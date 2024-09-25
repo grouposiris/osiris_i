@@ -49,16 +49,16 @@ module user_proj_example #(
     input wbs_stb_i,
     input wbs_cyc_i,
     input wbs_we_i,
-    input [3:0] wbs_sel_i,
+    // input [3:0] wbs_sel_i,
     input [31:0] wbs_dat_i,
     input [31:0] wbs_adr_i,
     output wbs_ack_o,
     output [31:0] wbs_dat_o,
 
     // Logic Analyzer Signals
-    input  [127:0] la_data_in,
-    output [127:0] la_data_out,
-    input  [127:0] la_oenb,
+    // input  [127:0] la_data_in,
+    // output [127:0] la_data_out,
+    // input  [127:0] la_oenb,
 
     // IOs
     input  [BITS-1:0] io_in,
@@ -66,91 +66,120 @@ module user_proj_example #(
     output [BITS-1:0] io_oeb,
 
     // IRQ
-    output [2:0] irq
+    // output [2:0] irq
 );
+
+    // wire [6:0] led_out;
+    //
+    // seven_segment_seconds U_SEVEN_SEG (
+    //     .clk(wb_clk_i),
+    //     .reset(wb_rst_i),
+    //     .compare_in(24'h100),
+    //     .update_compare(1'b0),
+    //     .led_out(led_out)
+    // );
+    //
+    // assign io_oeb = 16'h0;
+    // assign io_out = {11'h0, led_out};
+
     wire clk;
     wire rst;
 
-    wire [BITS-1:0] rdata; 
-    wire [BITS-1:0] wdata;
-    wire [BITS-1:0] count;
-
-    wire valid;
-    wire [3:0] wstrb;
-    wire [BITS-1:0] la_write;
-
-    // WB MI A
-    assign valid = wbs_cyc_i && wbs_stb_i; 
-    assign wstrb = wbs_sel_i & {4{wbs_we_i}};
-    assign wbs_dat_o = {{(32-BITS){1'b0}}, rdata};
-    assign wdata = wbs_dat_i[BITS-1:0];
-
-    // IO
-    assign io_out = count;
-    assign io_oeb = {(BITS){rst}};
-
-    // IRQ
-    assign irq = 3'b000;	// Unused
-
-    // LA
-    assign la_data_out = {{(128-BITS){1'b0}}, count};
-    // Assuming LA probes [63:32] are for controlling the count register  
-    assign la_write = ~la_oenb[63:64-BITS] & ~{BITS{valid}};
-    // Assuming LA probes [65:64] are for controlling the count clk & reset  
-    assign clk = (~la_oenb[64]) ? la_data_in[64]: wb_clk_i;
-    assign rst = (~la_oenb[65]) ? la_data_in[65]: wb_rst_i;
-
-    counter #(
-        .BITS(BITS)
-    ) counter(
+    module osiris_i (
         .clk(clk),
-        .reset(rst),
-        .ready(wbs_ack_o),
-        .valid(valid),
-        .rdata(rdata),
-        .wdata(wbs_dat_i[BITS-1:0]),
-        .wstrb(wstrb),
-        .la_write(la_write),
-        .la_input(la_data_in[63:64-BITS]),
-        .count(count)
+        .rst(io_in[1]),
+        .wb_dat_i(wdata),
+        .wb_ack_i(wbs_ack_o),
+        .wb_adr_o(wbs_adr_i),
+        .wb_dat_o(wbs_dat_o),
+        .wb_we_o(wbs_we_i),
+        .wb_stb_o(wbs_stb_i),
+        .wb_cyc_o(wbs_cyc_i)
     );
 
+    // wire clk;
+    // wire rst;
+    //
+    // wire [BITS-1:0] rdata;
+    // wire [BITS-1:0] wdata;
+    // wire [BITS-1:0] count;
+    //
+    // wire valid;
+    // wire [3:0] wstrb;
+    // wire [BITS-1:0] la_write;
+    //
+    // // WB MI A
+    // assign valid = wbs_cyc_i && wbs_stb_i;
+    // assign wstrb = wbs_sel_i & {4{wbs_we_i}};
+    // assign wbs_dat_o = {{(32-BITS){1'b0}}, rdata};
+    // assign wdata = wbs_dat_i[BITS-1:0];
+    //
+    // // IO
+    // assign io_out = count;
+    // assign io_oeb = {(BITS){rst}};
+    //
+    // // IRQ
+    // assign irq = 3'b000;	// Unused
+    //
+    // // LA
+    // assign la_data_out = {{(128-BITS){1'b0}}, count};
+    // // Assuming LA probes [63:32] are for controlling the count register
+    // assign la_write = ~la_oenb[63:64-BITS] & ~{BITS{valid}};
+    // // Assuming LA probes [65:64] are for controlling the count clk & reset
+    // assign clk = (~la_oenb[64]) ? la_data_in[64]: wb_clk_i;
+    // assign rst = (~la_oenb[65]) ? la_data_in[65]: wb_rst_i;
+
+    // counter #(
+    //     .BITS(BITS)
+    // ) counter(
+    //     .clk(clk),
+    //     .reset(rst),
+    //     .ready(wbs_ack_o),
+    //     .valid(valid),
+    //     .rdata(rdata),
+    //     .wdata(wbs_dat_i[BITS-1:0]),
+    //     .wstrb(wstrb),
+    //     .la_write(la_write),
+    //     .la_input(la_data_in[63:64-BITS]),
+    //     .count(count)
+    // );
+
 endmodule
 
-module counter #(
-    parameter BITS = 16
-)(
-    input clk,
-    input reset,
-    input valid,
-    input [3:0] wstrb,
-    input [BITS-1:0] wdata,
-    input [BITS-1:0] la_write,
-    input [BITS-1:0] la_input,
-    output reg ready,
-    output reg [BITS-1:0] rdata,
-    output reg [BITS-1:0] count
-);
-
-    always @(posedge clk) begin
-        if (reset) begin
-            count <= 1'b0;
-            ready <= 1'b0;
-        end else begin
-            ready <= 1'b0;
-            if (~|la_write) begin
-                count <= count + 1'b1;
-            end
-            if (valid && !ready) begin
-                ready <= 1'b1;
-                rdata <= count;
-                if (wstrb[0]) count[7:0]   <= wdata[7:0];
-                if (wstrb[1]) count[15:8]  <= wdata[15:8];
-            end else if (|la_write) begin
-                count <= la_write & la_input;
-            end
-        end
-    end
-
-endmodule
+// module counter #(
+//     parameter BITS = 16
+// )(
+//     input clk,
+//     input reset,
+//     input valid,
+//     input [3:0] wstrb,
+//     input [BITS-1:0] wdata,
+//     input [BITS-1:0] la_write,
+//     input [BITS-1:0] la_input,
+//     output reg ready,
+//     output reg [BITS-1:0] rdata,
+//     output reg [BITS-1:0] count
+// );
+//
+//     always @(posedge clk) begin
+//         if (reset) begin
+//             count <= 1'b0;
+//             ready <= 1'b0;
+//         end else begin
+//             ready <= 1'b0;
+//             if (~|la_write) begin
+//                 count <= count + 1'b1;
+//             end
+//             if (valid && !ready) begin
+//                 ready <= 1'b1;
+//                 rdata <= count;
+//                 if (wstrb[0]) count[7:0]   <= wdata[7:0];
+//                 if (wstrb[1]) count[15:8]  <= wdata[15:8];
+//             end else if (|la_write) begin
+//                 count <= la_write & la_input;
+//             end
+//         end
+//     end
+//
+// endmodule
 `default_nettype wire
