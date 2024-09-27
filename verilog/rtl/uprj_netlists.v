@@ -51,6 +51,5 @@
     `include "./osiris_i/stage_fetch.v"
     `include "./osiris_i/stage_write_back.v"
     `include "./osiris_i/wishbone_master.v"
-    // `include "user_proj_example.v"
-
+    `include "user_proj_example.v"
 `endif

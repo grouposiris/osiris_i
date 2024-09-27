@@ -18,5 +18,6 @@
 -v $(USER_PROJECT_VERILOG)/rtl/user_proj_example.v
 -v $(USER_PROJECT_VERILOG)/rtl/seven_segment_seconds.v
 -v $(USER_PROJECT_VERILOG)/rtl/osiris_i/osiris_i.v
+-v $(USER_PROJECT_VERILOG)/rtl/osiris_i/core.v
+-v $(USER_PROJECT_VERILOG)/rtl/osiris_i/wishbone_master.v
 
- 

@@ -17,140 +17,120 @@
 // Description: Verilog module wishbone_client
 ////////////////////////////////////////////////////////////////////////////////
 
-module wishbone_master #(
-    parameter DATA_WIDTH = 32,
-    parameter ADDR_WIDTH = 32
-)(
-    clk,
-    rst,
-    i_pc_IF,
-    i_mem_write_M,
-    i_data_addr_M,
-    i_write_data_M,
-    o_instr_ID,
-    o_read_data_M,
-    wb_adr_o, 
-    wb_dat_o,
-    wb_we_o,
-    wb_cyc_o,
-    wb_stb_o,
-    wb_dat_i,
-    wb_ack_i
+module wishbone_master #(parameter DATA_WIDTH = 32, ADDR_WIDTH = 32) (
+    input  wire                   clk,                  // Clock
+    input  wire                   rst,                  // Reset
+    input  wire [ADDR_WIDTH-1:0]  wb_adr_i,             // Address from the Wishbone master
+    input  wire [DATA_WIDTH-1:0]  wb_dat_i,             // Data from the Wishbone master
+    input  wire                   wb_we_i,              // Write enable signal from the Wishbone master
+    input  wire                   wb_stb_i,             // Strobe signal from the Wishbone master
+    input  wire                   wb_cyc_i,             // Cycle valid signal from the Wishbone master
+    output reg  [DATA_WIDTH-1:0]  wb_dat_o,             // Data to the Wishbone master
+    output reg                    wb_ack_o,             // Acknowledge signal to the Wishbone master
+
+    // Interface to the core module
+    output reg  [DATA_WIDTH-1:0]  i_instr_ID,           // Instruction to the core
+    output reg  [DATA_WIDTH-1:0]  i_read_data_M,        // Data read from memory for the core
+    input  wire [DATA_WIDTH-1:0]  o_pc_IF,              // PC from the core
+    input  wire                   o_mem_write_M,        // Memory write signal from the core
+    input  wire [DATA_WIDTH-1:0]  o_data_addr_M,        // Data address from the core
+    input  wire [DATA_WIDTH-1:0]  o_write_data_M        // Data to write from the core
 );
 
+assign wb_dat_o = 32'b1;
+assign wb_ack_o = 1'b1;
+assign i_instr_ID = 32'b1;
+assign i_read_data_M = 32'b1;
+// TO DO
+/*
 // ------------------------------------------
-// IO declaration
+// Local Signals
 // ------------------------------------------
-    input  wire clk;
-    input  wire rst;
+// reg  [32:0] mem ;  // Simple memory for storing data (adjust size as needed)
+reg  [32:0] addr_reg;     // Register to hold the address
+reg                   write_en;    // Internal write enable
+reg                   read_en;     // Internal read enable
 
-    // Interface with osiris_i_core
-    input wire [DATA_WIDTH-1:0] i_pc_IF;
-    input wire                  i_mem_write_M;
-    input wire [DATA_WIDTH-1:0] i_data_addr_M;
-    input wire [DATA_WIDTH-1:0] i_write_data_M;
 
-    output  wire [DATA_WIDTH-1:0] o_instr_ID;
-    output  wire [DATA_WIDTH-1:0] o_read_data_M;
-
-    // Wishbone Interface
-    input  wire [DATA_WIDTH-1:0] wb_dat_i;     // Data input
-    input  wire                  wb_ack_i;     // Acknowledge
-    
-    output reg  [ADDR_WIDTH-1:0] wb_adr_o;     // Address output
-    output reg  [DATA_WIDTH-1:0] wb_dat_o;     // Data output
-    output reg                   wb_we_o;      // Write enable
-    output reg                   wb_stb_o;     // Strobe
-    output reg                   wb_cyc_o;     // Cycle valid
-
+assign write_en =
 
 // ------------------------------------------
-// Signals deinitions
+// Wishbone Slave Logic
 // ------------------------------------------
+always @(posedge clk or posedge rst) begin
+    if (rst) begin
+        wb_ack_o <= 1'b0;
+        wb_dat_o <= {DATA_WIDTH{1'b0}};
+        write_en <= 1'b0;
+        read_en <= 1'b0;
+        // addr_reg <= {ADDR_WIDTH{1'b0}};
+    end else begin
+        wb_ack_o <= 1'b0;  // Default no acknowledge
 
-    // FSM States
-    typedef enum logic [1:0] {
-        IDLE,
-        READ,
-        WRITE,
-        WAIT_ACK
-    } state_t;
+        // Check for valid cycle and strobe signal
+        if (wb_cyc_i && wb_stb_i) begin
+            addr_reg <= wb_adr_i;
 
-    state_t state, next_state;
+            // Wishbone Write Operation
+            if (wb_we_i) begin
+                write_en <= 1'b1;
+                wb_ack_o <= 1'b1;  // Acknowledge write
+            end
 
-    // Local signals
-    reg [DATA_WIDTH-1:0] addr; // Address for read/write operations
-
-
-// ------------------------------------------
-// Logic
-// ------------------------------------------
-    // Sequential Logic: State Register
-    always @(posedge clk or posedge rst) begin
-        if (rst) begin
-            // state <= IDLE;
-            // wb_cyc_o <= 0;
-            // wb_stb_o <= 0;
-            // wb_we_o <= 0;
-        end else begin
-            state <= next_state;
+            // Wishbone Read Operation
+            else begin
+                read_en <= 1'b1;
+                wb_ack_o <= 1'b1;  // Acknowledge read
+            end
         end
     end
+end
 
-    // Combinational Logic: Next State and Outputs
-    always @* begin
-        // Default assignments
-        next_state = state;
-        wb_cyc_o = 0;
-        wb_stb_o = 0;
-        wb_we_o = 0;
-
-        case (state)
-            IDLE: begin
-                // When a request is made from the core
-                if (i_mem_write_M) begin
-                    // Prepare for writing
-                    wb_adr_o = i_data_addr_M;   // address from core
-                    wb_dat_o = i_write_data_M;  // data from core
-                    wb_we_o = i_mem_write_M;    // Write enable signal
-                    wb_cyc_o = 1;               // Start cycle
-                    wb_stb_o = 1;               // Enable strobe
-                    next_state = WRITE;         // Move to WRITE state
-                end else begin
-                    // Prepare for reading
-                    wb_stb_o = 1'b1;
-                    wb_we_o = 1'b0;               // read operation
-                    wb_adr_o = i_pc_IF;           // address instruction fetch
-                    next_state = READ;          // Move to READ state
-                end
-            end
-            
-            READ: begin
-                if (wb_ack_i) begin
-                    next_state = IDLE; 
-                end else begin
-                    next_state = WAIT_ACK; 
-                end
-            end
-            
-            WRITE: begin
-                if (wb_ack_i) begin
-                    next_state = IDLE; 
-                end else begin
-                    next_state = WAIT_ACK; 
-                end
-            end
-            
-            WAIT_ACK: begin
-                if (wb_ack_i) begin
-                    next_state = IDLE; 
-                end
-            end
-        endcase
+// ------------------------------------------
+// Write Operation to Memory
+// ------------------------------------------
+always @(posedge clk) begin
+    if (write_en) begin
+        //mem <= wb_dat_i;
+        write_en <= 1'b0;  // Clear write enable
     end
+end
 
-    assign o_read_data_M = (state == READ && wb_ack_i) ? wb_dat_i : 0;
-    assign o_instr_ID = (state == READ && wb_ack_i) ? wb_dat_i : 0;
+// ------------------------------------------
+// Read Operation from Memory
+// ------------------------------------------
+always @(posedge clk) begin
+    if (read_en) begin
+        //wb_dat_o <= mem;
+        wb_dat_o <= 32'b1;
+        read_en <= 1'b0;  // Clear read enable
+    end
+end
+
+// ------------------------------------------
+// Core Interface Handling
+// ------------------------------------------
+// The core should receive instructions and memory data based on the Wishbone transactions.
+
+always @(posedge clk or posedge rst) begin
+    if (rst) begin
+        i_instr_ID <= {DATA_WIDTH{1'b0}};
+        i_read_data_M <= {DATA_WIDTH{1'b0}};
+    end else begin
+        if (wb_we_i && wb_cyc_i && wb_stb_i) begin
+            // Handle memory write operation in the core
+            if (o_mem_write_M) begin
+               // mem <= o_write_data_M;  // Store data from core to memory
+            end
+        end else begin
+            // Provide data for the core to execute from memory (fetch instructions)
+            //i_instr_ID <= mem;  // Provide instruction to core
+            i_instr_ID <= 32'b1;  // Provide instruction to core
+
+            //i_read_data_M <= mem;  // Provide data to core
+            i_read_data_M <= 32'hF;  // Provide data to core
+        end
+    end
+end*/
 
 endmodule
-

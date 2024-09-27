@@ -1,8 +1,8 @@
-CARAVEL_ROOT: /home/roliveira/Downloads/wrapper_test/osiris_i_core/caravel
-MCW_ROOT: /home/roliveira/Downloads/wrapper_test/osiris_i_core/mgmt_core_wrapper
+CARAVEL_ROOT: /home/roliveira/Downloads/osiris_i/osiris_i_core/caravel
+MCW_ROOT: /home/roliveira/Downloads/osiris_i/osiris_i_core/mgmt_core_wrapper
 PDK: sky130A
 PDK_ROOT: /home/roliveira/Downloads/unic-cass/pdks
-USER_PROJECT_ROOT: /home/roliveira/Downloads/wrapper_test/osiris_i_core
+USER_PROJECT_ROOT: /home/roliveira/Downloads/osiris_i/osiris_i_core
 caravan: false
 clk: 25
 emailto:

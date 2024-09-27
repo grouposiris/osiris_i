@@ -62,8 +62,8 @@ module user_proj_example #(
 
     // IOs
     input  [BITS-1:0] io_in,
-    output [BITS-1:0] io_out,
-    output [BITS-1:0] io_oeb,
+    //output [BITS-1:0] io_out,
+    output [BITS-1:0] io_oeb
 
     // IRQ
     // output [2:0] irq
@@ -82,20 +82,38 @@ module user_proj_example #(
     // assign io_oeb = 16'h0;
     // assign io_out = {11'h0, led_out};
 
-    wire clk;
-    wire rst;
+    // wire [31:0] wdata_i;
+    // wire [31:0] wdata_o;
+    // wire wbs_ack;
+    // wire [31:0] wbs_adr;
+    // wire wbs_cyc;
+    // wire wbs_stb;
+    // wire wbs_we;
 
-    module osiris_i (
-        .clk(clk),
-        .rst(io_in[1]),
-        .wb_dat_i(wdata),
-        .wb_ack_i(wbs_ack_o),
-        .wb_adr_o(wbs_adr_i),
+
+
+    osiris_i U_OSIRIS_I (
+        .clk(wb_clk_i),
+        .rst(io_in[0]),
+        .wb_dat_i(wbs_dat_i),
+        .wb_we_i(wbs_we_i),
+        .wb_stb_i(wbs_stb_i),
+        .wb_cyc_i(wbs_cyc_i),
+        .wb_adr_i(wbs_adr_i),
         .wb_dat_o(wbs_dat_o),
-        .wb_we_o(wbs_we_i),
-        .wb_stb_o(wbs_stb_i),
-        .wb_cyc_o(wbs_cyc_i)
+        .wb_ack_o(wbs_ack_o)
     );
+
+    // assign wbs_cyc_i = wbs_stb;
+    // assign wbs_stb_i = wbs_cyc;
+    // assign wbs_we_i = wbs_we;
+    // assign wbs_dat_o = wdata_i;
+    // assign wbs_adr_i = wbs_adr;
+    // assign wbs_ack_o = wbs_ack;
+    // assign wbs_dat_i = wdata_o;
+
+    assign io_oeb = 16'h0;
+
 
     // wire clk;
     // wire rst;
