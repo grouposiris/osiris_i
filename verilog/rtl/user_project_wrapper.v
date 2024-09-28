@@ -49,33 +49,33 @@ module user_project_wrapper #(
     input wbs_stb_i,
     input wbs_cyc_i,
     input wbs_we_i,
-    // input [3:0] wbs_sel_i,
+    input [3:0] wbs_sel_i,
     input [31:0] wbs_dat_i,
     input [31:0] wbs_adr_i,
     output wbs_ack_o,
     output [31:0] wbs_dat_o,
 
     // Logic Analyzer Signals
-    // input  [127:0] la_data_in,
-    // output [127:0] la_data_out,
-    // input  [127:0] la_oenb,
+    input  [127:0] la_data_in,
+    output [127:0] la_data_out,
+    input  [127:0] la_oenb,
 
     // IOs
     input  [`MPRJ_IO_PADS-1:0] io_in,
-   // output [`MPRJ_IO_PADS-1:0] io_out,
+   output [`MPRJ_IO_PADS-1:0] io_out,
    output [`MPRJ_IO_PADS-1:0] io_oeb,
 
     // Analog (direct connection to GPIO pad---use with caution)
     // Note that analog I/O is not available on the 7 lowest-numbered
     // GPIO pads, and so the analog_io indexing is offset from the
     // GPIO indexing by 7 (also upper 2 GPIOs do not have analog_io).
-   // inout [`MPRJ_IO_PADS-10:0] analog_io,
+   inout [`MPRJ_IO_PADS-10:0] analog_io,
 
     // Independent clock (on independent integer divider)
-    //input   user_clock2,
+    input   user_clock2,
 
     // User maskable interrupt signals
-   // output [2:0] user_irq
+   output [2:0] user_irq
 );
 
 
@@ -136,7 +136,7 @@ user_proj_example mprj (
 
     .io_in ({io_in[37:30],io_in[7:0]}),
     // .io_out({io_out[37:30],io_out[7:0]}),
-    .io_oeb({io_oeb[37:30],io_oeb[7:0]}),
+    // .io_oeb({io_oeb[37:30],io_oeb[7:0]}),
 
     // IRQ
     //.irq(user_irq)
