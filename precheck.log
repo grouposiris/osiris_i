@@ -1,0 +1,109 @@
+2024-09-28 02:21:26 - [INFO] - {{EXTRACTING FILES}} Extracting compressed files in: /home/roliveira/Downloads/osiris_i
+2024-09-28 02:21:26 - [INFO] - {{Project Type Info}} digital
+2024-09-28 02:21:27 - [INFO] - {{Project GDS Info}} user_project_wrapper: 1ef468a104070e81ede377cd45cc1d4c5d1bfcb3
+2024-09-28 02:21:27 - [INFO] - {{Tools Info}} KLayout: v0.29.2 | Magic: v8.3.471
+2024-09-28 02:21:27 - [INFO] - {{PDKs Info}} SKY130A: None | Open PDKs: 6d4d11780c40b20ee63cc98e645307a9bf2b2ab8
+2024-09-28 02:21:27 - [INFO] - {{START}} Precheck Started, the full log 'precheck.log' will be located in '/home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/logs'
+2024-09-28 02:21:27 - [INFO] - {{PRECHECK SEQUENCE}} Precheck will run the following checks: [License, Makefile, Default, Documentation, Top Cell Check, Consistency, GPIO-Defines, XOR, Magic DRC, Klayout FEOL, Klayout BEOL, Klayout Offgrid, Klayout Metal Minimum Clear Area Density, Klayout Pin Label Purposes Overlapping Drawing, Klayout ZeroArea, Spike Check, Illegal Cellname Check, OEB, LVS]
+2024-09-28 02:21:27 - [INFO] - {{STEP UPDATE}} Executing Check 1 of 19: License
+2024-09-28 02:21:28 - [INFO] - An approved LICENSE (Apache-2.0) was found in /home/roliveira/Downloads/osiris_i.
+2024-09-28 02:21:28 - [INFO] - {{MAIN LICENSE CHECK PASSED}} An approved LICENSE was found in project root.
+2024-09-28 02:21:28 - [INFO] - An approved LICENSE (Apache-2.0) was found in /home/roliveira/Downloads/osiris_i.
+2024-09-28 02:21:29 - [INFO] - An approved LICENSE (Apache-2.0) was found in /home/roliveira/Downloads/osiris_i.
+2024-09-28 02:21:29 - [INFO] - An approved LICENSE (Apache-2.0) was found in /home/roliveira/Downloads/osiris_i.
+2024-09-28 02:21:30 - [INFO] - An approved LICENSE (Apache-2.0) was found in /home/roliveira/Downloads/osiris_i.
+2024-09-28 02:21:30 - [INFO] - An approved LICENSE (Apache-2.0) was found in /home/roliveira/Downloads/osiris_i.
+2024-09-28 02:21:30 - [INFO] - {{SUBMODULES LICENSE CHECK PASSED}} No prohibited LICENSE file(s) was found in project submodules
+2024-09-28 02:21:31 - [ERROR] - SPDX COMPLIANCE FILE UNICODE DECODE EXCEPTION in (/home/roliveira/Downloads/osiris_i/docs/source/_static/.DS_Store): 'utf-8' codec can't decode byte 0xff in position 576: invalid start byte
+2024-09-28 02:21:31 - [WARNING] - {{SPDX COMPLIANCE CHECK FAILED}} Found 38 non-compliant file(s) with the SPDX Standard.
+2024-09-28 02:21:31 - [INFO] - SPDX COMPLIANCE: NON-COMPLIANT FILE(S) PREVIEW: ['/home/roliveira/Downloads/osiris_i/.readthedocs.yaml', '/home/roliveira/Downloads/osiris_i/verilog/rtl/seven_segment_seconds.v', '/home/roliveira/Downloads/osiris_i/verilog/rtl/osiris_i/core.v', '/home/roliveira/Downloads/osiris_i/verilog/rtl/osiris_i/stage_decode.v', '/home/roliveira/Downloads/osiris_i/verilog/rtl/osiris_i/if_id.v', '/home/roliveira/Downloads/osiris_i/verilog/rtl/osiris_i/pc_target.v', '/home/roliveira/Downloads/osiris_i/verilog/rtl/osiris_i/stage_fetch.v', '/home/roliveira/Downloads/osiris_i/verilog/rtl/osiris_i/full_adder.v', '/home/roliveira/Downloads/osiris_i/verilog/rtl/osiris_i/mux_4x1.v', '/home/roliveira/Downloads/osiris_i/verilog/rtl/osiris_i/register_file.v', '/home/roliveira/Downloads/osiris_i/verilog/rtl/osiris_i/op_decoder.v', '/home/roliveira/Downloads/osiris_i/verilog/rtl/osiris_i/wishbone_master.v', '/home/roliveira/Downloads/osiris_i/verilog/rtl/osiris_i/apb_bus.v', '/home/roliveira/Downloads/osiris_i/verilog/rtl/osiris_i/stage_write_back.v', '/home/roliveira/Downloads/osiris_i/verilog/rtl/osiris_i/mux_2x1.v']
+2024-09-28 02:21:31 - [INFO] - For the full SPDX compliance report check: /home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/logs/spdx_compliance_report.log
+2024-09-28 02:21:31 - [INFO] - {{STEP UPDATE}} Executing Check 2 of 19: Makefile
+2024-09-28 02:21:31 - [INFO] - {{MAKEFILE CHECK PASSED}} Makefile valid.
+2024-09-28 02:21:31 - [INFO] - {{STEP UPDATE}} Executing Check 3 of 19: Default
+2024-09-28 02:21:31 - [INFO] - {{README DEFAULT CHECK PASSED}} Project 'README.md' was modified and is not identical to the default 'README.md'
+2024-09-28 02:21:32 - [INFO] - {{CONTENT DEFAULT CHECK PASSED}} Project 'gds' was modified and is not identical to the default 'gds'
+2024-09-28 02:21:32 - [INFO] - {{STEP UPDATE}} Executing Check 4 of 19: Documentation
+2024-09-28 02:21:32 - [INFO] - {{DOCUMENTATION CHECK PASSED}} Project documentation is appropriate.
+2024-09-28 02:21:32 - [INFO] - {{STEP UPDATE}} Executing Check 5 of 19: Top Cell Check
+2024-09-28 02:21:34 - [INFO] - {{Top Cell Check CHECK PASSED}} The GDS file, user_project_wrapper.gds, has exactly 1 topcell.
+2024-09-28 02:21:34 - [INFO] - {{STEP UPDATE}} Executing Check 6 of 19: Consistency
+2024-09-28 02:21:38 - [INFO] - PORTS CHECK PASSED: Netlist user_project_wrapper ports match the golden wrapper ports
+2024-09-28 02:21:38 - [INFO] - COMPLEXITY CHECK PASSED: Netlist user_project_wrapper contains at least 1 instances (1 instances). 
+2024-09-28 02:21:38 - [INFO] - MODELING CHECK PASSED: Netlist user_project_wrapper is structural.
+2024-09-28 02:21:38 - [INFO] - LAYOUT CHECK PASSED: The GDS layout for user_project_wrapper matches the provided structural netlist.
+2024-09-28 02:21:38 - [INFO] - POWER CONNECTIONS CHECK PASSED: All instances in user_project_wrapper are connected to power
+2024-09-28 02:21:38 - [INFO] - PORT TYPES CHECK PASSED: Netlist user_project_wrapper port types match the golden wrapper port types.
+2024-09-28 02:21:38 - [INFO] - {{NETLIST CONSISTENCY CHECK PASSED}} user_project_wrapper netlist passed all consistency checks.
+2024-09-28 02:21:38 - [INFO] - {{CONSISTENCY CHECK PASSED}} The user netlist and the top netlist are valid.
+2024-09-28 02:21:38 - [INFO] - {{STEP UPDATE}} Executing Check 7 of 19: GPIO-Defines
+2024-09-28 02:21:38 - [INFO] - GPIO-DEFINES: Checking verilog/rtl/user_defines.v, parsing files: ['/home/roliveira/mpw_precheck/checks/gpio_defines_check/verilog_assets/gpio_modes_base.v', '/home/roliveira/Downloads/osiris_i/verilog/rtl/user_defines.v', '/home/roliveira/mpw_precheck/checks/gpio_defines_check/verilog_assets/gpio_modes_observe.v']
+2024-09-28 02:21:39 - [CRITICAL] - {{GPIO-DEFINES: ERROR IN verilog/rtl/user_defines.v}} Directives(33) still placeholder (13'hXXXX) or not hex-literal: USER_CONFIG_GPIO_5_INIT=13'hXXXX USER_CONFIG_GPIO_6_INIT=13'hXXXX USER_CONFIG_GPIO_7_INIT=13'hXXXX USER_CONFIG_GPIO_8_INIT=13'hXXXX USER_CONFIG_GPIO_9_INIT=13'hXXXX USER_CONFIG_GPIO_10_INIT=13'hXXXX USER_CONFIG_GPIO_11_INIT=13'hXXXX USER_CONFIG_GPIO_12_INIT=13'hXXXX USER_CONFIG_GPIO_13_INIT=13'hXXXX USER_CONFIG_GPIO_25_INIT=13'hXXXX USER_CONFIG_GPIO_26_INIT=13'hXXXX USER_CONFIG_GPIO_27_INIT=13'hXXXX USER_CONFIG_GPIO_28_INIT=13'hXXXX USER_CONFIG_GPIO_29_INIT=13'hXXXX USER_CONFIG_GPIO_30_INIT=13'hXXXX USER_CONFIG_GPIO_31_INIT=13'hXXXX USER_CONFIG_GPIO_32_INIT=13'hXXXX USER_CONFIG_GPIO_33_INIT=13'hXXXX USER_CONFIG_GPIO_34_INIT=13'hXXXX USER_CONFIG_GPIO_35_INIT=13'hXXXX USER_CONFIG_GPIO_36_INIT=13'hXXXX USER_CONFIG_GPIO_37_INIT=13'hXXXX USER_CONFIG_GPIO_14_INIT=13'hXXXX USER_CONFIG_GPIO_15_INIT=13'hXXXX USER_CONFIG_GPIO_16_INIT=13'hXXXX USER_CONFIG_GPIO_17_INIT=13'hXXXX USER_CONFIG_GPIO_18_INIT=13'hXXXX USER_CONFIG_GPIO_19_INIT=13'hXXXX USER_CONFIG_GPIO_20_INIT=13'hXXXX USER_CONFIG_GPIO_21_INIT=13'hXXXX USER_CONFIG_GPIO_22_INIT=13'hXXXX USER_CONFIG_GPIO_23_INIT=13'hXXXX USER_CONFIG_GPIO_24_INIT=13'hXXXX.. No report generated.
+2024-09-28 02:21:39 - [WARNING] - {{GPIO-DEFINES CHECK FAILED}} The user verilog/rtl/user_defines.v is not valid.
+2024-09-28 02:21:39 - [INFO] - {{STEP UPDATE}} Executing Check 8 of 19: XOR
+2024-09-28 02:21:54 - [INFO] - {{XOR CHECK UPDATE}} Total XOR differences: 0, for more details view /home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/outputs/user_project_wrapper.xor.gds
+2024-09-28 02:21:54 - [INFO] - {{XOR CHECK PASSED}} The GDS file has no XOR violations.
+2024-09-28 02:21:54 - [INFO] - {{STEP UPDATE}} Executing Check 9 of 19: Magic DRC
+2024-09-28 02:33:07 - [INFO] - 0 DRC violations
+2024-09-28 02:33:07 - [INFO] - {{MAGIC DRC CHECK PASSED}} The GDS file, user_project_wrapper.gds, has no DRC violations.
+2024-09-28 02:33:07 - [INFO] - {{STEP UPDATE}} Executing Check 10 of 19: Klayout FEOL
+2024-09-28 02:33:07 - [INFO] - in CUSTOM klayout_gds_drc_check
+2024-09-28 02:33:07 - [INFO] - run: klayout -b -r /home/roliveira/mpw_precheck/checks/tech-files/sky130A_mr.drc -rd input=/home/roliveira/Downloads/osiris_i/gds/user_project_wrapper.gds -rd topcell=user_project_wrapper -rd report=/home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/outputs/reports/klayout_feol_check.xml -rd thr=16 -rd feol=true >& /home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/logs/klayout_feol_check.log
+2024-09-28 02:37:00 - [INFO] - No DRC Violations found
+2024-09-28 02:37:00 - [INFO] - {{Klayout FEOL CHECK PASSED}} The GDS file, user_project_wrapper.gds, has no DRC violations.
+2024-09-28 02:37:00 - [INFO] - {{STEP UPDATE}} Executing Check 11 of 19: Klayout BEOL
+2024-09-28 02:37:00 - [INFO] - in CUSTOM klayout_gds_drc_check
+2024-09-28 02:37:00 - [INFO] - run: klayout -b -r /home/roliveira/mpw_precheck/checks/tech-files/sky130A_mr.drc -rd input=/home/roliveira/Downloads/osiris_i/gds/user_project_wrapper.gds -rd topcell=user_project_wrapper -rd report=/home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/outputs/reports/klayout_beol_check.xml -rd thr=16 -rd beol=true >& /home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/logs/klayout_beol_check.log
+2024-09-28 02:47:45 - [INFO] - No DRC Violations found
+2024-09-28 02:47:45 - [INFO] - {{Klayout BEOL CHECK PASSED}} The GDS file, user_project_wrapper.gds, has no DRC violations.
+2024-09-28 02:47:45 - [INFO] - {{STEP UPDATE}} Executing Check 12 of 19: Klayout Offgrid
+2024-09-28 02:47:45 - [INFO] - in CUSTOM klayout_gds_drc_check
+2024-09-28 02:47:45 - [INFO] - run: klayout -b -r /home/roliveira/mpw_precheck/checks/tech-files/sky130A_mr.drc -rd input=/home/roliveira/Downloads/osiris_i/gds/user_project_wrapper.gds -rd topcell=user_project_wrapper -rd report=/home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/outputs/reports/klayout_offgrid_check.xml -rd thr=16 -rd offgrid=true >& /home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/logs/klayout_offgrid_check.log
+2024-09-28 02:50:19 - [INFO] - No DRC Violations found
+2024-09-28 02:50:19 - [INFO] - {{Klayout Offgrid CHECK PASSED}} The GDS file, user_project_wrapper.gds, has no DRC violations.
+2024-09-28 02:50:19 - [INFO] - {{STEP UPDATE}} Executing Check 13 of 19: Klayout Metal Minimum Clear Area Density
+2024-09-28 02:50:19 - [INFO] - in CUSTOM klayout_gds_drc_check
+2024-09-28 02:50:19 - [INFO] - run: klayout -b -r /home/roliveira/mpw_precheck/checks/drc_checks/klayout/met_min_ca_density.lydrc -rd input=/home/roliveira/Downloads/osiris_i/gds/user_project_wrapper.gds -rd topcell=user_project_wrapper -rd report=/home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/outputs/reports/klayout_met_min_ca_density_check.xml -rd thr=16 >& /home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/logs/klayout_met_min_ca_density_check.log
+2024-09-28 02:50:54 - [INFO] - No DRC Violations found
+2024-09-28 02:50:54 - [INFO] - {{Klayout Metal Minimum Clear Area Density CHECK PASSED}} The GDS file, user_project_wrapper.gds, has no DRC violations.
+2024-09-28 02:50:54 - [INFO] - {{STEP UPDATE}} Executing Check 14 of 19: Klayout Pin Label Purposes Overlapping Drawing
+2024-09-28 02:50:54 - [INFO] - in CUSTOM klayout_gds_drc_check
+2024-09-28 02:50:54 - [INFO] - run: klayout -b -r /home/roliveira/mpw_precheck/checks/drc_checks/klayout/pin_label_purposes_overlapping_drawing.rb.drc -rd input=/home/roliveira/Downloads/osiris_i/gds/user_project_wrapper.gds -rd topcell=user_project_wrapper -rd report=/home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/outputs/reports/klayout_pin_label_purposes_overlapping_drawing_check.xml -rd thr=16 -rd top_cell_name=user_project_wrapper >& /home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/logs/klayout_pin_label_purposes_overlapping_drawing_check.log
+2024-09-28 02:51:20 - [INFO] - No DRC Violations found
+2024-09-28 02:51:20 - [INFO] - {{Klayout Pin Label Purposes Overlapping Drawing CHECK PASSED}} The GDS file, user_project_wrapper.gds, has no DRC violations.
+2024-09-28 02:51:20 - [INFO] - {{STEP UPDATE}} Executing Check 15 of 19: Klayout ZeroArea
+2024-09-28 02:51:20 - [INFO] - in CUSTOM klayout_gds_drc_check
+2024-09-28 02:51:20 - [INFO] - run: klayout -b -r /home/roliveira/mpw_precheck/checks/drc_checks/klayout/zeroarea.rb.drc -rd input=/home/roliveira/Downloads/osiris_i/gds/user_project_wrapper.gds -rd topcell=user_project_wrapper -rd report=/home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/outputs/reports/klayout_zeroarea_check.xml -rd thr=16 -rd cleaned_output=/home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/outputs/user_project_wrapper_no_zero_areas.gds >& /home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/logs/klayout_zeroarea_check.log
+2024-09-28 02:51:27 - [INFO] - No DRC Violations found
+2024-09-28 02:51:27 - [INFO] - {{Klayout ZeroArea CHECK PASSED}} The GDS file, user_project_wrapper.gds, has no DRC violations.
+2024-09-28 02:51:27 - [INFO] - {{STEP UPDATE}} Executing Check 16 of 19: Spike Check
+2024-09-28 02:51:27 - [INFO] - run: bash /home/roliveira/mpw_precheck/checks/spike_check/gdsArea0 -V -m /home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/outputs/reports/spike_check.xml /home/roliveira/Downloads/osiris_i/gds/user_project_wrapper.gds >& /home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/logs/spike_check.log
+2024-09-28 02:51:32 - [INFO] - No Spikes found
+2024-09-28 02:51:32 - [INFO] - {{Spike Check CHECK PASSED}} The GDS file, user_project_wrapper.gds, has no spike errors.
+2024-09-28 02:51:32 - [INFO] - {{STEP UPDATE}} Executing Check 17 of 19: Illegal Cellname Check
+2024-09-28 02:51:35 - [INFO] - {{Illegal Cellname Check CHECK PASSED}} The GDS file, user_project_wrapper.gds, has no Illegal Cellnames errors.
+2024-09-28 02:51:35 - [INFO] - {{STEP UPDATE}} Executing Check 18 of 19: OEB
+2024-09-28 02:51:35 - [INFO] - Loading LVS environment from /home/roliveira/Downloads/osiris_i/lvs/user_project_wrapper/lvs_config.json
+2024-09-28 02:51:35 - [INFO] - EXTRACT_FLATGLOB : 
+2024-09-28 02:51:35 - [INFO] - EXTRACT_ABSTRACT : *__fill_* *__fakediode_* *__tapvpwrvgnd_*
+2024-09-28 02:51:35 - [INFO] - LVS_FLATTEN : 
+2024-09-28 02:51:35 - [INFO] - LVS_NOFLATTEN : 
+2024-09-28 02:51:35 - [INFO] - LVS_IGNORE : 
+2024-09-28 02:51:35 - [INFO] - LVS_SPICE_FILES : /home/roliveira/Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/spice/sky130_ef_sc_hd__decap_12.spice /home/roliveira/Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/spice/sky130_fd_sc_hd.spice
+2024-09-28 02:51:35 - [INFO] - LVS_VERILOG_FILES : /home/roliveira/Downloads/osiris_i/verilog/gl/user_proj_example.v /home/roliveira/Downloads/osiris_i/verilog/gl/user_project_wrapper.v
+2024-09-28 02:51:35 - [INFO] - LAYOUT_FILE : /home/roliveira/Downloads/osiris_i/gds/user_project_wrapper.gds
+2024-09-28 02:51:35 - [INFO] - run: run_oeb_check
+2024-09-28 02:51:35 - [INFO] - OEB output directory: /home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26
+2024-09-28 02:57:04 - [INFO] - {{OEB CHECK PASSED}} The design, user_project_wrapper, has no OEB violations.
+2024-09-28 02:57:04 - [INFO] - {{STEP UPDATE}} Executing Check 19 of 19: LVS
+2024-09-28 02:57:04 - [INFO] - Loading LVS environment from /home/roliveira/Downloads/osiris_i/lvs/user_project_wrapper/lvs_config.json
+2024-09-28 02:57:04 - [INFO] - EXTRACT_FLATGLOB : 
+2024-09-28 02:57:04 - [INFO] - EXTRACT_ABSTRACT : *__fill_* *__fakediode_* *__tapvpwrvgnd_*
+2024-09-28 02:57:04 - [INFO] - LVS_FLATTEN : 
+2024-09-28 02:57:04 - [INFO] - LVS_NOFLATTEN : 
+2024-09-28 02:57:04 - [INFO] - LVS_IGNORE : 
+2024-09-28 02:57:04 - [INFO] - LVS_SPICE_FILES : /home/roliveira/Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/spice/sky130_ef_sc_hd__decap_12.spice /home/roliveira/Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/spice/sky130_fd_sc_hd.spice
+2024-09-28 02:57:04 - [INFO] - LVS_VERILOG_FILES : /home/roliveira/Downloads/osiris_i/verilog/gl/user_proj_example.v /home/roliveira/Downloads/osiris_i/verilog/gl/user_project_wrapper.v
+2024-09-28 02:57:04 - [INFO] - LAYOUT_FILE : /home/roliveira/Downloads/osiris_i/gds/user_project_wrapper.gds
+2024-09-28 02:57:04 - [INFO] - run: run_be_checks
+2024-09-28 02:57:04 - [INFO] - LVS output directory: /home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26
