@@ -107,3 +107,6 @@
 2024-09-28 02:57:04 - [INFO] - LAYOUT_FILE : /home/roliveira/Downloads/osiris_i/gds/user_project_wrapper.gds
 2024-09-28 02:57:04 - [INFO] - run: run_be_checks
 2024-09-28 02:57:04 - [INFO] - LVS output directory: /home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26
+2024-09-28 03:03:38 - [INFO] - {{LVS CHECK PASSED}} The design, user_project_wrapper, has no LVS violations.
+2024-09-28 03:03:38 - [INFO] - {{FINISH}} Executing Finished, the full log 'precheck.log' can be found in '/home/roliveira/Downloads/osiris_i/precheck_results/28_SEP_2024___02_21_26/logs'
+2024-09-28 03:03:38 - [CRITICAL] - {{FAILURE}} 1 Check(s) Failed: ['GPIO-Defines'] !!!
