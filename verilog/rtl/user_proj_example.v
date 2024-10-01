@@ -52,8 +52,8 @@ module user_proj_example #(
     // input [3:0] wbs_sel_i,
     input [31:0] wbs_dat_i,
     input [31:0] wbs_adr_i,
-    output wbs_ack_o,
-    output [31:0] wbs_dat_o,
+    // output wbs_ack_o,
+    // output [31:0] wbs_dat_o,
 
     // Logic Analyzer Signals
     // input  [127:0] la_data_in,
@@ -62,7 +62,7 @@ module user_proj_example #(
 
     // IOs
     input  [BITS-1:0] io_in,
-    //output [BITS-1:0] io_out,
+    output [BITS-1:0] io_out,
     // output [BITS-1:0] io_oeb
 
     // IRQ
@@ -90,19 +90,16 @@ module user_proj_example #(
     // wire wbs_stb;
     // wire wbs_we;
 
-
+    wire tx_out;
 
     osiris_i U_OSIRIS_I (
         .clk(wb_clk_i),
         .rst(io_in[0]),
-        .wb_dat_i(wbs_dat_i),
-        .wb_we_i(wbs_we_i),
-        .wb_stb_i(wbs_stb_i),
-        .wb_cyc_i(wbs_cyc_i),
-        .wb_adr_i(wbs_adr_i),
-        .wb_dat_o(wbs_dat_o),
-        .wb_ack_o(wbs_ack_o)
+        .uart_rx(io_in[1]),
+        .uart_tx(tx_out)
     );
+
+    assign io_out = {15'h0, tx_out};
 
     // assign wbs_cyc_i = wbs_stb;
     // assign wbs_stb_i = wbs_cyc;

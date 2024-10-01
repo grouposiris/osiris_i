@@ -16,21 +16,26 @@
 // Block:       osiris_i
 // Description: Verilog module osiris_i
 ////////////////////////////////////////////////////////////////////////////////
+
 module osiris_i #(parameter DATA_WIDTH = 32, ADDR_WIDTH = 32) (
-    input  wire                   clk,                 // Clock
-    input  wire                   rst,                 // Reset
-    input  wire [DATA_WIDTH-1:0]  wb_dat_i,            // Data input from the Wishbone master
-    input  wire                   wb_we_i,             // Write enable input from the Wishbone master
-    input  wire                   wb_stb_i,            // Strobe input from the Wishbone master
-    input  wire                   wb_cyc_i,            // Cycle valid input from the Wishbone master
-    input  wire [ADDR_WIDTH-1:0]  wb_adr_i,            // Address input from the Wishbone master
-    output wire [DATA_WIDTH-1:0]  wb_dat_o,            // Data output to the Wishbone master
-    output wire                   wb_ack_o             // Acknowledge output to Wishbone master
+    input  wire                   clk,   
+    input  wire                   rst,   
+    input  wire                   uart_rx,
+    output wire                   uart_tx
 );
 
 // ------------------------------------------
 // Internal Signals for Core and Wishbone
 // ------------------------------------------
+
+// wire [DATA_WIDTH-1:0] instr_wb_dat_o;
+// wire [DATA_WIDTH-1:0] data_wb_dat_o;
+wire [DATA_WIDTH-1:0] wb_dat;
+wire [ADDR_WIDTH-1:0] wb_adr;
+wire [ADDR_WIDTH-1:0] adr;
+wire wb_we, wb_stb, wb_cyc, wb_ack;
+
+
 wire [DATA_WIDTH-1:0] pc_IF;           // Program counter from core (IF stage)
 wire                  mem_write_M;     // Memory write signal from core (M stage)
 wire [DATA_WIDTH-1:0] data_addr_M;     // Data address from core (M stage)
@@ -38,41 +43,74 @@ wire [DATA_WIDTH-1:0] write_data_M;    // Data to write from core (M stage)
 wire [DATA_WIDTH-1:0] instr_ID;        // Instruction input to core (from Wishbone)
 wire [DATA_WIDTH-1:0] read_data_M;     // Data read input to core (from Wishbone)
 
+
+// ------------------------------------------
+// Instantiate UART to Wishbone bridge
+// ------------------------------------------
+uart_wbs_bridge #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH)) U_UART_WB_BRIDGE (
+    .clk(clk),
+    .rst(rst),
+    .uart_rx(uart_rx),
+    .uart_tx(uart_tx),
+    .wb_cyc_o(wb_cyc),
+    .wb_stb_o(wb_stb),
+    .wb_we_o(wb_we),
+    .wb_adr_o(wb_adr),
+    .wb_dat_o(wb_dat),
+    .wb_ack_i(wb_ack)
+);
+
+mux_2x1 #(.DATA_WIDTH(ADDR_WIDTH)) U_MUX_2x1 (
+    .i_sel(wb_we),
+    .i_a(wb_adr),
+    .i_b(pc_IF),
+    .o_mux(adr)
+);
+
+
 // ------------------------------------------
 // Instantiate the core module
 // ------------------------------------------
 core #(.DATA_WIDTH(DATA_WIDTH)) U_CORE (
     .clk(clk),
     .rst(rst),
-    .i_instr_ID(instr_ID),              // Instruction input from Wishbone slave
-    .i_read_data_M(read_data_M),        // Read data from Wishbone slave
-    .o_pc_IF(pc_IF),                    // Program counter output to Wishbone slave
-    .o_mem_write_M(mem_write_M),        // Memory write enable to Wishbone slave
-    .o_data_addr_M(data_addr_M),        // Data address output to Wishbone slave
-    .o_write_data_M(write_data_M)       // Data to write output to Wishbone slave
+    .i_instr_ID(instr_ID),             
+    .i_read_data_M(read_data_M),       
+    .o_pc_IF(pc_IF),                   
+    .o_mem_write_M(mem_write_M),       
+    .o_data_addr_M(data_addr_M),      
+    .o_write_data_M(write_data_M)     
+);
+
+
+// ------------------------------------------
+// Instantiate Instruction Memory
+// ------------------------------------------
+mem #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(10), .MEM_SIZE(4)) U_INST_MEM (
+    .clk(clk),
+    .rst(rst),
+    .wb_adr_i(adr[9:0]),  // 10-bit address for 4KB memory
+    .wb_dat_i(wb_dat),
+    .wb_we_i(wb_we),
+    .wb_stb_i(wb_stb),
+    .wb_cyc_i(wb_cyc),
+    .wb_dat_o(instr_ID),
+    .wb_ack_o(wb_ack)
 );
 
 // ------------------------------------------
-// Instantiate the wishbone_slave module
+// Instantiate Data Memory
 // ------------------------------------------
-wishbone_master #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH)) U_WISHBONE_SLAVE (
+mem #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(10), .MEM_SIZE(4)) U_DATA_MEM (
     .clk(clk),
     .rst(rst),
-    .wb_adr_i(wb_adr_i),                // Address input from Wishbone master
-    .wb_dat_i(wb_dat_i),                // Data input from Wishbone master
-    .wb_we_i(wb_we_i),                  // Write enable input from Wishbone master
-    .wb_stb_i(wb_stb_i),                // Strobe input from Wishbone master
-    .wb_cyc_i(wb_cyc_i),                // Cycle valid input from Wishbone master
-    .wb_dat_o(wb_dat_o),                // Data output to Wishbone master
-    .wb_ack_o(wb_ack_o),                // Acknowledge output to Wishbone master
-    
-    // Core interface signals
-    .i_instr_ID(instr_ID),              // Instruction input to core
-    .i_read_data_M(read_data_M),        // Read data input to core
-    .o_pc_IF(pc_IF),                    // Program counter output from core
-    .o_mem_write_M(mem_write_M),        // Memory write enable from core
-    .o_data_addr_M(data_addr_M),        // Data address output from core
-    .o_write_data_M(write_data_M)       // Write data output from core
+    .wb_adr_i(data_addr_M[9:0]),  // 10-bit address for 4KB memory
+    .wb_dat_i(write_data_M),
+    .wb_we_i(mem_write_M),
+    .wb_stb_i(wb_stb),
+    .wb_cyc_i(wb_cyc),
+    .wb_dat_o(read_data_M),
+    .wb_ack_o(wb_ack)
 );
 
 endmodule
