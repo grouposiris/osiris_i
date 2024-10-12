@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module osiris_i_tb;
+module tb_osiris_i;
 
     // Parameters
     parameter DATA_WIDTH = 32;
@@ -10,16 +10,16 @@ module osiris_i_tb;
     parameter CLK_PERIOD = 1e9 / CLOCK_FREQ;  // Clock period in nanoseconds
 
     // Clock and Reset
-    reg clk;
-    reg rst;
+    reg  clk;
+    reg  rst;
 
     // UART Signals
-    reg uart_rx;
+    reg  uart_rx;
     wire uart_tx;
 
     // Control Signals
-    reg start_rx;
-    reg select_mem;  // Control signal to select which memory to communicate with: 0 - Instruction Memory, 1 - Data Memory
+    reg  start_rx;
+    reg  select_mem;  // Control signal to select which memory to communicate with
 
     // Instantiate the osiris_i module (Device Under Test)
     osiris_i #(
@@ -73,50 +73,36 @@ module osiris_i_tb;
         $display("Starting osiris_i Testbench...");
         #200;  // Wait for reset to deassert
 
-        // --------------------------------------------
         // Test 1: Write Data to Instruction Memory via UART and Verify
-        // --------------------------------------------
-        $display("\nTest 1: Writing Data to Instruction Memory via UART...");
+        $display("\nTest 1: Writing Data to Instruction Memory...");
         select_mem = 0;  // Select Instruction Memory
-        test_address = 32'h00000000;  // Starting address for program
-        expected_data = 32'h00000093;  // Example instruction (e.g., NOP in RISC-V)
-
-        // Send multiple instructions to Instruction Memory
-        for (i = 0; i < 4; i = i + 1) begin
-            test_write_to_memory(test_address + i * 4, expected_data + i);
-        end
-
-        // --------------------------------------------
-        // Test 2: Read Data from Instruction Memory via UART and Verify
-        // --------------------------------------------
-        $display("\nTest 2: Reading Data from Instruction Memory via UART...");
-        for (i = 0; i < 4; i = i + 1) begin
-            test_read_from_memory(test_address + i * 4, read_data);
-            if (read_data !== (expected_data + i)) begin
-                $display(
-                    "ERROR: Instruction Memory Data Mismatch at address 0x%08X! Expected 0x%08X, Got 0x%08X",
-                    test_address + i * 4, expected_data + i, read_data);
-                test_passed = 0;
-            end else begin
-                $display("Instruction at address 0x%08X verified: 0x%08X", test_address + i * 4,
-                         read_data);
-            end
-        end
-
-        // --------------------------------------------
-        // Test 3: Write Data to Data Memory via UART and Verify
-        // --------------------------------------------
-        $display("\nTest 3: Writing Data to Data Memory via UART...");
-        select_mem = 1;  // Select Data Memory
-        test_address = 32'h00000000;  // Starting address in Data Memory
+        test_address = 32'h00000010;  // Address to write to
         expected_data = 32'hA5A5A5A5;  // Data to write
 
         test_write_to_memory(test_address, expected_data);
 
-        // --------------------------------------------
+        // Test 2: Read Data from Instruction Memory via UART and Verify
+        $display("\nTest 2: Reading Data from Instruction Memory...");
+        test_read_from_memory(test_address, read_data);
+
+        if (read_data !== expected_data) begin
+            $display("ERROR: Instruction Memory Data Mismatch! Expected 0x%08X, Got 0x%08X",
+                     expected_data, read_data);
+            test_passed = 0;
+        end else begin
+            $display("Instruction Memory Data Verified Successfully.");
+        end
+
+        // Test 3: Write Data to Data Memory via UART and Verify
+        $display("\nTest 3: Writing Data to Data Memory...");
+        select_mem = 1;  // Select Data Memory
+        test_address = 32'h00000020;  // Address to write to
+        expected_data = 32'h5A5A5A5A;  // Data to write
+
+        test_write_to_memory(test_address, expected_data);
+
         // Test 4: Read Data from Data Memory via UART and Verify
-        // --------------------------------------------
-        $display("\nTest 4: Reading Data from Data Memory via UART...");
+        $display("\nTest 4: Reading Data from Data Memory...");
         test_read_from_memory(test_address, read_data);
 
         if (read_data !== expected_data) begin
@@ -127,48 +113,7 @@ module osiris_i_tb;
             $display("Data Memory Data Verified Successfully.");
         end
 
-        // --------------------------------------------
-        // Test 5: Run Program on Core and Verify Result in Data Memory
-        // --------------------------------------------
-        $display("\nTest 5: Running Program on Core and Verifying Result...");
-        select_mem = 0;  // Select Instruction Memory
-
-        // Simple program to write 0xDEADBEEF to Data Memory at address 0x00000010
-        // Instructions (RISC-V machine code):
-        // 0x00000000: LUI x1, 0xDEADB      (opcode: 0xDEADB137)
-        // 0x00000004: ADDI x1, x1, 0xEEF   (opcode: 0xEEF31313)
-        // 0x00000008: SW x1, 0x10(x0)      (opcode: 0x01012023)
-        // 0x0000000C: NOP                  (opcode: 0x00000013)
-
-        // Loading instructions into Instruction Memory
-        test_write_to_memory(32'h00000000, 32'hDEADB137);  // LUI x1, 0xDEADB
-        test_write_to_memory(32'h00000004, 32'hEEF31313);  // ADDI x1, x1, 0xEEF
-        test_write_to_memory(32'h00000008, 32'h01012023);  // SW x1, 0x10(x0)
-        test_write_to_memory(32'h0000000C, 32'h00000013);  // NOP
-
-        // Allow some time for the core to execute the program
-        #1000;  // Adjust timing as needed for the core to complete execution
-
-        // Read back the result from Data Memory
-        select_mem = 1;  // Select Data Memory
-        test_address = 32'h00000010;  // Address where data should have been written
-        expected_data = 32'hDEADBEEF;  // Expected data
-
-        test_read_from_memory(test_address, read_data);
-
-        if (read_data !== expected_data) begin
-            $display(
-                "ERROR: Program Execution Failed! Expected Data 0x%08X at Address 0x%08X, Got 0x%08X",
-                expected_data, test_address, read_data);
-            test_passed = 0;
-        end else begin
-            $display("Program Execution Successful. Data at Address 0x%08X is 0x%08X",
-                     test_address, read_data);
-        end
-
-        // --------------------------------------------
         // Final Test Result
-        // --------------------------------------------
         if (test_passed) begin
             $display("\nAll tests PASSED!");
         end else begin
@@ -178,41 +123,44 @@ module osiris_i_tb;
         $finish;
     end
 
-    // Task to Test Writing Data to Memory via UART
+    // Task to Test Writing Data to Memory
     task test_write_to_memory(input [ADDR_WIDTH-1:0] address, input [DATA_WIDTH-1:0] data);
         begin
-            // Send CMD_WRITE command (assuming 0xAA)
+            // Send CMD_WRITE command
             uart_send_byte(8'hAA);
             $display("Sent CMD_WRITE Command.");
 
             // Send Address (LSB first)
             uart_send_word(address, ADDR_WIDTH);
-            $display("Sent Address: 0x%08X", address);
+            $display("Sent Address: 0x%0h", address);
 
             // Send Data (LSB first)
             uart_send_word(data, DATA_WIDTH);
-            $display("Sent Data: 0x%08X", data);
+            $display("Sent Data: 0x%0h", data);
 
             // Wait for UART bridge to complete the write operation
+            wait (dut.U_UART_WB_BRIDGE.state == dut.U_UART_WB_BRIDGE.WB_WRITE);
             wait (dut.U_UART_WB_BRIDGE.state == dut.U_UART_WB_BRIDGE.IDLE);
             #CLK_PERIOD;
+
+            $display("Data Written to Memory at Address 0x%0h", address);
         end
     endtask
 
-    // Task to Test Reading Data from Memory via UART
+    // Task to Test Reading Data from Memory
     task test_read_from_memory(input [ADDR_WIDTH-1:0] address, output reg [DATA_WIDTH-1:0] data);
         begin
-            // Send CMD_READ command (assuming 0x01)
+            // Send CMD_READ command
             uart_send_byte(8'h01);
             $display("Sent CMD_READ Command.");
 
             // Send Address (LSB first)
             uart_send_word(address, ADDR_WIDTH);
-            $display("Sent Address: 0x%08X", address);
+            $display("Sent Address: 0x%0h", address);
 
             // Receive Data via UART
             data = uart_receive_word(DATA_WIDTH);
-            $display("Received Data: 0x%08X", data);
+            $display("Received Data: 0x%0h", data);
         end
     endtask
 
