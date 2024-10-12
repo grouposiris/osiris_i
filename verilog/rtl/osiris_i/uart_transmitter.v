@@ -1,4 +1,7 @@
-module uart_transmitter (
+module uart_transmitter #(
+    parameter BAUD_RATE  = 9600,     // Default baud rate (9600 Bps)
+    parameter CLOCK_FREQ = 50000000  // Default clock frequency (50 MHz)
+) (
     input  wire       clk,
     input  wire       rst,
     output reg        tx,          // UART transmit line
@@ -7,8 +10,6 @@ module uart_transmitter (
     output reg        ready        // Indicates transmitter is ready for new data
 );
     // Parameters for UART configuration
-    parameter BAUD_RATE = 9600;
-    parameter CLOCK_FREQ = 50000000;  // 50 MHz clock
     localparam BIT_TIME = CLOCK_FREQ / BAUD_RATE;
 
     // Internal registers and signals
@@ -47,7 +48,7 @@ module uart_transmitter (
                     // Load data into shift register with start and stop bits
                     shift_reg    <= {1'b1, data_in, 1'b0};  // {Stop bit, Data[7:0], Start bit}
                     // shift_reg    <= data_in;  // {Stop bit, Data[7:0], Start bit}
-                    bit_index    <= 1;  // todo: init with value 1
+                    bit_index    <= 1;
                     transmitting <= 1;
                     ready        <= 0;
                     clock_count  <= 0;

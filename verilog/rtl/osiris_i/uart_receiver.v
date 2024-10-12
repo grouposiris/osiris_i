@@ -1,4 +1,7 @@
-module uart_receiver (
+module uart_receiver #(
+    parameter BAUD_RATE  = 9600,     // Default baud rate (9600 Bps)
+    parameter CLOCK_FREQ = 50000000  // Default clock frequency (50 MHz)
+) (
     input wire clk,  // System clock
     input wire rst,  // Reset signal (active high)
     input wire rx,  // UART receive line (input from UART)

@@ -1,11 +1,16 @@
 module uart_wbs_bridge #(
     parameter DATA_WIDTH = 32,
-    parameter ADDR_WIDTH = 16
+    parameter ADDR_WIDTH = 16,
+    parameter BAUD_RATE  = 9600,
+    parameter CLOCK_FREQ = 50000000  // 50 MHz
 ) (
-    input  wire                  clk,
-    input  wire                  rst,
-    input  wire                  uart_rx,   // UART receive line
-    output wire                  uart_tx,   // UART transmit line
+    input  wire clk,
+    input  wire rst,
+    input  wire uart_rx,  // UART receive line
+    output wire uart_tx,  // UART transmit line
+    // * Added a signal to start the reception process to prevent unnecessary power consumption
+    input  wire start_rx,
+
     // Wishbone signals
     output reg                   wb_cyc_o,  // Wishbone cycle
     output reg                   wb_stb_o,  // Wishbone strobe
@@ -24,18 +29,23 @@ module uart_wbs_bridge #(
     wire       uart_tx_ready;  // UART transmitter ready to accept data
 
     // Instantiate UART receiver module
-    // todo : fix with new interface
-    uart_receiver uart_rx_inst (
+    uart_receiver #(
+        .BAUD_RATE (BAUD_RATE),
+        .CLOCK_FREQ(CLOCK_FREQ)
+    ) uart_rx_inst (
         .clk(clk),
         .rst(rst),
         .rx(uart_rx),
+        .start_rx(start_rx),
         .data_out(uart_rx_data),
         .data_valid(uart_rx_valid)
     );
 
-    // todo: check new interface
     // Instantiate UART transmitter module
-    uart_transmitter uart_tx_inst (
+    uart_transmitter #(
+        .BAUD_RATE (BAUD_RATE),
+        .CLOCK_FREQ(CLOCK_FREQ)
+    ) uart_tx_inst (
         .clk(clk),
         .rst(rst),
         .tx(uart_tx),
@@ -121,38 +131,37 @@ module uart_wbs_bridge #(
                 READ_ADDR: begin
                     // Receive address bytes
 
-                    // if (uart_rx_valid) begin
-                    // * Here 'addr_reg' is getting one byte per cycle
-                    addr_reg <= addr_reg |
-                        (uart_rx_data << (8 * byte_count));  // todo: check correct byte order
+                    if (uart_rx_valid) begin
+                        // * Here 'addr_reg' is getting one byte per cycle
+                        addr_reg <= addr_reg |
+                            (uart_rx_data << (8 * byte_count));  // todo: check correct byte order
 
 
-                    // * after 2 bytes byte_count = 1 (read complete address)
-                    if (byte_count == ((ADDR_WIDTH / 8) - 1)) begin
-                        byte_count <= 0;
-                        if (cmd_reg == CMD_WRITE) begin
-                            // Write command, proceed to read data bytes
-                            state <= READ_DATA;
-                        end else if (cmd_reg == CMD_READ) begin
-                            // todo: check this values
-                            // Read command, initiate Wishbone read
-                            wb_adr_o <= addr_reg;
-                            wb_we_o  <= 0;  // Read operation
-                            wb_stb_o <= 1;
-                            wb_cyc_o <= 1;
-                            state    <= WB_READ;
+                        // * after 2 bytes byte_count = 1 (adress read is complete)
+                        if (byte_count == ((ADDR_WIDTH / 8) - 1)) begin
+                            byte_count <= 0;
+                            if (cmd_reg == CMD_WRITE) begin
+                                // Write command, proceed to read data bytes from external UART
+                                state <= READ_DATA;
+                            end else if (cmd_reg == CMD_READ) begin
+                                // todo: check this values
+                                // Read command, initiate Wishbone read
+                                wb_adr_o <= addr_reg;
+                                wb_we_o  <= 0;  // Read operation
+                                wb_stb_o <= 1;
+                                wb_cyc_o <= 1;
+                                state    <= WB_READ;
+                            end else begin
+                                // Invalid command
+                                state <= IDLE;
+                            end
                         end else begin
-                            // Invalid command
-                            state <= IDLE;
+                            byte_count <= byte_count + 1;
                         end
-                    end else begin
-                        byte_count <= byte_count + 1;
                     end
-                    // end
                 end
 
                 READ_DATA: begin
-                    // todo: chck this values
                     // Receive data bytes for write operation
                     // * The READ_DATA state specifically handles data reception via UART, not memory.
                     // Receiving data from UART (READ_DATA state): This state captures data being sent from an external UART device
@@ -161,23 +170,22 @@ module uart_wbs_bridge #(
                     // Once the bridge has fully received the data and address via UART (e.g., command, address, or payload), it will move to states like WB_READ or WB_WRITE to perform the actual memory transaction (read/write) via the Wishbone interface.
                     // If the UART command was a read request, the bridge reads from memory in the WB_READ state, retrieves the data, and later sends it back via UART.
 
-                    // if (uart_rx_valid) begin
-                    data_reg   <= data_reg | (uart_rx_data << (8 * byte_count));
-                    byte_count <= byte_count + 1;
-                    if (byte_count == (DATA_WIDTH / 8 - 1)) begin
-                        // All data bytes received, initiate Wishbone write
-                        wb_adr_o <= addr_reg;
-                        wb_dat_o <= data_reg;
-                        wb_we_o  <= 1;  // Write operation
-                        wb_stb_o <= 1;
-                        wb_cyc_o <= 1;
-                        state    <= WB_WRITE;
+                    if (uart_rx_valid) begin
+                        data_reg   <= data_reg | (uart_rx_data << (8 * byte_count));
+                        byte_count <= byte_count + 1;
+                        if (byte_count == (DATA_WIDTH / 8 - 1)) begin
+                            // All data bytes received, initiate Wishbone write
+                            wb_adr_o <= addr_reg;
+                            wb_dat_o <= data_reg;
+                            wb_we_o  <= 1;  // Write operation
+                            wb_stb_o <= 1;
+                            wb_cyc_o <= 1;
+                            state    <= WB_WRITE;
+                        end
                     end
-                    // end
                 end
 
                 WB_WRITE: begin
-                    // todo: review this
                     // Wait for Wishbone write acknowledge
                     if (wb_ack_i) begin
                         wb_stb_o <= 0;
@@ -188,7 +196,6 @@ module uart_wbs_bridge #(
                 end
 
                 WB_READ: begin
-                    // todo: review this
                     // Wait for Wishbone read acknowledge
                     if (wb_ack_i) begin
                         wb_stb_o <= 0;
@@ -200,10 +207,10 @@ module uart_wbs_bridge #(
                 end
 
                 SEND_DATA: begin
-                    // todo: review this
                     // Send read data bytes via UART
                     if (uart_tx_ready && !uart_tx_valid) begin
-                        uart_tx_data  <= wb_dat_i[8*byte_count +: 8];
+                        // uart_tx_data  <= wb_dat_i[8*byte_count +: 8];
+                        uart_tx_data  <= wb_dat_i[8*(byte_count+1): 8*byte_count];
                         uart_tx_valid <= 1;
                         byte_count    <= byte_count + 1;
                         if (byte_count == (DATA_WIDTH / 8 - 1)) begin
