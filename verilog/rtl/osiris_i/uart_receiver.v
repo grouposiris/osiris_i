@@ -4,10 +4,10 @@ module uart_receiver #(
 ) (
     input wire clk,  // System clock
     input wire rst,  // Reset signal (active high)
-    input wire rx,  // UART receive line (input from UART)
-    input wire start_rx,  // * Added a signal to start the reception process to prevent unnecessary power consumption
-    output reg [7:0] data_out,  // Output byte of received data
-    output reg data_valid  // Asserted when a complete byte is received
+    input wire i_rx,  // UART receive line (input from UART)
+    input wire i_start_rx,  // * Added a signal to start the reception process to prevent unnecessary power consumption
+    output reg [7:0] o_data,  // Output byte of received data
+    output reg o_data_valid  // Asserted when a complete byte is received
 );
 
     // UART Configuration Parameters
@@ -32,7 +32,7 @@ module uart_receiver #(
             rx_sync_1 <= 1'b1;  // Initialize to idle state (high)
             rx_sync_2 <= 1'b1;
         end else begin
-            rx_sync_1 <= rx;  // First flip-flop to synchronize 'rx' input
+            rx_sync_1 <= i_rx;  // First flip-flop to synchronize 'rx' input
             rx_sync_2 <= rx_sync_1;  // Second flip-flop to avoid metastability
         end
     end
@@ -45,10 +45,10 @@ module uart_receiver #(
             clock_count <= 0;
             shift_reg <= 0;
             receiving <= 0;
-            data_valid <= 0;
-            data_out <= 0;
+            o_data_valid <= 0;
+            o_data <= 0;
         end else begin
-            data_valid <= 0;  // Clear the 'data_valid' flag unless a new byte is received
+            o_data_valid <= 0;  // Clear the 'data_valid' flag unless a new byte is received
             //        clock period
             // start: 1 2 3 4 5 6 7 8 9 10
             // bit 0: 1 2 3 4 5 6 7 8 9 10
@@ -61,10 +61,10 @@ module uart_receiver #(
             // bit 7: 1 2 3 4 5 6 7 8 9 10
 
 
-            // * Add a check to ensure the start_rx signal is high before starting the reception process
-            if (!receiving && start_rx) begin
-                // $display("[uart_receiver 1]: !receiving && start_rx; rx_sync_2=%b", rx_sync_2);
-                // We are in the idle state, waiting for the start bit (rx line goes low)
+            // * Add a check to ensure the i_start_rx signal is high before starting the reception process
+            if (!receiving && i_start_rx) begin
+                // $display("[uart_receiver 1]: !receiving && i_start_rx; rx_sync_2=%b", rx_sync_2);
+                // We are in the idle state, waiting for the start bit (i_rx line goes low)
                 bit_index <= 0;  // Reset bit counter
                 clock_count <= HALF_BIT_TIME
                     ;  // Set the counter to half the bit time for median value sampling
@@ -75,7 +75,7 @@ module uart_receiver #(
                     receiving <= 0;  // Start receiving data
                 end
             end else if (receiving) begin
-                // $display("[uart_receiver 2]: receiving, start_rx=%b", start_rx);
+                // $display("[uart_receiver 2]: receiving, i_start_rx=%b", i_start_rx);
                 // We are currently receiving data
                 if (clock_count == BIT_TIME - 1) begin
                     // $display("[uart_receiver 2.A]: clock_count == BIT_TIME - 1");
@@ -85,20 +85,16 @@ module uart_receiver #(
                     if (bit_index == 0) begin
                         bit_index <= bit_index + 1;  // Increment bit counter
                     end else if (bit_index < (8 + 1)) begin
-                        // $display(
-                        //     "--------------------------------------->[uart_receiver 2.A.a]: bit_index < 8"
-                        //         );
+                        // $display("--------------------------------------->[uart_receiver 2.A.a]: bit_index < 8");
                         // If we are still in the data portion (8 bits total), shift the incoming bits
                         shift_reg[bit_index-1] <= rx_sync_2;  // * Median value from rx_sync_2 (second FF) to reduce noise/interference
                         bit_index <= bit_index + 1;  // Increment bit counter
                     end else begin
-                        $display(
-                            "############################################# [uart_receiver 2.A.b]: bit_index >= 8"
-                                );
+                        // $display("############################################# [uart_receiver 2.A.b]: bit_index >= 8");
                         // We've received all 8 bits, so now we expect the stop bit (ignore it)
                         receiving <= 0;  // Stop the reception process
-                        data_out <= shift_reg;  // Move the received data to 'data_out'
-                        data_valid <=
+                        o_data <= shift_reg;  // Move the received data to 'data_out'
+                        o_data_valid <=
                             1;  // Assert 'data_valid' to indicate a complete byte has been received
                     end
                 end else begin
@@ -108,7 +104,7 @@ module uart_receiver #(
                     //          BIT_TIME);
                 end
             end else begin
-                // $display("[uart_receiver 4]: ~receiving, start_rx=%b", start_rx);
+                // $display("[uart_receiver 4]: ~receiving, i_start_rx=%b", i_start_rx);
             end
         end
     end

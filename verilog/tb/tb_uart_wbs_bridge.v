@@ -19,11 +19,11 @@ module tb_uart_wbs_bridge;
     reg                   rst;
 
     // UART Signals
-    reg                   uart_rx;
-    wire                  uart_tx;
+    reg                   i_uart_rx;
+    wire                  o_uart_tx;
 
     // Control Signals
-    reg                   start_rx;
+    reg                   i_start_rx;
 
     // Wishbone Signals
     wire                  wb_cyc_o;
@@ -33,6 +33,9 @@ module tb_uart_wbs_bridge;
     wire [DATA_WIDTH-1:0] wb_dat_o;
     reg  [DATA_WIDTH-1:0] wb_dat_i;
     reg                   wb_ack_i;
+
+    reg  [ADDR_WIDTH-1:0] write_address;
+    reg  [DATA_WIDTH-1:0] write_data;
 
     // Instantiate the UART Wishbone Bridge
     uart_wbs_bridge #(
@@ -45,9 +48,9 @@ module tb_uart_wbs_bridge;
     ) uut (
         .clk(clk),
         .rst(rst),
-        .uart_rx(uart_rx),
-        .uart_tx(uart_tx),
-        .start_rx(start_rx),
+        .i_uart_rx(i_uart_rx),
+        .o_uart_tx(o_uart_tx),
+        .i_start_rx(i_start_rx),
         .wb_cyc_o(wb_cyc_o),
         .wb_stb_o(wb_stb_o),
         .wb_we_o(wb_we_o),
@@ -73,7 +76,7 @@ module tb_uart_wbs_bridge;
     initial begin
         $dumpfile("uart_wbs_bridge.vcd");  // Specify VCD output file
         $dumpvars(0, tb_uart_wbs_bridge);  // Dump all variables in this testbench
-        // #400 $finish;
+        // #20000 $finish;
     end
 
 
@@ -86,13 +89,13 @@ module tb_uart_wbs_bridge;
     // Reset Sequence
     initial begin
         rst = 1;
-        start_rx = 0;
-        uart_rx = 1;  // UART line idle (high)
+        i_start_rx = 0;
+        i_uart_rx = 1;  // UART line idle (high)
         wb_ack_i = 0;
         wb_dat_i = 0;
         #100;
         rst = 0;
-        start_rx = 1;  // Enable UART reception
+        i_start_rx = 1;  // Enable UART reception
     end
 
     // Main Test Sequence
@@ -101,26 +104,31 @@ module tb_uart_wbs_bridge;
         uart_tx_ptr = 0;
         uart_rx_ptr = 0;
 
+        write_address = 16'hBB11;
+        write_data = 32'hDEADBEEF;
+
+
         $display("Starting uart_wbs_bridge Testbench...");
         #200;  // Wait for reset to deassert
 
         // Test 1: Write Data to Memory via UART and Wishbone
         $display("\nTest 1: Writing Data to Memory...");
-        test_write_to_memory(16'hBB11, 32'hDEADBEEF);
+        test_write_to_memory(write_address, write_data);
 
 
         #100;
         // Test 2: Read Data from Memory via UART and Wishbone
         $display("\nTest 2: Reading Data from Memory...");
-        test_read_from_memory(16'hBB11);
+        test_read_from_memory(write_address);
 
-        // // Check if the read data matches the written data
-        // if (memory[16'h0010] !== 32'hDEADBEEF) begin
-        //     $display("ERROR: Data mismatch! Expected 0xDEADBEEF, Got 0x%08X", memory[16'h0010]);
-        //     test_passed = 0;
-        // end else begin
-        //     $display("Data verification successful.");
-        // end
+        // Check if the read data matches the written data
+        if (memory[write_address] !== write_data) begin
+            $display("ERROR: Data mismatch! Expected 0x%08h, Got 0x%08X", write_data,
+                     memory[write_address]);
+            test_passed = 0;
+        end else begin
+            $display("Ok: Expected 0x%08h, Got 0x%08X", write_data, memory[write_address]);
+        end
 
         // Final Test Result
         if (test_passed) begin
@@ -129,7 +137,7 @@ module tb_uart_wbs_bridge;
             $display("\nSome tests FAILED.");
         end
 
-        $finish;
+        #100 $finish;
     end
     // always @(posedge clk) begin
     //     $display(uut.uart_rx_inst.bit_index);
@@ -168,25 +176,32 @@ module tb_uart_wbs_bridge;
     task test_read_from_memory(input [ADDR_WIDTH-1:0] address);
         reg [DATA_WIDTH-1:0] received_data;
         begin
+            // $display("1 uut.state: %0d", uut.state);
             // Send CMD_READ command
             uart_send_byte(CMD_READ);
             $display("Sent CMD_READ Command.");
             #50;
 
+            // $display("2 uut.state: %0d", uut.state);
             // Send Address (LSB first)
             uart_send_word(address, ADDR_WIDTH);
             $display("Sent Address: 0x%0h", address);
 
+
+            // $display("3 uut.state: %0d", uut.state);
+            // $display("3 uut.WB_READ: %0d", uut.WB_READ);
             // Provide data from memory model
             wait (uut.state == uut.WB_READ);
             wb_dat_i = memory[address];
             wb_ack_i = 1;
             #CLK_PERIOD;
             wb_ack_i = 0;
+            // $display("4 uut.state: %0d", uut.state);
 
             // Receive Data via UART
             uart_receive_word(received_data);
             $display("Received Data: 0x%0h", received_data);
+            // $display("5 uut.state: %0d", uut.state);
 
             // Verify Data
             if (received_data !== memory[address]) begin
@@ -204,20 +219,20 @@ module tb_uart_wbs_bridge;
         integer bit_idx;
         begin
             // Start Bit
-            uart_rx = 0;
-            $display("uart_send_byte: sending Start bit = 0");
+            i_uart_rx = 0;
+            // $display("uart_send_byte: sending Start bit = 0");
             #(BIT_PERIOD);
 
             // Data Bits (LSB first)
             for (bit_idx = 0; bit_idx < 8; bit_idx = bit_idx + 1) begin
-                uart_rx = data[bit_idx];
-                $display("uart_send_byte: sending bit[%1d] = %b", bit_idx, data[bit_idx]);
+                i_uart_rx = data[bit_idx];
+                // $display("uart_send_byte: sending bit[%1d] = %b", bit_idx, data[bit_idx]);
                 #(BIT_PERIOD);
             end
 
             // Stop Bit
-            uart_rx = 1;
-            $display("uart_send_byte: sending Stop bit = 1");
+            i_uart_rx = 1;
+            // $display("uart_send_byte: sending Stop bit = 1");
             #(BIT_PERIOD);
 
             // Wait a bit before next byte
@@ -256,13 +271,13 @@ module tb_uart_wbs_bridge;
     //     reg [7:0] data;
     //     begin
     //         // Wait for Start Bit
-    //         wait (uart_tx == 0);
+    //         wait (o_uart_tx == 0);
     //         #(BIT_PERIOD / 2);  // Sample in the middle of the bit
 
     //         // Data Bits (LSB first)
     //         for (bit_idx = 0; bit_idx < 8; bit_idx = bit_idx + 1) begin
     //             #(BIT_PERIOD);
-    //             data[bit_idx] = uart_tx;
+    //             data[bit_idx] = o_uart_tx;
     //         end
 
     //         // Stop Bit
@@ -276,18 +291,20 @@ module tb_uart_wbs_bridge;
         output [7:0] data;  // Output for captured byte
         integer bit_idx;  // Loop index for capturing each bit
         begin
+            // $display("1 uart_capture_byte: wait (o_uart_tx == 0) o_uart_tx=%b;", o_uart_tx);
             // Wait for Start Bit
-            wait (uart_tx == 0);
+            wait (o_uart_tx == 0);
             #(BIT_PERIOD / 2);  // Sample in the middle of the start bit
 
             // Data Bits (LSB first)
             for (bit_idx = 0; bit_idx < 8; bit_idx = bit_idx + 1) begin
                 #(BIT_PERIOD);
-                data[bit_idx] = uart_tx;
+                data[bit_idx] = o_uart_tx;
             end
 
             // Stop Bit
             #(BIT_PERIOD);
+            // $display("2 uart_capture_byte: wait (o_uart_tx == 0) o_uart_tx=%b;", o_uart_tx);
         end
     endtask
 

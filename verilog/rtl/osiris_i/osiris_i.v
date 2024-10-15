@@ -6,11 +6,11 @@ module osiris_i #(
 ) (
     input wire clk,
     input wire rst,
-    input wire uart_rx,  // UART receive signal from external device
+    input wire i_uart_rx,  // UART receive signal from external device
     input wire
-        select_mem,  // Select memory for UART communication: 0 = Instruction Mem, 1 = Data Mem
-    input wire start_rx,  // Control signal to start UART reception
-    output wire uart_tx  // UART transmit signal to external device
+        i_select_mem,  // Select memory for UART communication: 0 = Instruction Mem, 1 = Data Mem
+    input wire i_start_rx,  // Control signal to start UART reception
+    output wire o_uart_tx  // UART transmit signal to external device
 );
 
     // ------------------------------------------
@@ -45,9 +45,9 @@ module osiris_i #(
     ) U_UART_WB_BRIDGE (
         .clk     (clk),
         .rst     (rst),
-        .uart_rx (uart_rx),        // UART receive signal
-        .uart_tx (uart_tx),        // UART transmit signal
-        .start_rx(start_rx),       // Start UART reception
+        .i_uart_rx (i_uart_rx),        // UART receive signal
+        .o_uart_tx (o_uart_tx),        // UART transmit signal
+        .i_start_rx(i_start_rx),       // Start UART reception
         .wb_cyc_o(uart_wb_cyc_o),  // Cycle output to memory
         .wb_stb_o(uart_wb_stb_o),  // Strobe output to memory
         .wb_we_o (uart_wb_we_o),   // Write enable output to memory
@@ -85,17 +85,17 @@ module osiris_i #(
     wire inst_mem_ack_o;
 
     // Mux between core and UART bridge for Instruction Memory access
-    assign inst_mem_adr_i = (select_mem == 1'b0 && uart_wb_stb_o) ? uart_wb_adr_o[9:0] :
+    assign inst_mem_adr_i = (i_select_mem == 1'b0 && uart_wb_stb_o) ? uart_wb_adr_o[9:0] :
         core_pc_IF[9:0];
     assign inst_mem_dat_i = uart_wb_dat_o;  // Only UART bridge writes to Instruction Memory
-    assign inst_mem_we_i = (select_mem == 1'b0 && uart_wb_stb_o) ? uart_wb_we_o :
+    assign inst_mem_we_i = (i_select_mem == 1'b0 && uart_wb_stb_o) ? uart_wb_we_o :
         1'b0;  // Core does not write to Instruction Memory
     
     // todo: fix the code below here
     // https://docs.google.com/spreadsheets/d/1JdC8AXBfz5wbBwStkz3v9DsegNWgmpZwvWYa5DVXGxc/edit?gid=1772642847#gid=1772642847
-    assign inst_mem_stb_i = (select_mem == 1'b0 && uart_wb_stb_o) ? uart_wb_stb_o :
+    assign inst_mem_stb_i = (i_select_mem == 1'b0 && uart_wb_stb_o) ? uart_wb_stb_o :
         1'b1;  // Core always reads instructions // ! here it should be activated only based on core instruction. if is a i-type instruction of Load-type, then ResultSrc would be 2'b01
-    assign inst_mem_cyc_i = (select_mem == 1'b0 && uart_wb_cyc_o) ? uart_wb_cyc_o :
+    assign inst_mem_cyc_i = (i_select_mem == 1'b0 && uart_wb_cyc_o) ? uart_wb_cyc_o :
         1'b1;  // Core always reads instructions
     
     // Connect instruction memory data output to core
@@ -113,20 +113,20 @@ module osiris_i #(
     wire data_mem_ack_o;
 
     // Mux between core and UART bridge for Data Memory access
-    assign data_mem_adr_i = (select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_adr_o[9:0] :
+    assign data_mem_adr_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_adr_o[9:0] :
         core_data_addr_M[9:0];
     assign
-        data_mem_dat_i = (select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_dat_o : core_write_data_M;
-    assign data_mem_we_i = (select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_we_o : core_mem_write_M;
-    assign data_mem_stb_i = (select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_stb_o :
+        data_mem_dat_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_dat_o : core_write_data_M;
+    assign data_mem_we_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_we_o : core_mem_write_M;
+    assign data_mem_stb_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_stb_o :
         1'b1;  // Core accesses Data Memory when not overridden
-    assign data_mem_cyc_i = (select_mem == 1'b1 && uart_wb_cyc_o) ? uart_wb_cyc_o : 1'b1;
+    assign data_mem_cyc_i = (i_select_mem == 1'b1 && uart_wb_cyc_o) ? uart_wb_cyc_o : 1'b1;
 
     // Connect data memory data output to core
     assign core_read_data_M = data_mem_dat_o;
 
     // Acknowledge handling
-    assign uart_wb_ack_i = (select_mem == 1'b1) ? data_mem_ack_o : uart_wb_ack_i;
+    assign uart_wb_ack_i = (i_select_mem == 1'b1) ? data_mem_ack_o : uart_wb_ack_i;
 
     // ------------------------------------------
     // Instantiate Instruction Memory
@@ -171,8 +171,8 @@ module osiris_i #(
     // ------------------------------------------
 
     // Data input to UART bridge
-    assign uart_wb_dat_i = (select_mem == 1'b1) ?
-        data_mem_dat_o : (select_mem == 1'b0) ? inst_mem_dat_o : {DATA_WIDTH{1'b0}};
+    assign uart_wb_dat_i = (i_select_mem == 1'b1) ?
+        data_mem_dat_o : (i_select_mem == 1'b0) ? inst_mem_dat_o : {DATA_WIDTH{1'b0}};
 
     // ------------------------------------------
     // Comments and Explanations

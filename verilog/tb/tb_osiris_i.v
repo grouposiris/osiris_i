@@ -18,12 +18,12 @@ module osiris_i_tb;
     reg rst;
 
     // UART Signals
-    reg uart_rx;
-    wire uart_tx;
+    reg i_uart_rx;
+    wire o_uart_tx;
 
     // Control Signals
-    reg start_rx;
-    reg select_mem;  // Control signal to select which memory to communicate with: 0 - Instruction Memory, 1 - Data Memory
+    reg i_start_rx;
+    reg i_select_mem;  // Control signal to select which memory to communicate with: 0 - Instruction Memory, 1 - Data Memory
 
     // Instantiate the osiris_i module (Device Under Test)
     osiris_i #(
@@ -34,10 +34,10 @@ module osiris_i_tb;
     ) dut (
         .clk(clk),
         .rst(rst),
-        .uart_rx(uart_rx),
-        .uart_tx(uart_tx),
-        .select_mem(select_mem),
-        .start_rx(start_rx)
+        .i_uart_rx(i_uart_rx),
+        .o_uart_tx(o_uart_tx),
+        .i_select_mem(i_select_mem),
+        .i_start_rx(i_start_rx)
     );
 
     // UART Timing
@@ -55,12 +55,12 @@ module osiris_i_tb;
     // Reset Sequence
     initial begin
         rst = 1;
-        start_rx = 0;
-        select_mem = 0;
-        uart_rx = 1;  // UART line idle (high)
+        i_start_rx = 0;
+        i_select_mem = 0;
+        i_uart_rx = 1;  // UART line idle (high)
         #100;
         rst = 0;
-        start_rx = 1;  // Enable UART reception
+        i_start_rx = 1;  // Enable UART reception
     end
 
     // Test Variables
@@ -81,8 +81,8 @@ module osiris_i_tb;
         // Test 1: Write Data to Instruction Memory via UART and Verify
         // --------------------------------------------
         $display("\nTest 1: Writing Data to Instruction Memory via UART...");
-        select_mem = 0;  // Select Instruction Memory
-        test_address = 32'h00000000;  // Starting address for program
+        i_select_mem  = 0;  // Select Instruction Memory
+        test_address  = 32'h00000000;  // Starting address for program
         expected_data = 32'h00000093;  // Example instruction (e.g., NOP in RISC-V)
 
         // Send multiple instructions to Instruction Memory
@@ -111,7 +111,7 @@ module osiris_i_tb;
         // // Test 3: Write Data to Data Memory via UART and Verify
         // // --------------------------------------------
         // $display("\nTest 3: Writing Data to Data Memory via UART...");
-        // select_mem = 1;  // Select Data Memory
+        // i_select_mem = 1;  // Select Data Memory
         // test_address = 32'h00000000;  // Starting address in Data Memory
         // expected_data = 32'hA5A5A5A5;  // Data to write
 
@@ -135,7 +135,7 @@ module osiris_i_tb;
         // // Test 5: Run Program on Core and Verify Result in Data Memory
         // // --------------------------------------------
         // $display("\nTest 5: Running Program on Core and Verifying Result...");
-        // select_mem = 0;  // Select Instruction Memory
+        // i_select_mem = 0;  // Select Instruction Memory
 
         // // Simple program to write 0xDEADBEEF to Data Memory at address 0x00000010
         // // Instructions (RISC-V machine code):
@@ -154,7 +154,7 @@ module osiris_i_tb;
         // #1000;  // Adjust timing as needed for the core to complete execution
 
         // // Read back the result from Data Memory
-        // select_mem = 1;  // Select Data Memory
+        // i_select_mem = 1;  // Select Data Memory
         // test_address = 32'h00000010;  // Address where data should have been written
         // expected_data = 32'hDEADBEEF;  // Expected data
 
@@ -229,17 +229,17 @@ module osiris_i_tb;
         integer bit_idx;
         begin
             // Start Bit
-            uart_rx = 0;
+            i_uart_rx = 0;
             #(BIT_PERIOD);
 
             // Data Bits (LSB first)
             for (bit_idx = 0; bit_idx < 8; bit_idx = bit_idx + 1) begin
-                uart_rx = data[bit_idx];
+                i_uart_rx = data[bit_idx];
                 #(BIT_PERIOD);
             end
 
             // Stop Bit
-            uart_rx = 1;
+            i_uart_rx = 1;
             #(BIT_PERIOD);
 
             // Wait a bit before next byte
@@ -265,13 +265,13 @@ module osiris_i_tb;
         integer bit_idx;  // Loop index for capturing each bit
         begin
             // Wait for Start Bit
-            wait (uart_tx == 0);
+            wait (o_uart_tx == 0);
             #(BIT_PERIOD / 2);  // Sample in the middle of the start bit
 
             // Data Bits (LSB first)
             for (bit_idx = 0; bit_idx < 8; bit_idx = bit_idx + 1) begin
                 #(BIT_PERIOD);
-                data[bit_idx] = uart_tx;
+                data[bit_idx] = o_uart_tx;
             end
 
             // Stop Bit

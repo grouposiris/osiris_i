@@ -9,10 +9,10 @@ module uart_wbs_bridge #(
 ) (
     input  wire clk,
     input  wire rst,
-    input  wire uart_rx,  // UART receive line
-    output wire uart_tx,  // UART transmit line
+    input  wire i_uart_rx,  // UART receive line
+    output wire o_uart_tx,  // UART transmit line
     // * Added a signal to start the reception process to prevent unnecessary power consumption
-    input  wire start_rx,
+    input  wire i_start_rx,
 
     // Wishbone signals
     output reg                   wb_cyc_o,  // Wishbone cycle
@@ -38,10 +38,10 @@ module uart_wbs_bridge #(
     ) uart_rx_inst (
         .clk(clk),
         .rst(rst),
-        .rx(uart_rx),
-        .start_rx(start_rx),
-        .data_out(uart_rx_data),
-        .data_valid(uart_rx_valid)
+        .i_rx(i_uart_rx),
+        .i_start_rx(i_start_rx),
+        .o_data(uart_rx_data),
+        .o_data_valid(uart_rx_valid)
     );
 
     // Instantiate UART transmitter module
@@ -51,10 +51,10 @@ module uart_wbs_bridge #(
     ) uart_tx_inst (
         .clk(clk),
         .rst(rst),
-        .tx(uart_tx),
-        .data_in(uart_tx_data),
-        .data_valid(uart_tx_valid),
-        .ready(uart_tx_ready)
+        .o_tx(o_uart_tx),
+        .i_data(uart_tx_data),
+        .i_data_valid(uart_tx_valid),
+        .o_ready(uart_tx_ready)
     );
 
     // Internal registers
@@ -70,18 +70,18 @@ module uart_wbs_bridge #(
     // localparam CMD_WRITE =
     //     8'hAA;  // Command to write data received via UART to memory (changed value for distinction)
 
-    // * CMD_READ read steps:
-    //   1. IDLE      -> Wait for the UART command (CMD_READ).
-    //   2. READ_ADDR -> Capture the address being sent via UART (this is where the memory should be read from).
-    //   3. WB_READ   -> After receiving the complete address, initiate the read operation from memory using the Wishbone protocol.
-    //   4. SEND_DATA -> After receiving the data from the Wishbone bus, send it back to the external UART device.
-
     // * CMD_WRITE write steps:
-    //   1. IDLE      -> Wait for the UART command (CMD_WRITE).
+    //   0. IDLE      -> Wait for the UART command (CMD_WRITE).
     //   2. READ_ADDR -> Capture the address being sent via UART (this is where the data should be written).
     //   3. READ_DATA -> After receiving the address, capture the data to be written to the specified address via UART. // todo: check possible bugs with external UART giving data before this bridge is ready
     //   4. WB_WRITE  -> Initiate the write operation to the memory using the Wishbone protocol.
-    //   5. IDLE      -> After the write operation is complete, return to the IDLE state, waiting for the next command.
+    //   0. IDLE      -> After the write operation is complete, return to the IDLE state, waiting for the next command.
+
+    // * CMD_READ read steps:
+    //   0. IDLE      -> Wait for the UART command (CMD_READ).
+    //   2. READ_ADDR -> Capture the address being sent via UART (this is where the memory should be read from).
+    //   5. WB_READ   -> After receiving the complete address, initiate the read operation from memory using the Wishbone protocol.
+    //   6. SEND_DATA -> After receiving the data from the Wishbone bus, send it back to the external UART device.
 
 
     // State encoding
@@ -110,6 +110,7 @@ module uart_wbs_bridge #(
             uart_tx_data  <= 0;
         end else begin
             case (state)
+                // 0
                 IDLE: begin
                     // $display("[uart_wbs_bridge] Entering IDLE state");
                     // Wait for a command byte from UART
@@ -117,10 +118,13 @@ module uart_wbs_bridge #(
                     wb_stb_o      <= 0;
                     wb_we_o       <= 0;
                     uart_tx_valid <= 0;
+
                     if (uart_rx_valid) begin
                         cmd_reg <= uart_rx_data;
                         byte_count <= 0;
                         addr_reg <= 0;
+                        data_reg <= 0;
+                        uart_tx_data <= 0;
 
                         if (uart_rx_data == CMD_READ) begin
                             // Read command received: valid command, so preceeds to read the desired address
@@ -134,9 +138,11 @@ module uart_wbs_bridge #(
                         end
                     end
                 end
+
+                // 2
                 READ_ADDR: begin
                     // Receive address bytes
-                    $display("[uart_wbs_bridge] Entering READ_ADDR state");
+                    // $display("[uart_wbs_bridge] Entering READ_ADDR state");
 
                     if (uart_rx_valid) begin
                         // * Here 'addr_reg' is getting one byte per cycle
@@ -168,8 +174,9 @@ module uart_wbs_bridge #(
                     end
                 end
 
+                // 3
                 READ_DATA: begin
-                    $display("[uart_wbs_bridge] Entering READ_DATA state");
+                    // $display("[uart_wbs_bridge] Entering READ_DATA state");
                     // Receive data bytes for write operation
                     // * The READ_DATA state specifically handles data reception via UART, not memory.
                     // Receiving data from UART (READ_DATA state): This state captures data being sent from an external UART device
@@ -193,8 +200,9 @@ module uart_wbs_bridge #(
                     end
                 end
 
+                // 4
                 WB_WRITE: begin
-                    $display("[uart_wbs_bridge] Entering WB_WRITE state");
+                    // $display("[uart_wbs_bridge] Entering WB_WRITE state");
                     // Wait for Wishbone write acknowledge
                     if (wb_ack_i) begin
                         wb_stb_o <= 0;
@@ -204,8 +212,9 @@ module uart_wbs_bridge #(
                     end
                 end
 
+                // 5
                 WB_READ: begin
-                    $display("[uart_wbs_bridge] Entering WB_READ state");
+                    // $display("[uart_wbs_bridge] Entering WB_READ state");
                     // Wait for Wishbone read acknowledge
                     if (wb_ack_i) begin
                         wb_stb_o <= 0;
@@ -216,15 +225,16 @@ module uart_wbs_bridge #(
                     end
                 end
 
+                // 6
                 SEND_DATA: begin
-                    $display("[uart_wbs_bridge] Entering SEND_DATA state");
+                    // $display("[uart_wbs_bridge] Entering SEND_DATA state");
                     // Send read data bytes via UART
                     if (uart_tx_ready && !uart_tx_valid) begin
                         uart_tx_data  <= wb_dat_i[8*byte_count +: 8];
                         // uart_tx_data  <= wb_dat_i[8*(byte_count+1): 8*byte_count];
                         uart_tx_valid <= 1;
                         byte_count    <= byte_count + 1;
-                        if (byte_count == (DATA_WIDTH / 8 - 1)) begin
+                        if (byte_count == (DATA_WIDTH / 8)) begin
                             // All data bytes sent
                             uart_tx_valid <= 0;
                             state <= IDLE;

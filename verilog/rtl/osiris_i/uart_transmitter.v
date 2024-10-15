@@ -4,10 +4,10 @@ module uart_transmitter #(
 ) (
     input  wire       clk,
     input  wire       rst,
-    output reg        tx,          // UART transmit line
-    input  wire [7:0] data_in,     // Byte to transmit
-    input  wire       data_valid,  // Assert to start transmission
-    output reg        ready        // Indicates transmitter is ready for new data
+    input  wire [7:0] i_data,        // Byte to transmit
+    input  wire       i_data_valid,  // Assert to start transmission
+    output reg        o_tx,          // UART transmit line
+    output reg        o_ready        // Indicates transmitter is o_ready for new data
 );
     // Parameters for UART configuration
     localparam BIT_TIME = CLOCK_FREQ / BAUD_RATE;
@@ -22,11 +22,11 @@ module uart_transmitter #(
     // UART transmission logic
     always @(posedge clk or posedge rst) begin
         if (rst) begin
-            tx           <= 1;  // Idle state is high
+            o_tx         <= 1;  // Idle state is high
             bit_index    <= 0;
             clock_count  <= 0;
             transmitting <= 0;
-            ready        <= 1;
+            o_ready      <= 1;
             shift_reg    <= 0;
         end else begin
             if (transmitting) begin
@@ -34,26 +34,26 @@ module uart_transmitter #(
                     clock_count <= 0;
                     bit_index   <= bit_index + 1;
                     if (bit_index < 10) begin
-                        tx <= shift_reg[bit_index];
+                        o_tx <= shift_reg[bit_index];
                     end else begin
                         // Transmission complete
                         transmitting <= 0;
-                        ready        <= 1;
-                        tx           <= 1;  // Return to idle state
+                        o_ready      <= 1;
+                        o_tx         <= 1;  // Return to idle state
                     end
                 end else begin
                     clock_count <= clock_count + 1;
                 end
             end else begin
-                if (data_valid && ready) begin
+                if (i_data_valid && o_ready) begin
                     // Load data into shift register with start and stop bits
-                    shift_reg    <= {1'b1, data_in, 1'b0};  // {Stop bit, Data[7:0], Start bit}
-                    // shift_reg    <= data_in;  // {Stop bit, Data[7:0], Start bit}
+                    shift_reg    <= {1'b1, i_data, 1'b0};  // {Stop bit, Data[7:0], Start bit}
+                    // shift_reg    <= i_data;  // {Stop bit, Data[7:0], Start bit}
                     bit_index    <= 1;
                     transmitting <= 1;
-                    ready        <= 0;
+                    o_ready      <= 0;
                     clock_count  <= 0;
-                    tx           <= 0;  // Start bit
+                    o_tx         <= 0;  // Start bit
                 end
             end
         end
