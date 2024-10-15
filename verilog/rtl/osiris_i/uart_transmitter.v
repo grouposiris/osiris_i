@@ -27,6 +27,7 @@ module uart_transmitter #(
             clock_count  <= 0;
             transmitting <= 0;
             ready        <= 1;
+            shift_reg    <= 0;
         end else begin
             if (transmitting) begin
                 if (clock_count == BIT_TIME - 1) begin

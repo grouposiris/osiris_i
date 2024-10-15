@@ -120,6 +120,7 @@ module uart_wbs_bridge #(
                     if (uart_rx_valid) begin
                         cmd_reg <= uart_rx_data;
                         byte_count <= 0;
+                        addr_reg <= 0;
 
                         if (uart_rx_data == CMD_READ) begin
                             // Read command received: valid command, so preceeds to read the desired address
@@ -183,7 +184,7 @@ module uart_wbs_bridge #(
                         if (byte_count == (DATA_WIDTH / 8 - 1)) begin
                             // All data bytes received, initiate Wishbone write
                             wb_adr_o <= addr_reg;
-                            wb_dat_o <= data_reg;
+                            wb_dat_o <= {uart_rx_data,data_reg[DATA_WIDTH-8 -1: 0]};
                             wb_we_o  <= 1;  // Write operation
                             wb_stb_o <= 1;
                             wb_cyc_o <= 1;

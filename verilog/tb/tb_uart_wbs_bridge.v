@@ -112,7 +112,7 @@ module tb_uart_wbs_bridge;
         #100;
         // Test 2: Read Data from Memory via UART and Wishbone
         $display("\nTest 2: Reading Data from Memory...");
-        test_read_from_memory(16'h0010);
+        test_read_from_memory(16'hBB11);
 
         // // Check if the read data matches the written data
         // if (memory[16'h0010] !== 32'hDEADBEEF) begin
@@ -141,6 +141,7 @@ module tb_uart_wbs_bridge;
             // Send CMD_WRITE command
             uart_send_byte(CMD_WRITE);
             $display("Sent CMD_WRITE Command.");
+            #50;
 
             // Send Address (LSB first)
             uart_send_word(address, ADDR_WIDTH);
@@ -170,6 +171,7 @@ module tb_uart_wbs_bridge;
             // Send CMD_READ command
             uart_send_byte(CMD_READ);
             $display("Sent CMD_READ Command.");
+            #50;
 
             // Send Address (LSB first)
             uart_send_word(address, ADDR_WIDTH);
