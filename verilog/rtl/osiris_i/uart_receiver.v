@@ -1,6 +1,6 @@
 module uart_receiver #(
-    parameter BAUD_RATE  = 9600,     // Default baud rate (9600 Bps)
-    parameter CLOCK_FREQ = 50000000  // Default clock frequency (50 MHz)
+    parameter BAUD_RATE  = 1,  // Default baud rate (9600 Bps)
+    parameter CLOCK_FREQ = 10  // Default clock frequency (50 MHz)
 ) (
     input wire clk,  // System clock
     input wire rst,  // Reset signal (active high)
@@ -11,8 +11,8 @@ module uart_receiver #(
 );
 
     // UART Configuration Parameters
-    parameter BAUD_RATE = 9600;  // Baud rate of UART communication (bits per second)
-    parameter CLOCK_FREQ = 50000000;  // Frequency of the system clock (e.g., 50 MHz)
+    // parameter BAUD_RATE = 9600;  // Baud rate of UART communication (bits per second)
+    // parameter CLOCK_FREQ = 50000000;  // Frequency of the system clock (e.g., 50 MHz)
     localparam BIT_TIME = CLOCK_FREQ / BAUD_RATE;  // Number of clock cycles per bit (bit duration)
     localparam HALF_BIT_TIME = BIT_TIME /
         2;  // Half of bit duration for accurate sampling (median value for noise reduction)
@@ -41,11 +41,12 @@ module uart_receiver #(
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             // Reset all internal registers to their initial state
-            bit_index   <= 0;
+            bit_index <= 0;
             clock_count <= 0;
-            shift_reg   <= 0;
-            receiving   <= 0;
-            data_valid  <= 0;
+            shift_reg <= 0;
+            receiving <= 0;
+            data_valid <= 0;
+            data_out <= 0;
         end else begin
             data_valid <= 0;  // Clear the 'data_valid' flag unless a new byte is received
             //        clock period
@@ -62,6 +63,7 @@ module uart_receiver #(
 
             // * Add a check to ensure the start_rx signal is high before starting the reception process
             if (!receiving && start_rx) begin
+                // $display("[uart_receiver 1]: !receiving && start_rx; rx_sync_2=%b", rx_sync_2);
                 // We are in the idle state, waiting for the start bit (rx line goes low)
                 bit_index <= 0;  // Reset bit counter
                 clock_count <= HALF_BIT_TIME
@@ -73,16 +75,26 @@ module uart_receiver #(
                     receiving <= 0;  // Start receiving data
                 end
             end else if (receiving) begin
+                // $display("[uart_receiver 2]: receiving, start_rx=%b", start_rx);
                 // We are currently receiving data
                 if (clock_count == BIT_TIME - 1) begin
+                    // $display("[uart_receiver 2.A]: clock_count == BIT_TIME - 1");
                     // If the counter reaches the duration of one bit
                     clock_count <= 0;  // Reset the counter for the next bit
 
-                    if (bit_index < 8) begin
+                    if (bit_index == 0) begin
+                        bit_index <= bit_index + 1;  // Increment bit counter
+                    end else if (bit_index < (8 + 1)) begin
+                        // $display(
+                        //     "--------------------------------------->[uart_receiver 2.A.a]: bit_index < 8"
+                        //         );
                         // If we are still in the data portion (8 bits total), shift the incoming bits
-                        shift_reg[bit_index] <= rx_sync_2;  // * Median value from rx_sync_2 (second FF) to reduce noise/interference
+                        shift_reg[bit_index-1] <= rx_sync_2;  // * Median value from rx_sync_2 (second FF) to reduce noise/interference
                         bit_index <= bit_index + 1;  // Increment bit counter
                     end else begin
+                        $display(
+                            "############################################# [uart_receiver 2.A.b]: bit_index >= 8"
+                                );
                         // We've received all 8 bits, so now we expect the stop bit (ignore it)
                         receiving <= 0;  // Stop the reception process
                         data_out <= shift_reg;  // Move the received data to 'data_out'
@@ -92,7 +104,11 @@ module uart_receiver #(
                 end else begin
                     // Increment the clock count to keep track of bit duration
                     clock_count <= clock_count + 1;
+                    // $display("[uart_receiver 3]: clock_count=%d, BIT_TIME=%d", clock_count,
+                    //          BIT_TIME);
                 end
+            end else begin
+                // $display("[uart_receiver 4]: ~receiving, start_rx=%b", start_rx);
             end
         end
     end

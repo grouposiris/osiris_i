@@ -101,10 +101,6 @@ module osiris_i #(
     // Connect instruction memory data output to core
     assign core_instr_ID = inst_mem_dat_o;
 
-    // Acknowledge handling
-    assign uart_wb_ack_i = (select_mem == 1'b0) ? inst_mem_ack_o :
-        1'b0;  // UART bridge gets ack from Instruction Memory when selected
-
     // ------------------------------------------
     // Data Memory Interface
     // ------------------------------------------
@@ -173,8 +169,6 @@ module osiris_i #(
     // ------------------------------------------
     // Acknowledge Signal to UART Bridge
     // ------------------------------------------
-    assign uart_wb_ack_i = (select_mem == 1'b1) ?
-        data_mem_ack_o : (select_mem == 1'b0) ? inst_mem_ack_o : 1'b0;
 
     // Data input to UART bridge
     assign uart_wb_dat_i = (select_mem == 1'b1) ?

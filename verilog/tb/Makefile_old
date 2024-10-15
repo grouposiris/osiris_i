@@ -1,0 +1,22 @@
+TARGET=osiris_i
+
+help: 
+	@echo "####################################################"
+	@echo " uart_wbs_bridge: run uart_wbs_bridge simulation"
+	@echo "        osiris_i: run osiris_i simulation"
+	@echo "    gen_filelist: generate filelist.txt based on Verilog files"
+	@echo "####################################################"
+
+# Target to generate the filelist based on the simulation target
+gen_filelist:
+	@./generate_filelist.sh $(TARGET)
+
+# Simulation targets
+uart_wbs_bridge: TARGET=uart_wbs_bridge
+uart_wbs_bridge: gen_filelist
+	iverilog -g2012 -o sim_$@_simulation -f filelist.txt
+	# iverilog -o sim_$@_simulation tb_$@.v ../rtl/osiris_i/$@.v
+
+osiris_i: TARGET=osiris_i
+osiris_i: gen_filelist
+	iverilog -g2012 -o sim_$@_simulation -f filelist.txt

@@ -23,32 +23,32 @@ module register_file #(
     NUM_REGS = 16,
     INDEX_WIDTH = 4
 ) (
-    clk, 
+    clk,
     i_rst_ID,
     i_write_en_WB,
     i_data_WB,
     i_rd_WB,
     i_instr_ID,
-    o_rs1_ID, 
+    o_rs1_ID,
     o_rs2_ID
 );
 
-// ------------------------------------------
-// IO declaration
-// ------------------------------------------
-    input   logic                       clk; 
-    input   logic                       i_rst_ID;
-    input   logic                       i_write_en_WB;    // determine write operation is enabled
-    input   logic [DATA_WIDTH-1:0]      i_data_WB;        // data to be written
-    input   logic [INDEX_WIDTH-1:0]     i_rd_WB;          // determine the register to be written
-    input   logic [DATA_WIDTH-1:0]      i_instr_ID;       // determine the registers to be read
-    
-    output  logic [DATA_WIDTH-1:0]      o_rs1_ID; 
-    output  logic [DATA_WIDTH-1:0]      o_rs2_ID;
-                             
-// ------------------------------------------
-// Localparams
-// ------------------------------------------
+    // ------------------------------------------
+    // IO declaration
+    // ------------------------------------------
+    input logic clk;
+    input logic i_rst_ID;
+    input logic i_write_en_WB;  // determine write operation is enabled
+    input logic [DATA_WIDTH-1:0] i_data_WB;  // data to be written
+    input logic [INDEX_WIDTH-1:0] i_rd_WB;  // determine the register to be written
+    input logic [DATA_WIDTH-1:0] i_instr_ID;  // determine the registers to be read
+
+    output logic [DATA_WIDTH-1:0] o_rs1_ID;
+    output logic [DATA_WIDTH-1:0] o_rs2_ID;
+
+    // ------------------------------------------
+    // Localparams
+    // ------------------------------------------
 
     reg [DATA_WIDTH-1:0] registers[15:0];
 
@@ -58,7 +58,7 @@ module register_file #(
     always @(posedge clk) begin
         // ! ? synchronous reset ??
         if (i_rst_ID) begin
-            for (int i = 0; i < NUM_REGS; i = i + 1) begin
+            for (integer i = 0; i < NUM_REGS; i = i + 1) begin
                 registers[i] <= 32'b0;
             end
         end else begin
