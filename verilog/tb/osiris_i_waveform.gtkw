@@ -1,0 +1,103 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Wed Oct 16 00:16:44 2024
+[*]
+[dumpfile] "/home/lspadersimon/repos/osiris_i/verilog/tb/osiris_i.vcd"
+[dumpfile_mtime] "Wed Oct 16 00:16:38 2024"
+[dumpfile_size] 416515
+[savefile] "/home/lspadersimon/repos/osiris_i/verilog/tb/osiris_i_waveform.gtkw"
+[timestart] 0
+[size] 1870 1016
+[pos] -1 -1
+*-18.000000 419850 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] osiris_i_tb.
+[sst_width] 233
+[signals_width] 266
+[sst_expanded] 1
+[sst_vpaned_height] 289
+@200
+-------- TB -------
+@22
+osiris_i_tb.expected_data[31:0]
+@420
+osiris_i_tb.i
+@28
+osiris_i_tb.i_select_mem
+osiris_i_tb.i_start_rx
+osiris_i_tb.i_uart_rx
+osiris_i_tb.o_uart_tx
+osiris_i_tb.rst
+@22
+osiris_i_tb.test_address[31:0]
+@28
+osiris_i_tb.test_passed
+osiris_i_tb.clk
+@420
+osiris_i_tb.step
+@200
+-
+-------- UART -------
+@24
+osiris_i_tb.U_UART_WB_BRIDGE.state[2:0]
+@28
+osiris_i_tb.dut.i_start_rx
+osiris_i_tb.dut.i_uart_rx
+osiris_i_tb.dut.o_uart_tx
+@29
+osiris_i_tb.dut.uart_wb_ack_i
+@22
+osiris_i_tb.dut.uart_wb_adr_o[31:0]
+@28
+osiris_i_tb.dut.uart_wb_cyc_o
+@22
+osiris_i_tb.dut.uart_wb_dat_i[31:0]
+osiris_i_tb.dut.uart_wb_dat_o[31:0]
+@28
+osiris_i_tb.dut.uart_wb_stb_o
+osiris_i_tb.dut.uart_wb_we_o
+@200
+-
+-------- INST MEM -------
+@28
+osiris_i_tb.dut.inst_mem_ack_o
+@22
+osiris_i_tb.dut.inst_mem_adr_i[9:0]
+@28
+osiris_i_tb.dut.inst_mem_cyc_i
+@22
+osiris_i_tb.dut.inst_mem_dat_i[31:0]
+osiris_i_tb.dut.inst_mem_dat_o[31:0]
+@28
+osiris_i_tb.dut.inst_mem_stb_i
+osiris_i_tb.dut.inst_mem_we_i
+@200
+-
+-------- DATA MEM -------
+@28
+osiris_i_tb.dut.data_mem_ack_o
+@22
+osiris_i_tb.dut.data_mem_adr_i[9:0]
+@28
+osiris_i_tb.dut.data_mem_cyc_i
+@22
+osiris_i_tb.dut.data_mem_dat_i[31:0]
+osiris_i_tb.dut.data_mem_dat_o[31:0]
+@28
+osiris_i_tb.dut.data_mem_stb_i
+osiris_i_tb.dut.data_mem_we_i
+@200
+-
+-------- CORE -------
+@22
+osiris_i_tb.dut.core_data_addr_M[31:0]
+osiris_i_tb.dut.core_instr_ID[31:0]
+@28
+osiris_i_tb.dut.core_mem_write_M
+@22
+osiris_i_tb.dut.core_pc_IF[31:0]
+osiris_i_tb.dut.core_read_data_M[31:0]
+osiris_i_tb.dut.core_write_data_M[31:0]
+@200
+-
+[pattern_trace] 1
+[pattern_trace] 0
