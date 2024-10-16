@@ -26,4 +26,4 @@
 ../rtl/osiris_i/uart_receiver.v
 ../rtl/osiris_i/uart_transmitter.v
 ../rtl/osiris_i/uart_wbs_bridge.v
-tb_uart_wbs_bridge.v
+tb_osiris_i.v

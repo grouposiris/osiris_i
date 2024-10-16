@@ -5,46 +5,59 @@ module osiris_i_tb;
     // Parameters
     parameter DATA_WIDTH = 32;
     parameter ADDR_WIDTH = 32;
-    parameter BAUD_RATE = 9600;
-    parameter CLOCK_FREQ = 50000000;  // 50 MHz clock
+    // parameter BAUD_RATE = 9600;
+    // parameter CLOCK_FREQ = 50000000;  // 50 MHz clock
+    parameter BAUD_RATE = 1e9;
+    parameter CLOCK_FREQ = 10e9;  // 50 MHz clock
     parameter CLK_PERIOD = 1e9 / CLOCK_FREQ;  // Clock period in nanoseconds
 
+    // UART Command Values
     localparam CMD_READ = 8'h01;  // Command to read from memory and send data via UART
-    localparam CMD_WRITE =
-        8'hAA;  // Command to write data received via UART to memory (changed value for distinction)
+    localparam CMD_WRITE = 8'hAA;  // Command to write data received via UART to memory
+
+    // Calculate Bit Period Based on Baud Rate
+    localparam real BIT_PERIOD = 1e9 / BAUD_RATE;  // Bit period in nanoseconds
+    localparam WAIT_BETWEEN_UART_SEND_BYTE = (10 * BIT_PERIOD);
+    localparam WAIT_BETWEEN_UART_SEND_CMD = 50;
+    localparam WAIT_BETWEEN_STEPS = 100;
+
+
+    // UART Wishbone Bridge State Encoding (from uart_wbs_bridge)
+    localparam STATE_IDLE = 3'd0;
+    localparam STATE_READ_ADDR = 3'd2;
+    localparam STATE_READ_DATA = 3'd3;
+    localparam STATE_WB_WRITE = 3'd4;
+    localparam STATE_WB_READ = 3'd5;
+    localparam STATE_SEND_DATA = 3'd6;
 
     // Clock and Reset
-    reg clk;
-    reg rst;
+    reg  clk;
+    reg  rst;
 
     // UART Signals
-    reg i_uart_rx;
+    reg  i_uart_rx;
     wire o_uart_tx;
 
     // Control Signals
-    reg i_start_rx;
-    reg i_select_mem;  // Control signal to select which memory to communicate with: 0 - Instruction Memory, 1 - Data Memory
+    reg  i_start_rx;
+    reg  i_select_mem;  // Control signal to select memory: 0 - Instruction Mem, 1 - Data Mem
 
     // Instantiate the osiris_i module (Device Under Test)
     osiris_i #(
         .DATA_WIDTH(DATA_WIDTH),
         .ADDR_WIDTH(ADDR_WIDTH),
         .BAUD_RATE (BAUD_RATE),
-        .CLOCK_FREQ(CLOCK_FREQ)
+        .CLOCK_FREQ(CLOCK_FREQ),
+        .CMD_READ  (CMD_READ),
+        .CMD_WRITE (CMD_WRITE)
     ) dut (
-        .clk(clk),
-        .rst(rst),
-        .i_uart_rx(i_uart_rx),
-        .o_uart_tx(o_uart_tx),
+        .clk         (clk),
+        .rst         (rst),
+        .i_uart_rx   (i_uart_rx),
+        .o_uart_tx   (o_uart_tx),
         .i_select_mem(i_select_mem),
-        .i_start_rx(i_start_rx)
+        .i_start_rx  (i_start_rx)
     );
-
-    // UART Timing
-    real BIT_PERIOD;
-    initial begin
-        BIT_PERIOD = 1e9 / BAUD_RATE;  // Bit period in nanoseconds
-    end
 
     // Clock Generation
     initial begin
@@ -61,6 +74,13 @@ module osiris_i_tb;
         #100;
         rst = 0;
         i_start_rx = 1;  // Enable UART reception
+        // #100000 $finish;
+    end
+
+    // VCD Dump for Waveform Viewing
+    initial begin
+        $dumpfile("osiris_i.vcd");
+        $dumpvars(0, osiris_i_tb);
     end
 
     // Test Variables
@@ -69,6 +89,7 @@ module osiris_i_tb;
     reg [DATA_WIDTH-1:0] read_data;
     reg [DATA_WIDTH-1:0] expected_data;
     reg [ADDR_WIDTH-1:0] test_address;
+    integer step;
 
     // Main Test Sequence
     initial begin
@@ -77,11 +98,25 @@ module osiris_i_tb;
         $display("Starting osiris_i Testbench...");
         #200;  // Wait for reset to deassert
 
+        step = 1;
         // --------------------------------------------
         // Test 1: Write Data to Instruction Memory via UART and Verify
         // --------------------------------------------
         $display("\nTest 1: Writing Data to Instruction Memory via UART...");
         i_select_mem  = 0;  // Select Instruction Memory
+        test_address  = 32'h0000BB11;  // Starting address for program
+        expected_data = 32'hDEADBEEF;  //
+
+        // Test 1: Write Data to Memory via UART and Wishbone
+        $display("\nTest 1: Writing Data to Memory...");
+        test_write_to_memory(test_address, expected_data);
+
+        #100;
+        // // Test 2: Read Data from Memory via UART and Wishbone
+        // $display("\nTest 2: Reading Data from Memory...");
+        // test_read_from_memory(test_address, read_data);
+
+        // ----------------
         test_address  = 32'h00000000;  // Starting address for program
         expected_data = 32'h00000093;  // Example instruction (e.g., NOP in RISC-V)
 
@@ -90,7 +125,9 @@ module osiris_i_tb;
             test_write_to_memory(test_address + i * 4, expected_data + i);
         end
 
-        // --------------------------------------------
+        #(WAIT_BETWEEN_STEPS);
+        step = 2;
+        // // --------------------------------------------
         // // Test 2: Read Data from Instruction Memory via UART and Verify
         // // --------------------------------------------
         // $display("\nTest 2: Reading Data from Instruction Memory via UART...");
@@ -107,16 +144,20 @@ module osiris_i_tb;
         //     end
         // end
 
+        #(WAIT_BETWEEN_STEPS);
+        step = 3;
         // // --------------------------------------------
         // // Test 3: Write Data to Data Memory via UART and Verify
         // // --------------------------------------------
         // $display("\nTest 3: Writing Data to Data Memory via UART...");
-        // i_select_mem = 1;  // Select Data Memory
-        // test_address = 32'h00000000;  // Starting address in Data Memory
+        // i_select_mem  = 1;  // Select Data Memory
+        // test_address  = 32'h00000000;  // Starting address in Data Memory
         // expected_data = 32'hA5A5A5A5;  // Data to write
 
         // test_write_to_memory(test_address, expected_data);
 
+        #(WAIT_BETWEEN_STEPS);
+        step = 4;
         // // --------------------------------------------
         // // Test 4: Read Data from Data Memory via UART and Verify
         // // --------------------------------------------
@@ -131,6 +172,8 @@ module osiris_i_tb;
         //     $display("Data Memory Data Verified Successfully.");
         // end
 
+        #(WAIT_BETWEEN_STEPS);
+        step = 5;
         // // --------------------------------------------
         // // Test 5: Run Program on Core and Verify Result in Data Memory
         // // --------------------------------------------
@@ -154,8 +197,8 @@ module osiris_i_tb;
         // #1000;  // Adjust timing as needed for the core to complete execution
 
         // // Read back the result from Data Memory
-        // i_select_mem = 1;  // Select Data Memory
-        // test_address = 32'h00000010;  // Address where data should have been written
+        // i_select_mem  = 1;  // Select Data Memory
+        // test_address  = 32'h00000010;  // Address where data should have been written
         // expected_data = 32'hDEADBEEF;  // Expected data
 
         // test_read_from_memory(test_address, read_data);
@@ -185,9 +228,10 @@ module osiris_i_tb;
     // Task to Test Writing Data to Memory via UART
     task test_write_to_memory(input [ADDR_WIDTH-1:0] address, input [DATA_WIDTH-1:0] data);
         begin
-            // Send CMD_WRITE command (assuming 0xAA)
+            // Send CMD_WRITE command
             uart_send_byte(CMD_WRITE);
             $display("Sent CMD_WRITE Command.");
+            #(WAIT_BETWEEN_UART_SEND_CMD);
 
             // Send Address (LSB first)
             uart_send_word(address, ADDR_WIDTH);
@@ -197,12 +241,8 @@ module osiris_i_tb;
             uart_send_word(data, DATA_WIDTH);
             $display("Sent Data: 0x%08X", data);
 
-            // Wait for UART bridge to complete the write operation
-            $display("dut.U_UART_WB_BRIDGE.state= %b; dut.U_UART_WB_BRIDGE.IDLE=%b",
-                     dut.U_UART_WB_BRIDGE.state, dut.U_UART_WB_BRIDGE.IDLE);
-            wait (dut.U_UART_WB_BRIDGE.state == dut.U_UART_WB_BRIDGE.IDLE);
-            $display("dut.U_UART_WB_BRIDGE.state= %b; dut.U_UART_WB_BRIDGE.IDLE=%b",
-                     dut.U_UART_WB_BRIDGE.state, dut.U_UART_WB_BRIDGE.IDLE);
+            // Wait for UART bridge to return to IDLE state
+            wait (dut.U_UART_WB_BRIDGE.state == STATE_IDLE);
             #CLK_PERIOD;
         end
     endtask
@@ -210,9 +250,10 @@ module osiris_i_tb;
     // Task to Test Reading Data from Memory via UART
     task test_read_from_memory(input [ADDR_WIDTH-1:0] address, output reg [DATA_WIDTH-1:0] data);
         begin
-            // Send CMD_READ command (assuming 0x01)
+            // Send CMD_READ command
             uart_send_byte(CMD_READ);
             $display("Sent CMD_READ Command.");
+            #(WAIT_BETWEEN_UART_SEND_CMD);
 
             // Send Address (LSB first)
             uart_send_word(address, ADDR_WIDTH);
@@ -243,7 +284,7 @@ module osiris_i_tb;
             #(BIT_PERIOD);
 
             // Wait a bit before next byte
-            #(BIT_PERIOD);
+            #(WAIT_BETWEEN_UART_SEND_BYTE);
         end
     endtask
 
@@ -279,7 +320,6 @@ module osiris_i_tb;
         end
     endtask
 
-
     // Task to Receive a Word (multiple bytes) via UART from DUT
     task automatic uart_receive_word(output reg [DATA_WIDTH-1:0] data);
         integer byte_count;
@@ -287,7 +327,6 @@ module osiris_i_tb;
         begin
             data = 0;
             for (byte_count = 0; byte_count < (DATA_WIDTH / 8); byte_count = byte_count + 1) begin
-                // received_byte = uart_capture_byte();
                 uart_capture_byte(received_byte);  // Call the task with output argument
                 data = data | (received_byte << (8 * byte_count));
             end

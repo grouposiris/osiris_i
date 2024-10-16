@@ -122,8 +122,8 @@ module uart_wbs_bridge #(
                     if (uart_rx_valid) begin
                         cmd_reg <= uart_rx_data;
                         byte_count <= 0;
-                        addr_reg <= 0;
-                        data_reg <= 0;
+                        // addr_reg <= 0;
+                        // data_reg <= 0;
                         uart_tx_data <= 0;
 
                         if (uart_rx_data == CMD_READ) begin

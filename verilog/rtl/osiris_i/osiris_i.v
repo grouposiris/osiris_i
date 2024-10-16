@@ -2,7 +2,9 @@ module osiris_i #(
     parameter DATA_WIDTH = 32,
     parameter ADDR_WIDTH = 32,
     parameter BAUD_RATE  = 9600,
-    parameter CLOCK_FREQ = 50000000  // 50 MHz
+    parameter CLOCK_FREQ = 50000000,  // 50 MHz
+    parameter CMD_READ = 8'h01,  // Command to read from memory and send data via UART
+    parameter CMD_WRITE=8'hAA  // Command to write data received via UART to memory (changed value for distinction)
 ) (
     input wire clk,
     input wire rst,
@@ -126,7 +128,7 @@ module osiris_i #(
     assign core_read_data_M = data_mem_dat_o;
 
     // Acknowledge handling
-    assign uart_wb_ack_i = (i_select_mem == 1'b1) ? data_mem_ack_o : uart_wb_ack_i;
+    assign uart_wb_ack_i = (i_select_mem == 1'b1) ? data_mem_ack_o : inst_mem_ack_o;
 
     // ------------------------------------------
     // Instantiate Instruction Memory

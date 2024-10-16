@@ -5,14 +5,20 @@ module tb_uart_wbs_bridge;
     // Parameters
     parameter DATA_WIDTH = 32;
     parameter ADDR_WIDTH = 16;
+    // parameter BAUD_RATE = 9600;
+    // parameter CLOCK_FREQ = 50000000;  // 50 MHz clock
     parameter BAUD_RATE = 1e9;
     parameter CLOCK_FREQ = 10e9;  // 50 MHz clock
-    // parameter CLOCK_FREQ = 50000000;  // 50 MHz clock
     parameter CLK_PERIOD = 1e9 / CLOCK_FREQ;  // Clock period in nanoseconds
     // Read/Write command values
     localparam CMD_READ = 8'h01;  // Command to read from memory and send data via UART
     localparam CMD_WRITE =
         8'hFF;  // Command to write data received via UART to memory (changed value for distinction)
+
+    // Calculate Bit Period Based on Baud Rate
+    localparam real BIT_PERIOD = 1e9 / BAUD_RATE;  // Bit period in nanoseconds
+    localparam WAIT_BETWEEN_UART_SEND_BYTE = (10 * BIT_PERIOD);
+    localparam WAIT_BETWEEN_UART_SEND_CMD = 50;
 
     // Clock and Reset
     reg                   clk;
@@ -149,7 +155,7 @@ module tb_uart_wbs_bridge;
             // Send CMD_WRITE command
             uart_send_byte(CMD_WRITE);
             $display("Sent CMD_WRITE Command.");
-            #50;
+            #WAIT_BETWEEN_UART_SEND_CMD;
 
             // Send Address (LSB first)
             uart_send_word(address, ADDR_WIDTH);
@@ -180,7 +186,7 @@ module tb_uart_wbs_bridge;
             // Send CMD_READ command
             uart_send_byte(CMD_READ);
             $display("Sent CMD_READ Command.");
-            #50;
+            #WAIT_BETWEEN_UART_SEND_CMD;
 
             // $display("2 uut.state: %0d", uut.state);
             // Send Address (LSB first)
@@ -236,7 +242,7 @@ module tb_uart_wbs_bridge;
             #(BIT_PERIOD);
 
             // Wait a bit before next byte
-            #(10 * BIT_PERIOD);
+            #(WAIT_BETWEEN_UART_SEND_BYTE);
         end
     endtask
 
@@ -309,10 +315,6 @@ module tb_uart_wbs_bridge;
     endtask
 
 
-    // Calculate Bit Period Based on Baud Rate
-    real BIT_PERIOD;
-    initial begin
-        BIT_PERIOD = 1e9 / BAUD_RATE;  // Bit period in nanoseconds
-    end
+
 
 endmodule
