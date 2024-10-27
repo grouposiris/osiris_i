@@ -18,9 +18,10 @@
 //              stage DECODE
 ////////////////////////////////////////////////////////////////////////////////
 
-module if_id #(parameter DATA_WIDTH = 32,
-               parameter REG_WIDTH = 4) 
-(
+module if_id #(
+    parameter DATA_WIDTH = 32,
+    parameter REG_WIDTH  = 4
+) (
     // ? where's i_enable?
     // ? where's i_clear?
     clk,
@@ -34,30 +35,30 @@ module if_id #(parameter DATA_WIDTH = 32,
     o_instr_ID
 );
 
-// ------------------------------------------
-// IO declaration
-// ------------------------------------------
+    // ------------------------------------------
+    // IO declaration
+    // ------------------------------------------
     input logic clk;
-    input logic [DATA_WIDTH-1:0]  i_pcplus4_IF;
-    input logic [DATA_WIDTH-1:0]  i_pc_IF;
-    input logic [DATA_WIDTH-1:0]  i_instr_IF;
-    input logic         i_flush_ID;
-    input logic         i_stall_ID;
+    input logic [DATA_WIDTH-1:0] i_pcplus4_IF;
+    input logic [DATA_WIDTH-1:0] i_pc_IF;
+    input logic [DATA_WIDTH-1:0] i_instr_IF;
+    input logic i_flush_ID;
+    input logic i_stall_ID;
 
     output logic [DATA_WIDTH-1:0] o_pcplus4_ID;
     output logic [DATA_WIDTH-1:0] o_pc_ID;
     output logic [DATA_WIDTH-1:0] o_instr_ID;
-                                    
-// ------------------------------------------
-// Logic
-// ------------------------------------------
+
+    // ------------------------------------------
+    // Logic
+    // ------------------------------------------
     // Register always block
     always @(posedge clk) begin
         if (i_flush_ID) begin
             // If a flush signal is asserted, clear the pipeline registers
-            o_pcplus4_ID <= 32'hx;
-            o_pc_ID <= 32'hx;
-            o_instr_ID <= 32'hx;
+            o_pcplus4_ID <= 32'h0;
+            o_pc_ID <= 32'h0;
+            o_instr_ID <= 32'h0;
         end else if (!i_stall_ID) begin
             // Update the pipeline registers with new values
             o_pcplus4_ID <= i_pcplus4_IF;
@@ -65,5 +66,5 @@ module if_id #(parameter DATA_WIDTH = 32,
             o_instr_ID <= i_instr_IF;
         end
     end
- 
+
 endmodule

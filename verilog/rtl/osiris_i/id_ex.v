@@ -18,9 +18,10 @@
 //              DECODE and EXECUTE
 //////////////////////////////////////////////////////////////////////////////
 
-module id_ex #(parameter DATA_WIDTH = 32,
-               parameter REG_WIDTH = 4) 
-(
+module id_ex #(
+    parameter DATA_WIDTH = 32,
+    parameter REG_WIDTH  = 4
+) (
     clk,
     i_rd_ID,
     i_rs1_ID,
@@ -56,66 +57,65 @@ module id_ex #(parameter DATA_WIDTH = 32,
 );
 
 
-// ------------------------------------------
-// IO declaration
-// ------------------------------------------
+    // ------------------------------------------
+    // IO declaration
+    // ------------------------------------------
     input logic clk;
-    input logic [REG_WIDTH-1:0]   i_rd_ID;            // Datapath
-    input logic [DATA_WIDTH-1:0]   i_rs1_ID;
-    input logic [DATA_WIDTH-1:0]   i_rs2_ID;
-    input logic [DATA_WIDTH-1:0]  i_imm_ex_ID;
-    input logic [REG_WIDTH-1:0]   i_rs1Addr_ID;
-    input logic [REG_WIDTH-1:0]   i_rs2Addr_ID;
-    input logic [DATA_WIDTH-1:0]  i_pc_ID;
-    input logic [DATA_WIDTH-1:0]  i_pc_plus4_ID;
-    input logic         i_jump_ID;          // Control
-    input logic         i_branch_ID;
-    input logic         i_reg_write_ID;
-    input logic [1:0]   i_result_src_ID;
-    input logic         i_mem_write_ID;
-    input logic [4:0]   i_alu_ctrl_ID;
-    input logic         i_alu_src_ID;
-    input logic         i_clear;            // Hazard
+    input logic [REG_WIDTH-1:0] i_rd_ID;  // Datapath
+    input logic [DATA_WIDTH-1:0] i_rs1_ID;
+    input logic [DATA_WIDTH-1:0] i_rs2_ID;
+    input logic [DATA_WIDTH-1:0] i_imm_ex_ID;
+    input logic [REG_WIDTH-1:0] i_rs1Addr_ID;
+    input logic [REG_WIDTH-1:0] i_rs2Addr_ID;
+    input logic [DATA_WIDTH-1:0] i_pc_ID;
+    input logic [DATA_WIDTH-1:0] i_pc_plus4_ID;
+    input logic i_jump_ID;  // Control
+    input logic i_branch_ID;
+    input logic i_reg_write_ID;
+    input logic [1:0] i_result_src_ID;
+    input logic i_mem_write_ID;
+    input logic [4:0] i_alu_ctrl_ID;
+    input logic i_alu_src_ID;
+    input logic i_clear;  // Hazard
 
-    output logic [REG_WIDTH-1:0]  o_rd_EX;            // Datapath
-    output logic [DATA_WIDTH-1:0]  o_rs1_EX;
-    output logic [DATA_WIDTH-1:0]  o_rs2_EX;
+    output logic [REG_WIDTH-1:0] o_rd_EX;  // Datapath
+    output logic [DATA_WIDTH-1:0] o_rs1_EX;
+    output logic [DATA_WIDTH-1:0] o_rs2_EX;
     output logic [DATA_WIDTH-1:0] o_imm_ex_EX;
-    output logic [REG_WIDTH-1:0]  o_rs1Addr_EX;
-    output logic [REG_WIDTH-1:0]  o_rs2Addr_EX;
+    output logic [REG_WIDTH-1:0] o_rs1Addr_EX;
+    output logic [REG_WIDTH-1:0] o_rs2Addr_EX;
     output logic [DATA_WIDTH-1:0] o_pc_EX;
     output logic [DATA_WIDTH-1:0] o_pc_plus4_EX;
-    output logic        o_jump_EX;          // Control
-    output logic        o_branch_EX;
-    output logic        o_reg_write_EX;
-    output logic [1:0]  o_result_src_EX;
-    output logic        o_mem_write_EX;
-    output logic [4:0]  o_alu_ctrl_EX;
-    output logic        o_alu_src_EX;
-                                    
-// ------------------------------------------
-// Logic
-// ------------------------------------------
+    output logic o_jump_EX;  // Control
+    output logic o_branch_EX;
+    output logic o_reg_write_EX;
+    output logic [1:0] o_result_src_EX;
+    output logic o_mem_write_EX;
+    output logic [4:0] o_alu_ctrl_EX;
+    output logic o_alu_src_EX;
+
+    // ------------------------------------------
+    // Logic
+    // ------------------------------------------
     always @(posedge clk) begin
         if (i_clear) begin
             // Clear the pipeline registers
-            o_rd_EX <= 5'bx;
-            o_rs1_EX <= 5'bx;
-            o_rs2_EX <= 5'bx;
-            o_imm_ex_EX <= 32'bx;
-            o_rs1Addr_EX <= 5'bx;
-            o_rs2Addr_EX <= 5'bx;
-            o_pc_EX <= 32'bx;
-            o_pc_plus4_EX <= 32'bx;
-            o_jump_EX <= 1'bx;
-            o_branch_EX <= 1'bx;
-            o_reg_write_EX <= 1'bx;
-            o_result_src_EX <= 2'bx;
-            o_mem_write_EX <= 1'bx;
-            o_alu_ctrl_EX <= 5'bx;
-            o_alu_src_EX <= 1'bx;
-        end
-        else begin
+            o_rd_EX <= 5'b0;
+            o_rs1_EX <= 5'b0;
+            o_rs2_EX <= 5'b0;
+            o_imm_ex_EX <= 32'b0;
+            o_rs1Addr_EX <= 5'b0;
+            o_rs2Addr_EX <= 5'b0;
+            o_pc_EX <= 32'b0;
+            o_pc_plus4_EX <= 32'b0;
+            o_jump_EX <= 1'b0;
+            o_branch_EX <= 1'b0;
+            o_reg_write_EX <= 1'b0;
+            o_result_src_EX <= 2'b0;
+            o_mem_write_EX <= 1'b0;
+            o_alu_ctrl_EX <= 5'b0;
+            o_alu_src_EX <= 1'b0;
+        end else begin
             // Update the pipeline registers
             o_rd_EX <= i_rd_ID;
             o_rs1_EX <= i_rs1_ID;

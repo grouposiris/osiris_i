@@ -161,14 +161,15 @@ module osiris_i_tb;
         $display("Starting osiris_i Testbench...");
         #200;  // Wait for reset to deassert
 
-        test_memory(i_select_mem);
+        test_memory(i_select_mem, 32'h00000000, 32'hBEE00000);
         i_select_mem = 1;
-        test_memory(i_select_mem);
+        test_memory(i_select_mem, 32'hF0000007, 32'hBAA00000);
 
         #(WAIT_BETWEEN_STEPS);
         $display("\n\n --------------------------------------------");
         $display(" Test 5: Run Program on Core and Verify Result in Data Memory ");
         $display(" --------------------------------------------");
+        step = 0;
         i_select_mem = 0;  // Select Instruction Memory
 
         // Simple program to write 0xDEADBEEF to Data Memory at address 0x00000010
@@ -228,17 +229,20 @@ module osiris_i_tb;
             $display("\nError: Some tests FAILED.");
         end
 
-        #500000 $finish;
+        // #500000 $finish;
+        #10000 $finish;
     end
 
     // Declare the task within your testbench module
     task test_memory(
-        input logic select_mem  // Input parameter to select the memory
+        input logic select_mem,  // Input parameter to select the memory
+        input [ADDR_WIDTH-1:0] first_address = 32'hA0000002,
+        input [ADDR_WIDTH-1:0] first_data_value = 32'hF0000093
     );
         integer it;
-        reg [31:0] test_address;
-        reg [31:0] expected_data;
-        reg [31:0] read_data;
+        reg [ADDR_WIDTH-1:0] test_address;
+        reg [DATA_WIDTH-1:0] expected_data;
+        reg [DATA_WIDTH-1:0] read_data;
 
         begin
             // Set the memory selection signal
@@ -283,8 +287,8 @@ module osiris_i_tb;
             step = step + 1;
 
             // ----------------
-            test_address  = 32'hA0000002;  // Starting address for recursive test
-            expected_data = 32'hF0000093;  // Example instruction (e.g., NOP in RISC-V)
+            test_address  = first_address;  // Starting address for recursive test
+            expected_data = first_data_value;  // Example instruction (e.g., NOP in RISC-V)
             #50;
 
             // Send multiple instructions to Memory
@@ -313,8 +317,6 @@ module osiris_i_tb;
             end
         end
     endtask
-
-
 
     // Task to Test Writing Data to Memory via UART
     task test_write_to_memory(input [ADDR_WIDTH-1:0] address, input [DATA_WIDTH-1:0] data);

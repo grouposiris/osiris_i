@@ -120,13 +120,17 @@ module osiris_i #(
     wire data_mem_ack_o;
 
     // Mux between core and UART bridge for Data Memory access
-    assign data_mem_adr_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_adr_o[9:0] :
-        core_data_addr_M[9:0];
-    assign
-        data_mem_dat_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_dat_o : core_write_data_M;
+    assign data_mem_adr_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_adr_o[9:0] : core_data_addr_M[9:0];
+    // assign data_mem_adr_i = 32'b0;
+    
+    assign data_mem_dat_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_dat_o : core_write_data_M;
+    // assign data_mem_dat_i = 32'b0;
+    
     assign data_mem_we_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_we_o : core_mem_write_M;
-    assign data_mem_stb_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_stb_o :
-        1'b1;  // Core accesses Data Memory when not overridden
+    // assign data_mem_we_i = 1'b0;
+
+
+    assign data_mem_stb_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_stb_o : 1'b1;  // Core accesses Data Memory when not overridden
     assign data_mem_cyc_i = (i_select_mem == 1'b1 && uart_wb_cyc_o) ? uart_wb_cyc_o : 1'b1;
 
     // Connect data memory data output to core
