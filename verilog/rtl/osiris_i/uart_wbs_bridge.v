@@ -3,7 +3,7 @@ module uart_wbs_bridge #(
     parameter ADDR_WIDTH = 16,
     parameter BAUD_RATE = 9600,
     parameter CLOCK_FREQ = 50000000,  // 50 MHz,
-    parameter CMD_READ = 8'h01,  // Command to read from memory and send data via UART
+    parameter CMD_READ = 8'h77,  // Command to read from memory and send data via UART
     parameter CMD_WRITE =
         8'hAA  // Command to write data received via UART to memory (changed value for distinction)
 ) (
@@ -122,8 +122,8 @@ module uart_wbs_bridge #(
                     if (uart_rx_valid) begin
                         cmd_reg <= uart_rx_data;
                         byte_count <= 0;
-                        // addr_reg <= 0;
-                        // data_reg <= 0;
+                        addr_reg <= 0;
+                        data_reg <= 0;
                         uart_tx_data <= 0;
 
                         if (uart_rx_data == CMD_READ) begin
@@ -217,8 +217,8 @@ module uart_wbs_bridge #(
                     // $display("[uart_wbs_bridge] Entering WB_READ state");
                     // Wait for Wishbone read acknowledge
                     if (wb_ack_i) begin
-                        wb_stb_o <= 0;
-                        wb_cyc_o <= 0;
+                        // wb_stb_o <= 0;
+                        // wb_cyc_o <= 0;
                         wb_we_o  <= 0;
                         byte_count <= 0;
                         state    <= SEND_DATA;  // Proceed to send data via UART
@@ -230,14 +230,18 @@ module uart_wbs_bridge #(
                     // $display("[uart_wbs_bridge] Entering SEND_DATA state");
                     // Send read data bytes via UART
                     if (uart_tx_ready && !uart_tx_valid) begin
-                        uart_tx_data  <= wb_dat_i[8*byte_count +: 8];
+                        uart_tx_data <=
+                            wb_dat_i[8*byte_count+:8];  // data connected to uart_transceiver
                         // uart_tx_data  <= wb_dat_i[8*(byte_count+1): 8*byte_count];
                         uart_tx_valid <= 1;
-                        byte_count    <= byte_count + 1;
+                        byte_count <= byte_count + 1;
                         if (byte_count == (DATA_WIDTH / 8)) begin
                             // All data bytes sent
+                            wb_stb_o <= 0;
+                            wb_cyc_o <= 0;
                             uart_tx_valid <= 0;
                             state <= IDLE;
+                            uart_tx_data <= 0;
                         end
                     end else begin
                         uart_tx_valid <= 0;

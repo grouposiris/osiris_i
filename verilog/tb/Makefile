@@ -6,6 +6,7 @@ VCD_FILES := uart_wbs_bridge.vcd osiris_i.vcd
 # Default DUT selection
 # DUT ?= uart_wbs_bridge
 DUT ?= osiris_i
+# DUT=uart_wbs_bridge
 
 # Paths
 SIM_DIR = .

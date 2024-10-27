@@ -1,6 +1,8 @@
 module osiris_i #(
     parameter DATA_WIDTH = 32,
     parameter ADDR_WIDTH = 32,
+    parameter INST_MEM_SIZE = 4, // in KB
+    parameter DATA_MEM_SIZE = 4, // in KB
     parameter BAUD_RATE  = 9600,
     parameter CLOCK_FREQ = 50000000,  // 50 MHz
     parameter CMD_READ = 8'h01,  // Command to read from memory and send data via UART
@@ -43,7 +45,9 @@ module osiris_i #(
         .DATA_WIDTH(DATA_WIDTH),
         .ADDR_WIDTH(ADDR_WIDTH),
         .BAUD_RATE (BAUD_RATE),
-        .CLOCK_FREQ(CLOCK_FREQ)
+        .CLOCK_FREQ(CLOCK_FREQ),
+        .CMD_READ(CMD_READ),
+        .CMD_WRITE(CMD_WRITE)
     ) U_UART_WB_BRIDGE (
         .clk     (clk),
         .rst     (rst),
@@ -134,9 +138,9 @@ module osiris_i #(
     // Instantiate Instruction Memory
     // ------------------------------------------
     mem #(
-        .DATA_WIDTH(DATA_WIDTH),
-        .ADDR_WIDTH(10),
-        .MEM_SIZE(4)  // 4KB Instruction Memory
+        .DATA_WIDTH(32),
+        // .ADDR_WIDTH(10)
+        .MEM_SIZE(INST_MEM_SIZE)  // 4KB Instruction Memory
     ) U_INST_MEM (
         .clk     (clk),
         .rst     (rst),
@@ -154,8 +158,8 @@ module osiris_i #(
     // ------------------------------------------
     mem #(
         .DATA_WIDTH(DATA_WIDTH),
-        .ADDR_WIDTH(10),
-        .MEM_SIZE(4)  // 4KB Data Memory
+        // .ADDR_WIDTH(10)
+        .MEM_SIZE(DATA_MEM_SIZE)  // 4KB Data Memory
     ) U_DATA_MEM (
         .clk     (clk),
         .rst     (rst),

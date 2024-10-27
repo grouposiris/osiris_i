@@ -33,7 +33,7 @@ module uart_transmitter #(
                 if (clock_count == BIT_TIME - 1) begin
                     clock_count <= 0;
                     bit_index   <= bit_index + 1;
-                    if (bit_index < 10) begin
+                    if (bit_index < 8 + 2) begin
                         o_tx <= shift_reg[bit_index];
                     end else begin
                         // Transmission complete
@@ -47,13 +47,13 @@ module uart_transmitter #(
             end else begin
                 if (i_data_valid && o_ready) begin
                     // Load data into shift register with start and stop bits
-                    shift_reg    <= {1'b1, i_data, 1'b0};  // {Stop bit, Data[7:0], Start bit}
+                    shift_reg <= {1'b1, i_data, 1'b0};  // {Stop bit, Data[7:0], Start bit}
                     // shift_reg    <= i_data;  // {Stop bit, Data[7:0], Start bit}
-                    bit_index    <= 1;
+                    bit_index <= 1;  // starts on bit 1 because de start bit is already being sent below (o_tx)
                     transmitting <= 1;
-                    o_ready      <= 0;
-                    clock_count  <= 0;
-                    o_tx         <= 0;  // Start bit
+                    o_ready <= 0;
+                    clock_count <= 0;
+                    o_tx <= 0;  // Start bit
                 end
             end
         end
