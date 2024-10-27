@@ -239,6 +239,15 @@ module osiris_i_tb;
         test_write_to_memory(32'h00000004, 32'hEEF31313);  // ADDI x1, x1, 0xEEF
         test_write_to_memory(32'h00000008, 32'h01012023);  // SW x1, 0x10(x0)
         test_write_to_memory(32'h0000000C, 32'h00000013);  // NOP
+        // todo: check if addressing would be by bytes or not
+        // todo: separate reset signal to memories
+        // todo: core clock-gating when UART accesses memories
+
+        // todo: confimacao da UART em que estado estah 
+        // jgoar bits estado para fora ou bit
+        // todo: x- confirmacao da memoria que foi escrito
+
+        // todo: add PDK memories
 
         // // Allow some time for the core to execute the program
         // #1000;  // Adjust timing as needed for the core to complete execution
@@ -284,7 +293,7 @@ module osiris_i_tb;
 
             // Send CMD_WRITE command
             uart_send_byte(CMD_WRITE);
-            $display("Sent CMD_WRITE Command.");
+            $display("\nSent CMD_WRITE Command.");
             #(WAIT_BETWEEN_UART_SEND_CMD);
 
             // Send Address (LSB first)
