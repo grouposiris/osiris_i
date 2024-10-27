@@ -9,7 +9,8 @@ module osiris_i #(
     parameter CMD_WRITE=8'hAA  // Command to write data received via UART to memory (changed value for distinction)
 ) (
     input wire clk,
-    input wire rst,
+    input wire rst_core,
+    input wire rst_mem_uart,
     input wire i_uart_rx,  // UART receive signal from external device
     input wire
         i_select_mem,  // Select memory for UART communication: 0 = Instruction Mem, 1 = Data Mem
@@ -50,7 +51,7 @@ module osiris_i #(
         .CMD_WRITE(CMD_WRITE)
     ) U_UART_WB_BRIDGE (
         .clk     (clk),
-        .rst     (rst),
+        .rst     (rst_mem_uart),
         .i_uart_rx (i_uart_rx),        // UART receive signal
         .o_uart_tx (o_uart_tx),        // UART transmit signal
         .i_start_rx(i_start_rx),       // Start UART reception
@@ -70,7 +71,7 @@ module osiris_i #(
         .DATA_WIDTH(DATA_WIDTH)
     ) U_CORE (
         .clk           (clk),
-        .rst           (rst),
+        .rst           (rst_core),
         .i_instr_ID    (core_instr_ID),     // Instruction input to core
         .i_read_data_M (core_read_data_M),  // Data read input to core
         .o_pc_IF       (core_pc_IF),        // Program Counter output from core
@@ -143,7 +144,7 @@ module osiris_i #(
         .MEM_SIZE(INST_MEM_SIZE)  // 4KB Instruction Memory
     ) U_INST_MEM (
         .clk     (clk),
-        .rst     (rst),
+        .rst     (rst_mem_uart),
         .wb_adr_i(inst_mem_adr_i),  // Address input
         .wb_dat_i(inst_mem_dat_i),  // Data input
         .wb_we_i (inst_mem_we_i),   // Write enable input
@@ -162,7 +163,7 @@ module osiris_i #(
         .MEM_SIZE(DATA_MEM_SIZE)  // 4KB Data Memory
     ) U_DATA_MEM (
         .clk     (clk),
-        .rst     (rst),
+        .rst     (rst_mem_uart),
         .wb_adr_i(data_mem_adr_i),  // Address input
         .wb_dat_i(data_mem_dat_i),  // Data input
         .wb_we_i (data_mem_we_i),   // Write enable input

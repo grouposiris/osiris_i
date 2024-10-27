@@ -71,7 +71,8 @@ module osiris_i_tb;
 
     // Clock and Reset
     reg  clk;
-    reg  rst;
+    reg  rst_core;
+    reg  rst_mem_uart;
 
     // UART Signals
     reg  i_uart_rx;
@@ -93,7 +94,8 @@ module osiris_i_tb;
         .CMD_WRITE(CMD_WRITE)
     ) dut (
         .clk         (clk),
-        .rst         (rst),
+        .rst_core    (rst_core),
+        .rst_mem_uart(rst_mem_uart),
         .i_uart_rx   (i_uart_rx),
         .o_uart_tx   (o_uart_tx),
         .i_select_mem(i_select_mem),
@@ -108,12 +110,14 @@ module osiris_i_tb;
 
     // Reset Sequence
     initial begin
-        rst = 1;
+        rst_core = 1;
+        rst_mem_uart = 1;
         i_start_rx = 0;
         i_select_mem = 0;
         i_uart_rx = 1;  // UART line idle (high)
         #100;
-        rst = 0;
+        // rst_core = 0;
+        rst_mem_uart = 0;
         i_start_rx = 1;  // Enable UART reception
         #40000 $finish;
     end
@@ -151,80 +155,20 @@ module osiris_i_tb;
     // Main Test Sequence
     initial begin
         test_passed = 1;
+        rst_core = 1;
+        step = 0;
 
         $display("Starting osiris_i Testbench...");
         #200;  // Wait for reset to deassert
 
-        step = 1;
-        // --------------------------------------------
-        // Test 1: Write Data to Instruction Memory via UART and Verify
-        // --------------------------------------------
-        $display("\nTest 1: Writing Data to Instruction Memory via UART...");
-        i_select_mem  = 0;  // Select Instruction Memory
-        test_address  = 32'hF000008C;  // Starting address for program
-        expected_data = 32'hDEADBEEF;  //
-
-        // Test 1: Write Data to Memory via UART and Wishbone
-        $display("\nTest 1: Writing Data to Memory...");
-        test_write_to_memory(test_address, expected_data);
-
-        #100;
-        step = 2;
-
-         // --------------------------------------------
-        $display("\nTest 1: Writing Data to Instruction Memory via UART...");
-        i_select_mem  = 0;  // Select Instruction Memory
-        test_address  = 32'hF0000088;  // Starting address for program
-        expected_data = 32'hD00DB00F;  //
-
-        // Test 1: Write Data to Memory via UART and Wishbone
-        $display("\nTest 1: Writing Data to Memory...");
-        test_write_to_memory(test_address, expected_data);
-        
-        #(WAIT_BETWEEN_STEPS);
-        step = 3;
-
-        // ----------------
-        test_address  = 32'hA0000002;  // Starting address for program
-        expected_data = 32'hF0000093;  // Example instruction (e.g., NOP in RISC-V)
-        #50;
-
-        // Send multiple instructions to Instruction Memory
-        $display("\nTest 1: Writing Data to Memory recursively");
-        for (it = 0; it < 10; it = it + 1) begin
-            $display("\nTest 1: [%1d] Sending to addr:%h the data:%h", it, test_address + it,expected_data + it);
-            step = step + 1;
-            test_write_to_memory(test_address + (it), expected_data + it);
-            $display("Test 1: [%1d] Completed write iteration", it);
-        end
-
-        #(5* WAIT_BETWEEN_STEPS);
-        step = step + 1;
-
-        $display(" ---------------------------------------------------------------- ");
-
-        // Test 2: Read Data from Memory via UART and Wishbone
-        $display("\nTest 2: Reading Data from Memory...");
-        test_read_from_memory(test_address, read_data);
-        #
-        (WAIT_BETWEEN_STEPS);
-        step = step + 1;
-        // --------------------------------------------
-        // Test 2: Read Data from Instruction Memory via UART and Verify
-        // --------------------------------------------
-        $display("\nTest 2: Reading Data from Instruction Memory via UART...");
-        for (it = 0; it < 10; it = it + 1) begin
-            test_read_from_memory(test_address + (it), read_data);
-            $display("\nTest 2: [%1d] Read from addr:%h the data:%h", it, test_address + it, expected_data + it);
-            compare_memory_data(test_address + (it), read_data); // compare with tb_mem
-        end
+        test_memory(i_select_mem);
+        i_select_mem = 1;
+        test_memory(i_select_mem);
 
         #(WAIT_BETWEEN_STEPS);
-        step = step + 1;
-        // --------------------------------------------
-        // Test 5: Run Program on Core and Verify Result in Data Memory
-        // --------------------------------------------
-        $display("\nTest 5: Running Program on Core and Verifying Result...");
+        $display("\n\n --------------------------------------------");
+        $display(" Test 5: Run Program on Core and Verify Result in Data Memory ");
+        $display(" --------------------------------------------");
         i_select_mem = 0;  // Select Instruction Memory
 
         // Simple program to write 0xDEADBEEF to Data Memory at address 0x00000010
@@ -239,15 +183,21 @@ module osiris_i_tb;
         test_write_to_memory(32'h00000004, 32'hEEF31313);  // ADDI x1, x1, 0xEEF
         test_write_to_memory(32'h00000008, 32'h01012023);  // SW x1, 0x10(x0)
         test_write_to_memory(32'h0000000C, 32'h00000013);  // NOP
-        // todo: check if addressing would be by bytes or not
-        // todo: separate reset signal to memories
+        // OK todo: separate reset signal to memories
         // todo: core clock-gating when UART accesses memories
+        // todo: add PDK memories
+        
+        // todo: check if addressing would be by bytes or not
 
         // todo: confimacao da UART em que estado estah 
-        // jgoar bits estado para fora ou bit
+        //      jgoar bits estado para fora ou bit
         // todo: x- confirmacao da memoria que foi escrito
 
-        // todo: add PDK memories
+        #(WAIT_BETWEEN_STEPS);
+        step = step + 1;
+        i_start_rx = 0;  // Enable UART reception
+        #(50* CLK_PERIOD);
+        rst_core = 0;
 
         // // Allow some time for the core to execute the program
         // #1000;  // Adjust timing as needed for the core to complete execution
@@ -280,6 +230,91 @@ module osiris_i_tb;
 
         #500000 $finish;
     end
+
+    // Declare the task within your testbench module
+    task test_memory(
+        input logic select_mem  // Input parameter to select the memory
+    );
+        integer it;
+        reg [31:0] test_address;
+        reg [31:0] expected_data;
+        reg [31:0] read_data;
+
+        begin
+            // Set the memory selection signal
+            i_select_mem = select_mem;  // 0 for Instruction Memory, 1 for Data Memory
+
+            step = step + 1;
+            $display("\n\n ====================================================");
+            // --------------------------------------------
+            // Test 1: Write Data to Memory via UART and Verify
+            // --------------------------------------------
+            if (select_mem == 0) begin
+                $display("\n Test 1: Writing Data to Instruction Memory via UART...");
+            end else begin
+                $display("\n Test 1: Writing Data to Data Memory via UART...");
+            end
+
+            test_address  = 32'hF000008C;  // Starting address for the test
+            expected_data = 32'hDEADBEEF;  // Test data
+
+            // Write Data to Memory via UART and Wishbone
+            test_write_to_memory(test_address, expected_data);
+
+            #(WAIT_BETWEEN_STEPS);
+            step = step + 1;
+
+            $display("\n\n --------------------------------------------");
+            if (select_mem == 0) begin
+                $display("\nTest 1: Writing Data to Instruction Memory via UART...");
+            end else begin
+                $display("\nTest 1: Writing Data to Data Memory via UART...");
+            end
+            $display(" --------------------------------------------");
+
+            test_address  = 32'hF0000088;  // Another test address
+            expected_data = 32'hD00DB00F;  // Another test data
+
+            // Write Data to Memory via UART and Wishbone
+            $display("\nTest 1: Writing Data to Memory...");
+            test_write_to_memory(test_address, expected_data);
+            
+            #(WAIT_BETWEEN_STEPS);
+            step = step + 1;
+
+            // ----------------
+            test_address  = 32'hA0000002;  // Starting address for recursive test
+            expected_data = 32'hF0000093;  // Example instruction (e.g., NOP in RISC-V)
+            #50;
+
+            // Send multiple instructions to Memory
+            $display("\n Test 1: Writing Data to Memory recursively");
+            for (it = 0; it < 10; it = it + 1) begin
+                $display("\n Test 1: [%1d] Sending to addr: %h the data: %h", it, test_address + it, expected_data + it);
+                step = step + 1;
+                test_write_to_memory(test_address + it, expected_data + it);
+                $display(" Test 1: [%1d] Completed write iteration", it);
+            end
+
+            #(5 * WAIT_BETWEEN_STEPS);
+            step = step + 1;
+
+            $display("\n\n --------------------------------------------");
+            if (select_mem == 0) begin
+                $display(" Test 2: Reading Data from Instruction Memory via UART...");
+            end else begin
+                $display(" Test 2: Reading Data from Data Memory via UART...");
+            end
+            $display(" --------------------------------------------");
+            for (it = 0; it < 10; it = it + 1) begin
+                test_read_from_memory(test_address + it, read_data);
+                $display("\nTest 2: [%1d] Read from addr: %h the data: %h", it, test_address + it, read_data);
+                compare_memory_data(test_address + it, read_data); // Compare with expected data
+            end
+        end
+    endtask
+
+
 
     // Task to Test Writing Data to Memory via UART
     task test_write_to_memory(input [ADDR_WIDTH-1:0] address, input [DATA_WIDTH-1:0] data);

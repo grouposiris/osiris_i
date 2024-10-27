@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Sun Oct 27 03:16:11 2024
+[*] Sun Oct 27 14:39:03 2024
 [*]
 [dumpfile] "/home/lspadersimon/repos/osiris_i/verilog/tb/osiris_i.vcd"
-[dumpfile_mtime] "Sun Oct 27 03:14:36 2024"
-[dumpfile_size] 10507290
+[dumpfile_mtime] "Sun Oct 27 14:29:40 2024"
+[dumpfile_size] 12043856
 [savefile] "/home/lspadersimon/repos/osiris_i/verilog/tb/osiris_i_waveform.gtkw"
-[timestart] 4468300
+[timestart] 0
 [size] 1870 1016
 [pos] -1 -1
-*-17.000000 4812650 209750 279850 339850 359750 419750 539850 600100 669950 4320950 4450950 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-22.000000 8840000 209750 279850 339850 359750 419750 539850 600100 669950 4320950 4450950 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [markername] Asent Write Command complete
 [markername] Bsent Write Address byte 1:0
 [markername] Csent Write Address bytes 7:6
@@ -21,6 +21,7 @@
 [markername] Isent CMD_READ
 [markername] Jsent address to read
 [treeopen] osiris_i_tb.
+[treeopen] osiris_i_tb.dut.
 [treeopen] osiris_i_tb.dut.U_CORE.
 [treeopen] osiris_i_tb.U_UART_WB_BRIDGE.
 [treeopen] osiris_i_tb.U_UART_WB_BRIDGE.uart_rx_inst.
@@ -31,27 +32,24 @@
 @22
 compare_memory_data.address[31:0]
 compare_memory_data.expected_value[31:0]
-@23
 compare_memory_data.read_data[31:0]
 @200
 -------- TB -------
-@22
-osiris_i_tb.read_data[31:0]
-osiris_i_tb.expected_data[31:0]
 @420
 osiris_i_tb.i
 @28
+osiris_i_tb.rst_core
+osiris_i_tb.rst_mem_uart
 [color] 3
 osiris_i_tb.i_select_mem
 osiris_i_tb.i_start_rx
 osiris_i_tb.i_uart_rx
 osiris_i_tb.o_uart_tx
-osiris_i_tb.rst
-@22
-osiris_i_tb.test_address[31:0]
-@28
 osiris_i_tb.test_passed
 osiris_i_tb.clk
+@420
+[color] 6
+osiris_i_tb.step
 @200
 -
 -------- UART -------
@@ -79,10 +77,6 @@ osiris_i_tb.dut.uart_wb_stb_o
 osiris_i_tb.dut.uart_wb_we_o
 @200
 -
-@420
-[color] 6
-osiris_i_tb.step
-@200
 ----- uart_receiver -----
 @28
 [color] 5
@@ -201,15 +195,24 @@ osiris_i_tb.dut.data_mem_we_i
 @200
 -
 -------- CORE -------
-@22
-osiris_i_tb.dut.core_data_addr_M[31:0]
-osiris_i_tb.dut.core_instr_ID[31:0]
 @28
-osiris_i_tb.dut.core_mem_write_M
+[color] 3
+osiris_i_tb.i_select_mem
+@200
+-
+@28
+osiris_i_tb.dut.clk
+osiris_i_tb.dut.rst_core
 @22
-osiris_i_tb.dut.core_pc_IF[31:0]
-osiris_i_tb.dut.core_read_data_M[31:0]
-osiris_i_tb.dut.core_write_data_M[31:0]
+osiris_i_tb.dut.U_CORE.i_instr_ID[31:0]
+osiris_i_tb.dut.U_CORE.i_read_data_M[31:0]
+osiris_i_tb.dut.U_CORE.o_pc_IF[31:0]
+@28
+osiris_i_tb.dut.U_CORE.o_mem_write_M
+@22
+osiris_i_tb.dut.U_CORE.o_data_addr_M[31:0]
+@23
+osiris_i_tb.dut.U_CORE.o_write_data_M[31:0]
 @200
 -
 [pattern_trace] 1
