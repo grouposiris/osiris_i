@@ -1,6 +1,6 @@
 # Define DUTs and Testbenches
 DUTS := uart_wbs_bridge osiris_i
-TESTBENCHES := tb_uart_wbs_bridge.v tb_osiris_i.v
+TESTBENCHES := tb_uart_wbs_bridge.v tb_osiris_i.sv
 VCD_FILES := uart_wbs_bridge.vcd osiris_i.vcd
 
 # Default DUT selection

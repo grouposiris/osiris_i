@@ -14,7 +14,7 @@ module osiris_i_tb;
     localparam DATA_MEM_ADDR_BITS = $clog2(DATA_MEM_WORDS);
 
     // parameter BAUD_RATE = 9600;
-    // parameter CLOCK_FREQ = 50000000;  // 50 MHz clock
+    // parameter CLOCK_FREQ = 50e6;  // 50 MHz clock
     parameter BAUD_RATE = 1e9;
     parameter CLOCK_FREQ = 10e9;  // 50 MHz clock
     parameter CLK_PERIOD = 1e9 / CLOCK_FREQ;  // Clock period in nanoseconds
@@ -25,11 +25,9 @@ module osiris_i_tb;
 
     // Calculate Bit Period Based on Baud Rate
     localparam real BIT_PERIOD = 1e9 / BAUD_RATE;  // Bit period in nanoseconds
-    // localparam real BIT_PERIOD = CLOCK_FREQ / BAUD_RATE;  // Bit period in nanoseconds
     localparam WAIT_BETWEEN_UART_SEND_BYTE = (10 * BIT_PERIOD);
     localparam WAIT_BETWEEN_UART_SEND_CMD = 50;
     localparam WAIT_BETWEEN_STEPS = 200;
-
 
     // UART Wishbone Bridge State Encoding (from uart_wbs_bridge)
     localparam STATE_IDLE = 3'd0;
@@ -118,8 +116,8 @@ module osiris_i_tb;
         #100;
         // rst_core = 0;
         rst_mem_uart = 0;
-        i_start_rx = 1;  // Enable UART reception
-        #40000 $finish;
+        i_start_rx   = 1;  // Enable UART reception
+        #50000 $display("finish prevent"); $finish;
     end
 
     // VCD Dump for Waveform Viewing
@@ -128,29 +126,26 @@ module osiris_i_tb;
         $dumpvars(0, osiris_i_tb);
     end
 
-    // // integer i;
-    // initial begin
-    //     $monitor("Inst Memory Dump:");
-    //     for (i = 0; i < (INST_MEM_SIZE * 1024 / 4); i = i + 1) begin
-    //         $monitor("inst_mem[%0d] = %h", i, dut.U_INST_MEM.mem[i]);
-    //     end
-    // end
-
-    // initial begin
-    //     $monitor("Data Memory Dump:");
-    //     for (i = 0; i < (DATA_MEM_SIZE * 1024 / 4); i = i + 1) begin
-    //         $monitor("data_mem[%0d] = %h", i, dut.U_DATA_MEM.mem[i]);
-    //     end
-    // end
-
-
     // Test Variables
-    integer i, it;
+    integer i;
     reg test_passed;
     reg [DATA_WIDTH-1:0] read_data;
     reg [DATA_WIDTH-1:0] expected_data;
     reg [ADDR_WIDTH-1:0] test_address;
     integer step; // tb variable just to simulation organization
+
+    // Arrays to Store Instructions and Expected Results
+    reg [31:0] instruction_mem[0:255];
+    reg [31:0] instruction_addresses[0:255];
+    integer num_instructions;
+
+    reg [31:0] expected_data_array[0:255];
+    reg [31:0] expected_addresses[0:255];
+    integer expected_result_count;
+
+    // File for Writing Outputs
+    integer output_file;
+    integer it;
 
     // Main Test Sequence
     initial begin
@@ -165,25 +160,31 @@ module osiris_i_tb;
         i_select_mem = 1;
         test_memory(i_select_mem, 32'hF0000007, 32'hBAA00000);
 
+        // =========================================================================
         #(WAIT_BETWEEN_STEPS);
         $display("\n\n --------------------------------------------");
         $display(" Test 5: Run Program on Core and Verify Result in Data Memory ");
         $display(" --------------------------------------------");
         step = 0;
         i_select_mem = 0;  // Select Instruction Memory
+        rst_mem_uart = 1;
+        #(CLK_PERIOD);
+        rst_mem_uart = 0;
+        #(10* CLK_PERIOD);
 
-        // Simple program to write 0xDEADBEEF to Data Memory at address 0x00000010
-        // Instructions (RISC-V machine code):
-        // 0x00000000: LUI x1, 0xDEADB      (opcode: 0xDEADB137)
-        // 0x00000004: ADDI x1, x1, 0xEEF   (opcode: 0xEEF31313)
-        // 0x00000008: SW x1, 0x10(x0)      (opcode: 0x01012023)
-        // 0x0000000C: NOP                  (opcode: 0x00000013)
+        // Reading Instructions from File
+        $display("Reading instructions from fibonacci_assembly_hex.txt...");
+        num_instructions = 0;
+        read_instructions_from_file("fibonacci_assembly_hex.txt");
 
-        // Loading instructions into Instruction Memory
-        test_write_to_memory(32'h00000000, 32'hDEADB137);  // LUI x1, 0xDEADB
-        test_write_to_memory(32'h00000004, 32'hEEF31313);  // ADDI x1, x1, 0xEEF
-        test_write_to_memory(32'h00000008, 32'h01012023);  // SW x1, 0x10(x0)
-        test_write_to_memory(32'h0000000C, 32'h00000013);  // NOP
+        #(WAIT_BETWEEN_STEPS) step = 0;
+        // Loading Instructions into Instruction Memory
+        $display("Loading instructions into Instruction Memory...");
+        for (i = 0; i < num_instructions; i = i + 1) begin
+            test_write_to_memory(instruction_addresses[i], instruction_mem[i]);
+        end
+
+
         // OK todo: separate reset signal to memories
         // todo: core clock-gating when UART accesses memories
         // todo: add PDK memories
@@ -194,46 +195,221 @@ module osiris_i_tb;
         //      jgoar bits estado para fora ou bit
         // todo: x- confirmacao da memoria que foi escrito
 
-        #(WAIT_BETWEEN_STEPS);
-        step = step + 1;
-        i_start_rx = 0;  // Enable UART reception
+        // Release Core Reset and Start Execution
+        #(WAIT_BETWEEN_STEPS) step = 0;
+        i_start_rx = 0;  // Disable UART reception
         #(50* CLK_PERIOD);
-        rst_core = 0;
+        rst_core = 0; // Activate core
+        #(1000);  // Wait for core to execute instructions
 
-        // // Allow some time for the core to execute the program
-        // #1000;  // Adjust timing as needed for the core to complete execution
+        step = 1;
+        i_start_rx = 1;  // Enable UART reception
+        rst_core = 1; // disable core
+        #(10* CLK_PERIOD);
 
-        // // Read back the result from Data Memory
-        // i_select_mem  = 1;  // Select Data Memory
-        // test_address  = 32'h00000010;  // Address where data should have been written
-        // expected_data = 32'hDEADBEEF;  // Expected data
+        // Reading Expected Results from File
+        $display("Reading expected results from fibonacci_hex_47_32bit.txt...");
+        expected_result_count = 0;
+        read_expected_results_from_file("fibonacci_hex_47_32bit.txt");
 
-        // test_read_from_memory(test_address, read_data);
+        // Open File to Write Outputs
+        output_file = $fopen("risc_outputs.txt", "w");
+        if (output_file == 0) begin
+            $display("Error: Cannot open risc_outputs.txt for writing");
+            $finish;
+        end
 
-        // if (read_data !== expected_data) begin
-        //     $display(
-        //         "ERROR: Program Execution Failed! Expected Data 0x%08X at Address 0x%08X, Got 0x%08X",
-        //         expected_data, test_address, read_data);
-        //     test_passed = 0;
-        // end else begin
-        //     $display("Program Execution Successful. Data at Address 0x%08X is 0x%08X",
-        //              test_address, read_data);
-        // end
+        $display("\n\n-------------------------------------------------------------");
+        // Verify Results and Write Outputs to File
+        $display("Verifying results and writing outputs to risc_outputs.txt...");
+        i_select_mem = 1;  // Select Data Memory
+        for (it = 0; it < expected_result_count; it = it + 1) begin
+            test_read_from_memory(expected_addresses[it], read_data);
+            // Write output to file
+            // $fwrite(output_file, "@%08X %08X\n", expected_addresses[it], read_data);
 
-        // --------------------------------------------
+            if (read_data !== expected_data_array[it]) begin
+                $display("ERROR: Data mismatch at address 0x%08X! Expected 0x%08X, Got 0x%08X",
+                         expected_addresses[it], expected_data_array[it], read_data);
+                test_passed = 0;
+            end else begin
+                $display("Data at address 0x%08X verified: 0x%08X", expected_addresses[it],
+                         read_data);
+            end
+        end
+
+        // Close the output file
+        $fclose(output_file);
+
         // Final Test Result
-        // --------------------------------------------
         if (test_passed) begin
             $display("\nAll tests PASSED!");
         end else begin
             $display("\nError: Some tests FAILED.");
         end
 
-        // #500000 $finish;
         #10000 $finish;
     end
 
-    // Declare the task within your testbench module
+    // Task to read instructions from a file specified by 'filename'
+    task read_instructions_from_file(input string filename);
+        integer instr_file;   // File descriptor for instruction file
+        integer code;         // Variable to store the return code of $fgets
+        reg [DATA_WIDTH-1:0] instr;  // Variables for instruction address and data
+        // reg [ADDR_WIDTH-1:0] addr;  // Variables for instruction address and data
+        parameter int MAX_LINE_LENGTH = 8; // Adjust as needed
+        reg [8*MAX_LINE_LENGTH-1:0] line; // Line buffer as a reg array
+
+        bit exit_loop; // Flag to control loop exit
+        reg [DATA_WIDTH-1:0] hex_value;
+        begin
+            exit_loop = 0;
+            $display("\n\n----------------- read_instructions_from_file ----------------------------");
+            $display("Starting read_instructions_from_file for file: %s", filename);
+
+            // Attempt to open the file in read mode
+            instr_file = $fopen(filename, "r");
+            $display("File opened, file descriptor: %0h", instr_file);
+            
+            // Check if file opened successfully
+            if (instr_file == 0) begin
+                $display("Error: Cannot open %s", filename);  // Display error if file cannot be opened
+                $finish;  // Terminate simulation
+            end
+
+            num_instructions = 0;
+            // Initialize counter and display start of file read loop
+            $display("Beginning file read loop...");
+            while (!$feof(instr_file)) begin
+                if (!exit_loop) begin
+                    
+                    // Clear the line buffer
+                    line = {8*MAX_LINE_LENGTH{1'b0}};
+
+                    // Read a line from the file
+                    code = $fgets(line, instr_file);
+
+                    if (code == 0) begin
+                        $display("Warning: fgets failed at line %0d", num_instructions + 1);
+                        exit_loop = 1;
+                    end
+
+                    if (line == "\n") begin
+                        $display("");
+                    end else begin
+                        $display("At line %0d -> Raw line read: %s", num_instructions, line);
+                        $sscanf(line, "%h", hex_value);
+
+                        // Store address and instruction in arrays
+                        instruction_addresses[num_instructions] = num_instructions;
+                        // instruction_mem[num_instructions] = instr;
+                        instruction_mem[num_instructions] = hex_value;
+                        $display("Stored instruction at index %0d", num_instructions);
+
+                        // Increment instruction count
+                        num_instructions = num_instructions + 1;
+                        
+                        // For debugging, limit the number of instructions (optional)
+                        if (num_instructions >= 17) begin
+                            $display("Reached maximum instruction limit of %0d.", 17);
+                            exit_loop = 1;
+                        end
+                    end
+                end
+            end
+
+            // Close the instruction file after reading
+            $fclose(instr_file);
+            $display("File closed successfully.");
+
+            // Display the number of instructions loaded
+            $display("Loaded %0d instructions from %s.", num_instructions, filename);
+        end
+    endtask
+
+
+    // Task to read expected results from a file specified by 'filename'
+    // This task loads expected result data from the file into memory arrays
+    task read_expected_results_from_file(input string filename);
+        integer expected_file;      // File descriptor for expected results file
+        integer code;               // Return code of $fgets
+        // reg [ADDR_WIDTH-1:0] addr;      // Variables for expected data address and value
+        reg [DATA_WIDTH-1:0] data;      // Variables for expected data address and value
+        parameter int MAX_LINE_LENGTH = 8; // Adjust as needed
+        reg [8*MAX_LINE_LENGTH-1:0] line; // Line buffer as a reg array
+
+        bit exit_loop;          // Flag to control loop exit
+        reg [DATA_WIDTH-1:0] hex_value;
+        begin
+            exit_loop = 0;
+            $display("\n\n----------------- read_expected_results_from_file ----------------------------");
+            $display("Starting read_expected_results_from_file for file: %s", filename);
+
+            // Attempt to open the file in read mode
+            expected_file = $fopen(filename, "r");
+
+            if (expected_file == 0) begin
+                $display("Error: Cannot open %s", filename);  // Display error if file cannot be opened
+                $finish;  // Terminate simulation
+            end
+            $display("File opened successfully.");
+
+            expected_result_count = 0;
+
+            // Begin reading lines
+            $display("Beginning file read loop...");
+            while (!$feof(expected_file) && !exit_loop) begin
+
+                // Clear the line buffer
+                line = {8*MAX_LINE_LENGTH{1'b0}};
+
+                // Read a line from the file
+                code = $fgets(line, expected_file);
+                // // Parse the line for address and data
+                // // code = $sscanf(line, "@%h %h", addr, data);
+                // code = $sscanf(line, "@%h", data);
+
+                // if (code == 0) begin
+                //     $display("Warning: fgets failed at line %0d", expected_result_count + 1);
+                //     exit_loop = 1;
+                // end
+
+                // Ignore empty lines or newline-only entries
+                if (line == "\n") begin
+                    $display(""); // Skip to the next line
+                end else begin
+                    $display("At line %0d -> Raw line read: %s", expected_result_count, line);
+                    $sscanf(line, "%h", hex_value);
+
+                    // Store address and data in arrays
+                    // expected_addresses[expected_result_count] = addr;
+                    expected_addresses[expected_result_count] = expected_result_count;
+                    expected_data_array[expected_result_count] = hex_value;
+                    // $display("Stored expected result at index %0d: addr = %h, data = %h", expected_result_count, addr, data);
+                    $display("Stored expected result at index %0d: data = %h", expected_result_count, hex_value);
+
+                    // Increment expected results count
+                    expected_result_count = expected_result_count + 1;
+
+                    // Optional limit for debugging
+                    if (expected_result_count >= 48) begin
+                        $display("Reached maximum expected result limit of %0d.", 48);
+                        exit_loop = 1;
+                    end
+                end
+            end
+            
+
+            // Close the expected results file after reading
+            $fclose(expected_file);
+            $display("File closed successfully.");
+
+            // Display the number of expected results loaded
+            $display("Loaded %0d expected results from %s.", expected_result_count, filename);
+        end
+    endtask
+
+    // Task to Test Memory Read and Write via UART
     task test_memory(
         input logic select_mem,  // Input parameter to select the memory
         input [ADDR_WIDTH-1:0] first_address = 32'hA0000002,
@@ -249,7 +425,7 @@ module osiris_i_tb;
             i_select_mem = select_mem;  // 0 for Instruction Memory, 1 for Data Memory
 
             step = step + 1;
-            $display("\n\n ====================================================");
+            $display("\n\n====================================================");
             // --------------------------------------------
             // Test 1: Write Data to Memory via UART and Verify
             // --------------------------------------------
@@ -320,14 +496,7 @@ module osiris_i_tb;
 
     // Task to Test Writing Data to Memory via UART
     task test_write_to_memory(input [ADDR_WIDTH-1:0] address, input [DATA_WIDTH-1:0] data);
-        integer MEM_WORDS;
-        integer MEM_ADDR_BITS;
         begin
-            // if (i_select_mem) begin
-            // end else begin
-                
-            // end
-
             // Send CMD_WRITE command
             uart_send_byte(CMD_WRITE);
             $display("\nSent CMD_WRITE Command.");
@@ -361,28 +530,23 @@ module osiris_i_tb;
 
     // Task to Test Reading Data from Memory via UART
     task test_read_from_memory(input [ADDR_WIDTH-1:0] address, output reg [DATA_WIDTH-1:0] data);
-        integer x;
         begin
-            x=0;
-            // step = 0;
             // Send CMD_READ command
             uart_send_byte(CMD_READ);
             $display("Sent CMD_READ Command.");
             #(WAIT_BETWEEN_UART_SEND_CMD);
 
-            // step = 1;
             // Send Address (LSB first)
             uart_send_word2(address, ADDR_WIDTH);
             $display("Sent Address: 0x%08X", address);
 
-            // step = 2;
             // Receive Data via UART
             uart_receive_word(data);
             $display("Received Data: 0x%08X", data);
         end
     endtask
 
-    // Task to Send a Word (multiple bytes) via UART to DUT
+    // Task to Send a Word via UART to DUT
     task uart_send_word(input [DATA_WIDTH-1:0] data, input integer width);
         integer byte_count;
         reg [7:0] byte_data;
@@ -457,7 +621,6 @@ module osiris_i_tb;
         reg [7:0] received_byte;
         begin
             data = 0;
-            // step = step + 1;
             for (byte_count = 0; byte_count < (DATA_WIDTH / 8); byte_count = byte_count + 1) begin
                 uart_capture_byte(received_byte);  // Call the task with output argument
                 data = data | (received_byte << (8 * byte_count));
@@ -479,13 +642,13 @@ module osiris_i_tb;
                 #(BIT_PERIOD);
                 data[bit_idx] = o_uart_tx;
             end
-            // step = step + 1;
 
             // Stop Bit
             #(BIT_PERIOD);
         end
     endtask
 
+    // Task to Compare Memory Data with Expected Values
     task compare_memory_data;
         input [ADDR_WIDTH-1:0] address;         // Address to read from memory
         input [DATA_WIDTH-1:0] read_data;       // Variable to hold read data
