@@ -199,10 +199,11 @@ module osiris_i_tb;
         #(WAIT_BETWEEN_STEPS) step = 0;
         i_start_rx = 0;  // Disable UART reception
         #(50* CLK_PERIOD);
-        rst_core = 0; // Activate core
-        #(1000);  // Wait for core to execute instructions
-
         step = 1;
+        rst_core = 0; // Activate core
+        #(50000 * CLK_PERIOD);  // Wait for core to execute instructions
+
+        step = 2;
         i_start_rx = 1;  // Enable UART reception
         rst_core = 1; // disable core
         #(10* CLK_PERIOD);
@@ -310,8 +311,8 @@ module osiris_i_tb;
                         num_instructions = num_instructions + 1;
                         
                         // For debugging, limit the number of instructions (optional)
-                        if (num_instructions >= 17) begin
-                            $display("Reached maximum instruction limit of %0d.", 17);
+                        if (num_instructions >= 33) begin
+                            $display("Reached maximum instruction limit of %0d.", 33);
                             exit_loop = 1;
                         end
                     end
