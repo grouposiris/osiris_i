@@ -173,15 +173,34 @@ module osiris_i_tb;
         #(10* CLK_PERIOD);
 
         // Reading Instructions from File
-        $display("Reading instructions from fibonacci_assembly_hex.txt...");
+        $display("Reading instructions from store_inst_hex.txt...");
         num_instructions = 0;
-        read_instructions_from_file("fibonacci_assembly_hex.txt");
+        read_instructions_from_file("store_inst_hex.txt");
 
-        #(WAIT_BETWEEN_STEPS) step = 0;
+        #(WAIT_BETWEEN_STEPS) step = 1;
         // Loading Instructions into Instruction Memory
         $display("Loading instructions into Instruction Memory...");
-        for (i = 0; i < num_instructions; i = i + 1) begin
-            test_write_to_memory(instruction_addresses[i], instruction_mem[i]);
+        for (it = 0; it < num_instructions; it = it + 1) begin
+            $display("\n Test 5: [%1d] Sending to addr: %h the data: %h", it, instruction_addresses[it], instruction_mem[it]);
+            step = step + 1;
+            test_write_to_memory(instruction_addresses[it], instruction_mem[it]);
+        end
+
+
+        #(5 * WAIT_BETWEEN_STEPS);
+        step = 1;
+
+        $display("\n\n --------------------------------------------");
+        if (i_select_mem == 0) begin
+            $display(" Test 5: Reading Data from Instruction Memory via UART...");
+        end else begin
+            $display(" Test 5: Reading Data from Data Memory via UART...");
+        end
+        $display(" --------------------------------------------");
+        for (it = 0; it < num_instructions; it = it + 1) begin
+            test_read_from_memory(instruction_addresses[it], read_data);
+            $display("\nTest 5: [%1d] Read from addr: %h the data: %h", it, instruction_addresses[it], read_data);
+            compare_memory_data(instruction_addresses[it], read_data); // Compare with expected data
         end
 
 
@@ -195,23 +214,25 @@ module osiris_i_tb;
         //      jgoar bits estado para fora ou bit
         // todo: x- confirmacao da memoria que foi escrito
 
+        #(50000 * CLK_PERIOD);  // Wait for core to execute instructions
+
         // Release Core Reset and Start Execution
-        #(WAIT_BETWEEN_STEPS) step = 0;
+        #(WAIT_BETWEEN_STEPS);
         i_start_rx = 0;  // Disable UART reception
         #(50* CLK_PERIOD);
-        step = 1;
+        step = 2;
         rst_core = 0; // Activate core
         #(50000 * CLK_PERIOD);  // Wait for core to execute instructions
 
-        step = 2;
+        step = 3;
         i_start_rx = 1;  // Enable UART reception
         rst_core = 1; // disable core
         #(10* CLK_PERIOD);
 
         // Reading Expected Results from File
-        $display("Reading expected results from fibonacci_hex_47_32bit.txt...");
+        $display("Reading expected results from store_expected.txt...");
         expected_result_count = 0;
-        read_expected_results_from_file("fibonacci_hex_47_32bit.txt");
+        read_expected_results_from_file("store_expected.txt");
 
         // Open File to Write Outputs
         output_file = $fopen("risc_outputs.txt", "w");
@@ -234,7 +255,7 @@ module osiris_i_tb;
                          expected_addresses[it], expected_data_array[it], read_data);
                 test_passed = 0;
             end else begin
-                $display("Data at address 0x%08X verified: 0x%08X", expected_addresses[it],
+                $display("OK: Data at address 0x%08X verified: 0x%08X", expected_addresses[it],
                          read_data);
             end
         end
@@ -311,8 +332,8 @@ module osiris_i_tb;
                         num_instructions = num_instructions + 1;
                         
                         // For debugging, limit the number of instructions (optional)
-                        if (num_instructions >= 33) begin
-                            $display("Reached maximum instruction limit of %0d.", 33);
+                        if (num_instructions >= 117) begin
+                            $display("Reached maximum instruction limit of %0d.", 117);
                             exit_loop = 1;
                         end
                     end
@@ -430,11 +451,6 @@ module osiris_i_tb;
             // --------------------------------------------
             // Test 1: Write Data to Memory via UART and Verify
             // --------------------------------------------
-            if (select_mem == 0) begin
-                $display("\n Test 1: Writing Data to Instruction Memory via UART...");
-            end else begin
-                $display("\n Test 1: Writing Data to Data Memory via UART...");
-            end
 
             test_address  = 32'hF000008C;  // Starting address for the test
             expected_data = 32'hDEADBEEF;  // Test data
@@ -447,9 +463,9 @@ module osiris_i_tb;
 
             $display("\n\n --------------------------------------------");
             if (select_mem == 0) begin
-                $display("\nTest 1: Writing Data to Instruction Memory via UART...");
+                $display("\n Test 1: Writing Data to Instruction Memory via UART...");
             end else begin
-                $display("\nTest 1: Writing Data to Data Memory via UART...");
+                $display("\n Test 1: Writing Data to Data Memory via UART...");
             end
             $display(" --------------------------------------------");
 
@@ -457,7 +473,7 @@ module osiris_i_tb;
             expected_data = 32'hD00DB00F;  // Another test data
 
             // Write Data to Memory via UART and Wishbone
-            $display("\nTest 1: Writing Data to Memory...");
+            $display("\n Test 1: Writing Data to Memory...");
             test_write_to_memory(test_address, expected_data);
             
             #(WAIT_BETWEEN_STEPS);

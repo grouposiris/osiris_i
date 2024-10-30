@@ -17,7 +17,7 @@ module mem #(
     // Memory array: 64KB Memory, 32-bit wide
     // reg [DATA_WIDTH-1:0] mem[0:(MEM_SIZE * 1024 / 4) - 1];
 
-    // // Memory depth calculation based on ADDR_WIDTH
+    // // Memory depth calculation   based on ADDR_WIDTH
     // localparam MEM_DEPTH = 2 ** ADDR_WIDTH;
     // // Memory array with calculated depth
     // reg [DATA_WIDTH-1:0] mem[0:MEM_DEPTH - 1];
