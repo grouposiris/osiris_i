@@ -46,7 +46,7 @@ module osiris_i_tb;
 
     // Array to store flags indicating if the value has changed
     reg [DATA_WIDTH-1:0] mem_prev[0:15];  // Array to store previous values
-    // integer i;
+    integer i;
 
     initial begin
         // Initialize previous values to zero or a known initial value
@@ -127,7 +127,7 @@ module osiris_i_tb;
     end
 
     // Test Variables
-    integer i;
+    //integer i;
     reg test_passed;
     reg [DATA_WIDTH-1:0] read_data;
     reg [DATA_WIDTH-1:0] expected_data;

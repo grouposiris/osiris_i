@@ -265,7 +265,7 @@ module datapath #(
     );
 
     // Memory Access Stage
-    assign o_data_addr_M  = alu_result_M;
+    assign o_data_addr_M  = alu_result_WB;
     assign o_write_data_M = write_data_M;
     assign o_mem_write_M  = mem_write_M;
 

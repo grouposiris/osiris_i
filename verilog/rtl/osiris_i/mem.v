@@ -3,16 +3,16 @@ module mem #(
     // parameter ADDR_WIDTH = 14   // 13 = 32kB, 14 = 64KB
     parameter MEM_SIZE   = 64   // in KB
 ) (
-    input  wire                         clk,       // Clock
-    input  wire                         rst,       // Reset
+    clk,       // Clock
+    rst,       // Reset
     // input  wire [ADDR_WIDTH-1:0] wb_adr_i,  // Wishbone address input
-    input  wire [$clog2(MEM_DEPTH)-1:0] wb_adr_i,  // Adjusted address input width
-    input  wire [       DATA_WIDTH-1:0] wb_dat_i,  // Wishbone data input
-    input  wire                         wb_we_i,   // Wishbone write enable
-    input  wire                         wb_stb_i,  // Wishbone strobe
-    input  wire                         wb_cyc_i,  // Wishbone cycle
-    output wire [       DATA_WIDTH-1:0] wb_dat_o,  // Wishbone data output
-    output reg                          wb_ack_o   // Wishbone acknowledge
+    wb_adr_i,  // Adjusted address input width
+    wb_dat_i,  // Wishbone data input
+    wb_we_i,   // Wishbone write enable
+    wb_stb_i,  // Wishbone strobe
+    wb_cyc_i,  // Wishbone cycle
+    wb_dat_o,  // Wishbone data output
+    wb_ack_o   // Wishbone acknowledge
 );
     // Memory array: 64KB Memory, 32-bit wide
     // reg [DATA_WIDTH-1:0] mem[0:(MEM_SIZE * 1024 / 4) - 1];
@@ -27,6 +27,17 @@ module mem #(
 
     // Define the memory array with calculated depth
     reg [DATA_WIDTH-1:0] mem[0:MEM_DEPTH-1];
+
+    input  wire                         clk;       // Clock
+    input  wire                         rst;       // Reset
+    // input  wire [ADDR_WIDTH-1:0] wb_adr_i,  // Wishbone address input
+    input  wire [$clog2(MEM_DEPTH)-1:0] wb_adr_i;  // Adjusted address input width
+    input  wire [       DATA_WIDTH-1:0] wb_dat_i;  // Wishbone data input
+    input  wire                         wb_we_i;   // Wishbone write enable
+    input  wire                         wb_stb_i;  // Wishbone strobe
+    input  wire                         wb_cyc_i;  // Wishbone cycle
+    output wire [       DATA_WIDTH-1:0] wb_dat_o;  // Wishbone data output
+    output reg                          wb_ack_o;   // Wishbone acknowledge
 
     integer i;
 
