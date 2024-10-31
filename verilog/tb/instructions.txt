@@ -1,0 +1,96 @@
+addi x1, x0, 0
+addi x2, x0, 1
+sw x2, 0(x0)
+sw x2, 1(x0)
+sw x2, 4(x0)
+sh x2, 0(x0)
+sh x2, 1(x0)
+sh x2, 4(x0)
+sb x2, 0(x0)
+sb x2, 1(x0)
+sb x2, 4(x0)
+# I-Type Instructions
+addi x1, x0, 0
+addi x2, x0, 1
+addi x3, x0, -1
+andi x4, x5, 0xF
+andi x6, x7, 0xA
+andi x8, x9, 0x7
+ori x10, x11, 0x3
+ori x12, x13, 0x9
+ori x14, x15, 0x5
+xori x1, x2, 0x2
+xori x3, x4, 0x8
+xori x5, x6, 0xF
+slti x7, x8, 10
+slti x9, x10, 20
+slti x11, x12, 30
+sltiu x13, x14, 5
+sltiu x15, x1, 15
+sltiu x2, x3, 25
+slli x1, x2, 1
+slli x3, x4, 2
+slli x5, x6, 3
+srli x7, x8, 1
+srli x9, x10, 2
+srli x11, x12, 3
+srai x13, x14, 1
+srai x15, x1, 2
+srai x2, x3, 3
+# R-Type Instructions
+add x1, x2, x3
+add x4, x5, x6
+add x7, x8, x9
+sub x10, x11, x12
+sub x13, x14, x15
+sub x1, x2, x3
+and x3, x4, x5
+and x6, x7, x8
+and x9, x10, x11
+or x12, x13, x14
+or x15, x1, x2
+or x3, x4, x5
+xor x6, x7, x8
+xor x9, x10, x11
+xor x12, x13, x14
+# S-Type Instructions
+sw x2, 0(x0)
+sw x2, 4(x0)
+sw x2, 8(x0)
+sh x3, 0(x1)
+sh x3, 2(x1)
+sh x3, 6(x1)
+sb x4, 0(x2)
+sb x4, 1(x2)
+sb x4, 3(x2)
+# B-Type Instructions
+beq x1, x2, 8
+beq x3, x4, -4
+beq x5, x6, 12
+bne x7, x8, 16
+bne x9, x10, -8
+bne x11, x12, 20
+blt x13, x14, 24
+blt x15, x1, -12
+blt x2, x3, 28
+bge x4, x5, 32
+bge x6, x7, -16
+bge x8, x9, 36
+bltu x10, x11, 40
+bltu x12, x13, -20
+bltu x14, x15, 44
+bgeu x1, x2, 48
+bgeu x3, x4, -24
+bgeu x5, x6, 52
+# U-Type Instructions
+lui x1, 0x12345
+lui x2, 0x23456
+lui x3, 0x34567
+auipc x4, 0x45678
+auipc x5, 0x56789
+auipc x6, 0x67890
+# J-Type Instructions
+jal x1, 32
+jal x2, -16
+jal x3, 64
+exit

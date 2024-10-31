@@ -243,7 +243,7 @@ module osiris_i_tb;
 
         $display("\n\n-------------------------------------------------------------");
         // Verify Results and Write Outputs to File
-        $display("Verifying results and writing outputs to risc_outputs.txt...");
+        $display(" Test 5: Verifying results and writing outputs to risc_outputs.txt...");
         i_select_mem = 1;  // Select Data Memory
         for (it = 0; it < expected_result_count; it = it + 1) begin
             test_read_from_memory(expected_addresses[it], read_data);
@@ -251,11 +251,11 @@ module osiris_i_tb;
             // $fwrite(output_file, "@%08X %08X\n", expected_addresses[it], read_data);
 
             if (read_data !== expected_data_array[it]) begin
-                $display("ERROR: Data mismatch at address 0x%08X! Expected 0x%08X, Got 0x%08X",
+                $display("ERROR: Data mismatch at address 0x%08X! Expected 0x%08X, Got 0x%08X \n",
                          expected_addresses[it], expected_data_array[it], read_data);
                 test_passed = 0;
             end else begin
-                $display("OK: Data at address 0x%08X verified: 0x%08X", expected_addresses[it],
+                $display("OK: Data at address 0x%08X verified: 0x%08X \n", expected_addresses[it],
                          read_data);
             end
         end
