@@ -112,6 +112,8 @@ def encode_instruction(instr_str, line_num=None):
             opcode
         )
     elif instr_type == 'I':
+        if mnemonic in ['xori']:
+            print("xori")
         if mnemonic in ['slli', 'srli', 'srai']:
             if len(operands) != 3:
                 raise ValueError(
@@ -146,20 +148,29 @@ def encode_instruction(instr_str, line_num=None):
                 opcode
             )
         else:
+            # xori x1, x2, 0x2
             if len(operands) != 3:
                 raise ValueError(
                     f"Instruction '{mnemonic}' requires 3 operands.")
             rd = parse_register(operands[0])
             rs1 = parse_register(operands[1])
             imm = int(operands[2], 0)
-            imm = sign_extend(imm, 12) & 0xFFF
+            # imm = sign_extend(imm, 12) & 0xFFF
+            imm = sign_extend(imm, 12)  # imm = 0x00000002
+            # machine_code = (
+            #     (imm << 20) |           # (0x002 << 20) = 0x00200000
+            #     (rs1 << 15) |           # (2 << 15)     = 0x00010000
+            #     (funct3 << 12) |        # (4 << 12)     = 0x00004000
+            #     (rd << 7) |             # (1 << 7)      = 0x00000080
+            #     opcode                  #               = 0x00000013
+            # )
             machine_code = (
-                (imm << 20) |
+                ((imm & 0xFFF) << 20) |
                 (rs1 << 15) |
                 (funct3 << 12) |
                 (rd << 7) |
                 opcode
-            )
+            ) & 0xFFFFFFFF
     elif instr_type == 'S':
         if len(operands) != 3:
             raise ValueError(f"Instruction '{mnemonic}' requires 3 operands.")
@@ -181,7 +192,6 @@ def encode_instruction(instr_str, line_num=None):
             (imm_4_0 << 7) |
             opcode
         )
-
     elif instr_type == 'B':
         if len(operands) != 3:
             raise ValueError(f"Instruction '{mnemonic}' requires 3 operands.")
