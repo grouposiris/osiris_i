@@ -1,0 +1,35 @@
+Clock Cycle:     0 | Program Counter changed to 00000000
+Clock Cycle:     0 | Instruction Register changed to 00000000, Assembly: UNKNOWN_OPCODE
+Clock Cycle:     0 | Register[0] changed to 00000000
+Clock Cycle:     0 | Register[1] changed to 00000000
+Clock Cycle:     0 | Register[2] changed to 00000000
+Clock Cycle:     0 | Register[3] changed to 00000000
+Clock Cycle:     0 | Register[4] changed to 00000000
+Clock Cycle:     0 | Register[5] changed to 00000000
+Clock Cycle:     0 | Register[6] changed to 00000000
+Clock Cycle:     0 | Register[7] changed to 00000000
+Clock Cycle:     0 | Register[8] changed to 00000000
+Clock Cycle:     0 | Register[9] changed to 00000000
+Clock Cycle:     0 | Register[10] changed to 00000000
+Clock Cycle:     0 | Register[11] changed to 00000000
+Clock Cycle:     0 | Register[12] changed to 00000000
+Clock Cycle:     0 | Register[13] changed to 00000000
+Clock Cycle:     0 | Register[14] changed to 00000000
+Clock Cycle:     0 | Register[15] changed to 00000000
+Clock Cycle:     3 | Program Counter changed to 00000004
+Clock Cycle:     3 | Instruction Register changed to 00000093, Assembly: ADDI x1, x0, 0
+Clock Cycle:     5 | Program Counter changed to 00000008
+Clock Cycle:     5 | Instruction Register changed to 00100113, Assembly: ADDI x2, x0, 1
+Clock Cycle:     6 | Program Counter changed to 0000000c
+Clock Cycle:     6 | Instruction Register changed to 00202023, Assembly: SW x2, 0(x0)
+Clock Cycle:     7 | Program Counter changed to 00000010
+Clock Cycle:     7 | Instruction Register changed to 002020a3, Assembly: SW x2, 1(x0)
+Clock Cycle:     8 | Program Counter changed to 00000014
+Clock Cycle:     8 | Instruction Register changed to 00202223, Assembly: SW x2, 4(x0)
+Clock Cycle:     9 | Program Counter changed to 00000018
+Clock Cycle:     9 | Register[2] changed to 00000001
+Clock Cycle:     9 | Instruction Register changed to 00000000, Assembly: UNKNOWN_OPCODE
+Clock Cycle:    10 | Program Counter changed to 0000001c
+Clock Cycle:    12 | Program Counter changed to 00000020
+Clock Cycle:    14 | Program Counter changed to 00000024
+Clock Cycle:    14 | Instruction Register changed to xxxxxxxx, Assembly: UNKNOWN_OPCODE

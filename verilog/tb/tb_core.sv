@@ -21,6 +21,7 @@ module tb_core ();
             reg  clk;
             reg  rst_core;
             reg  [15:0] cycle_counter = 0;
+            integer f_osiris_core_state_dump;
 
         // DUT signals
             reg [DATA_WIDTH-1:0] core_instr_ID;
@@ -84,6 +85,7 @@ module tb_core ();
                 for (i = 0; i < 16; i = i + 1) begin : monitor_registers
                     always @(dut.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.registers[i]) begin
                         $display("Time %0t ps: Register[%0d] changed to %h", $time, i, dut.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.registers[i]);
+                        $fdisplay(f_osiris_core_state_dump, "Clock Cycle: %d | Register[%0d] changed to %h", cycle_counter, i, dut.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.registers[i]);
                     end
                 end
             endgenerate
@@ -110,11 +112,13 @@ module tb_core ();
         // Monitor changes in the PC register
             always @(core_pc_IF) begin
                 $display("Time %0t ps: core_pc_IF changed to %h", $time, core_pc_IF);
+                $fdisplay(f_osiris_core_state_dump, "Clock Cycle: %d | Program Counter changed to %h", cycle_counter, core_pc_IF);
             end
 
         // Monitor changes in the Instruction Register
             always @(dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID) begin
                 $display("Time %0t ps: i_instr_ID changed to %h, Assembly: %s", $time, dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID, decode_instruction(dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID));
+                $fdisplay(f_osiris_core_state_dump, "Clock Cycle: %d | Instruction Register changed to %h, Assembly: %s", cycle_counter, dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID, decode_instruction(dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID));
             end
 
         // Main Test Sequence
@@ -122,6 +126,13 @@ module tb_core ();
                 // Run some simple test instructions
                 // @(negedge rst_core);
                 //display_registers();  // Dump registers after reset
+
+                // Seting up the testbench
+                // Open the file to store the state of osiris core
+                f_osiris_core_state_dump = $fopen("osiris_core_state.dump", "w");
+                if (!f_osiris_core_state_dump) begin
+                    $display("[Error] - Failed to open the file: osiris_core_state.dump");
+                end
 
                 $display("---------------------------------------");
                 $display("Initializing memories with zeroes...");
@@ -140,10 +151,10 @@ module tb_core ();
                 #(1*CLK_PERIOD);
 
 
-                $display("\n\n\n");
-                encode_instruction_string("sw x7, 16(x2)", encoded_instr);
-                $display("Encoded Instruction for 'sw x7, 16(x2)': %h", encoded_instr);
-                $display("\n\n\n");
+                //$display("\n\n\n");
+                //encode_instruction_string("sw x7, 16(x2)", encoded_instr);
+                //$display("Encoded Instruction for 'sw x7, 16(x2)': %h", encoded_instr);
+                //$display("\n\n\n");
 
 
                 $display("---------------------------------------");
