@@ -112,13 +112,13 @@ module tb_core ();
         // Monitor changes in the PC register
             always @(core_pc_IF) begin
                 $display("Time %0t ps: core_pc_IF changed to %h", $time, core_pc_IF);
-                $fdisplay(f_osiris_core_state_dump, "Clock Cycle: %d | Program Counter changed to %h", cycle_counter, core_pc_IF);
+                $fdisplay(f_osiris_core_state_dump, "Clock Cycle: %d | [Program Counter] changed to %h", cycle_counter, core_pc_IF);
             end
 
         // Monitor changes in the Instruction Register
             always @(dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID) begin
                 $display("Time %0t ps: i_instr_ID changed to %h, Assembly: %s", $time, dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID, decode_instruction(dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID));
-                $fdisplay(f_osiris_core_state_dump, "Clock Cycle: %d | Instruction Register changed to %h, Assembly: %s", cycle_counter, dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID, decode_instruction(dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID));
+                $fdisplay(f_osiris_core_state_dump, "Clock Cycle: %d | [Instruction Register] changed to %h, Assembly: %s", cycle_counter, dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID, decode_instruction(dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID));
             end
 
         // Main Test Sequence
@@ -218,16 +218,19 @@ module tb_core ();
             always @(posedge clk) begin
                 if (core_mem_write_M & !rst_core) begin
                     mem_data[core_data_addr_M[DATA_MEM_ADDR_BITS-1:0]] <= core_write_data_M;
+                    $fdisplay(f_osiris_core_state_dump, "Clock Cycle: %d | [Data Memory] - Write - Addr = %h, Data = %h", cycle_counter, core_data_addr_M, mem_data[core_data_addr_M[DATA_MEM_ADDR_BITS-1:0]]);
                     //$display("Time %0t ps: [Data Memory] Write: Addr = %h, Data = %h",$time, core_data_addr_M, core_write_data_M);
                 end
             end
 
-        // Reads from the memory are asynchronous // looking at mem.v it seems synchronous
-            always @(posedge clk) begin
+        // Reads from the memory are asynchronous // looking at mem.v it seems synchronous // the read operation just uses an 'assign', so it is asynchronous
+            // Looking at mem.v, always that a change occurs in the 'wb_adr_i', the value of 'wb_dat_o' also changes. Neither one of those values are registered
+            always @(*) begin
                 if (!core_mem_write_M && !rst_core) begin
                     core_read_data_M <= mem_data[core_data_addr_M[DATA_MEM_ADDR_BITS-1:0]];
                     if (core_data_addr_M != 32'hxxxxxxxx && core_read_data_M != 32'hFFFFFFFF) begin
                         $display("Time %0t ps: [Data Memory] - Read - Addr = %h, Data = %h", $time, core_data_addr_M, core_read_data_M);
+                        $fdisplay(f_osiris_core_state_dump, "Clock Cycle: %d | [Data Memory] - Read - Addr = %h, Data = %h", cycle_counter, core_data_addr_M, core_read_data_M);
                     end
                 end else begin
                     core_read_data_M <= {DATA_WIDTH{1'b1}};
@@ -248,39 +251,6 @@ module tb_core ();
                 end else begin
                     $display("Test %0d PASSED", test_id);
                 end
-            endtask
-
-        // Test sequence with instructions
-            task run_test_sequence();
-                integer test_id = 0;
-
-                // Test example: Load immediate, store, etc.
-                // Load immediate test
-                mem_instr[0] = 32'h00000093;  // Example: addi x1, x0, 0 (loads 0 into x1)
-                mem_instr[1] = 32'h00100113;  // Example: addi x2, x0, 1 (loads 1 into x2)
-                //repeat(9) @(posedge clk);  // Allow time for execution
-
-                // $display("Checking results for Load Immediate instructions...");
-                // check_result(32'h0, dut.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.registers[1], test_id++);
-                // check_result(32'h1, dut.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.registers[2], test_id++);
-
-                // Store and Load test
-                // Additional instructions here
-
-                // Output final message
-                $display("Test sequence completed.");
-            endtask
-
-        // Task to display all registers in the core
-            task display_registers;
-            integer i;
-            begin
-                $display("===== Register Dump =====");
-                for (i = 0; i < 16; i = i + 1) begin
-                    $display("Register[%0d] = %h", i, dut.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.registers[i]);
-                end
-                $display("=========================");
-            end
             endtask
 
         // Function to decode RV32E instructions
