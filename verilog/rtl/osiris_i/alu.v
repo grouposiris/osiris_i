@@ -143,6 +143,7 @@ module alu #(
             SLL: begin
                 // SLL performs logical left shifts (ignores sign) on the value in register rs1 by the shift amount held in the lower 5 bits of register rs2.
                 // rd1 shifted left by rd2: we can only shift 32 bits so we need to use 5 bits of rd2
+                $display("alu: SLL i_rd1_EX: %b", i_rd1_EX);
                 o_alu_result_EX = i_rd1_EX <<
                     i_rd2_EX[5-1:0];  // ! TODO: verify SLL TYPE declaration
                 o_equal_EX =

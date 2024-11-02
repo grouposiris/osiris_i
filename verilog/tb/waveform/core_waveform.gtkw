@@ -1,20 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Sat Nov  2 18:50:47 2024
+[*] Sat Nov  2 22:29:24 2024
 [*]
 [dumpfile] "/home/lspadersimon/repos/osiris_i/verilog/tb/work/core.vcd"
-[dumpfile_mtime] "Sat Nov  2 18:50:42 2024"
-[dumpfile_size] 57458
+[dumpfile_mtime] "Sat Nov  2 22:28:08 2024"
+[dumpfile_size] 104253
 [savefile] "/home/lspadersimon/repos/osiris_i/verilog/tb/waveform/core_waveform.gtkw"
-[timestart] 0
+[timestart] 1028
 [size] 1870 1016
 [pos] -1 -1
-*-6.000000 70 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-4.000000 1062 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_core.
 [treeopen] tb_core.dut.
 [treeopen] tb_core.dut.U_DATAPATH.
 [sst_width] 303
-[signals_width] 352
+[signals_width] 370
 [sst_expanded] 1
 [sst_vpaned_height] 289
 @28
@@ -42,13 +42,14 @@ tb_core.cycle_counter[15:0]
 -group_end
 @24
 tb_core.core_pc_IF[31:0]
-@22
+@28
 tb_core.core_instr_ID[31:0]
-tb_core.core_data_addr_M[31:0]
+@22
+tb_core.core_read_data_M[31:0]
 @28
 tb_core.core_mem_write_M
 @22
-tb_core.core_read_data_M[31:0]
+tb_core.core_data_addr_M[31:0]
 tb_core.core_write_data_M[31:0]
 @28
 tb_core.f_osiris_core_state_dump
@@ -198,7 +199,7 @@ tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
 (31)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
 @1401200
 -group_end
-@22
+@25
 tb_core.dut.U_STAGE_EXECUTE.o_alu_result_EX[31:0]
 @28
 tb_core.dut.U_STAGE_EXECUTE.o_equal_EX
@@ -208,6 +209,14 @@ tb_core.dut.U_STAGE_EXECUTE.o_equal_EX
 tb_core.dut.U_STAGE_EXECUTE.i_pc_EX[31:0]
 tb_core.dut.U_STAGE_EXECUTE.i_imm_ext_EX[31:0]
 tb_core.dut.U_STAGE_EXECUTE.o_pc_target_EX[31:0]
+@200
+--------- EX_EM --------
+@28
+tb_core.dut.U_DATAPATH.U_EX_MEM.clk
+tb_core.dut.U_DATAPATH.U_EX_MEM.i_mem_write_EX
+tb_core.dut.U_DATAPATH.U_EX_MEM.o_mem_write_M
+@22
+tb_core.dut.U_DATAPATH.U_EX_MEM.o_write_data_M[31:0]
 @200
 -
 --------- stage_writeback --------

@@ -18,10 +18,12 @@
 //              stage MEM and WB 
 ////////////////////////////////////////////////////////////////////////////////
 
-module mem_wb #(parameter DATA_WIDTH = 32,
-               parameter REG_WIDTH = 4) 
-(
+module mem_wb #(
+    parameter DATA_WIDTH = 32,
+    parameter REG_WIDTH  = 4
+) (
     clk,
+    rst,
     i_alu_result_M,
     i_read_data_M,
     i_pc_target_M,
@@ -29,47 +31,71 @@ module mem_wb #(parameter DATA_WIDTH = 32,
     i_rd_M,
     i_reg_write_M,
     i_result_src_M,
+    i_mem_write_M,
     o_alu_result_WB,
     o_read_data_WB,
     o_pc_target_WB,
     o_pc_plus4_WB,
     o_rd_WB,
     o_reg_write_WB,
-    o_result_src_WB
+    o_result_src_WB,
+    o_mem_write_WB
 );
 
 
-// ------------------------------------------
-// IO declaration
-// ------------------------------------------
+    // ------------------------------------------
+    // IO declaration
+    // ------------------------------------------
     input logic clk;
-    input logic [DATA_WIDTH-1:0]  i_alu_result_M;            // Datapath
-    input logic [DATA_WIDTH-1:0]  i_read_data_M;
-    input logic [DATA_WIDTH-1:0]  i_pc_plus4_M;
-    input logic [DATA_WIDTH-1:0]  i_pc_target_M;
-    input logic [REG_WIDTH-1:0]   i_rd_M;
-    input logic         i_reg_write_M;             // Control
-    input logic [1:0]   i_result_src_M;
+    input logic rst;
+    input logic [DATA_WIDTH-1:0] i_alu_result_M;  // Datapath
+    input logic [DATA_WIDTH-1:0] i_read_data_M;
+    input logic [DATA_WIDTH-1:0] i_pc_plus4_M;
+    input logic [DATA_WIDTH-1:0] i_pc_target_M;
+    input logic [REG_WIDTH-1:0] i_rd_M;
+    input logic i_reg_write_M;  // Control
+    input logic [1:0] i_result_src_M;
+    input logic i_mem_write_M;
 
-    output logic [DATA_WIDTH-1:0]  o_alu_result_WB;            // Datapath
-    output logic [DATA_WIDTH-1:0]  o_read_data_WB;
-    output logic [DATA_WIDTH-1:0]  o_pc_plus4_WB;
-    output logic [DATA_WIDTH-1:0]  o_pc_target_WB;
-    output logic [REG_WIDTH-1:0]   o_rd_WB;
-    output logic         o_reg_write_WB;            // Control
-    output logic [1:0]   o_result_src_WB;
-                                    
-// ------------------------------------------
-// Logic
-// ------------------------------------------
+    output logic [DATA_WIDTH-1:0] o_alu_result_WB;  // Datapath
+    output logic [DATA_WIDTH-1:0] o_read_data_WB;
+    output logic [DATA_WIDTH-1:0] o_pc_plus4_WB;
+    output logic [DATA_WIDTH-1:0] o_pc_target_WB;
+    output logic [REG_WIDTH-1:0] o_rd_WB;
+    output logic o_reg_write_WB;  // Control
+    output logic [1:0] o_result_src_WB;
+    output logic o_mem_write_WB;
+
+    // ------------------------------------------
+    // Logic
+    // ------------------------------------------
     always @(posedge clk) begin
-        // Clear the pipeline registers
-        o_alu_result_WB <= i_alu_result_M;
-        o_read_data_WB <= i_read_data_M;
-        o_pc_target_WB <= i_pc_target_M;
-        o_pc_plus4_WB <= i_pc_plus4_M;
-        o_rd_WB <= i_rd_M;
-        o_reg_write_WB <= i_reg_write_M;
-        o_result_src_WB <= i_result_src_M;
+        if (rst) begin
+            // Clear the pipeline registers
+            o_read_data_WB <= {DATA_WIDTH{1'b0}};
+            o_pc_target_WB <= {DATA_WIDTH{1'b0}};
+            o_pc_plus4_WB <= {DATA_WIDTH{1'b0}};
+            o_rd_WB <= {REG_WIDTH{1'b0}};
+            o_reg_write_WB <= 1'b0;
+            o_result_src_WB <= 2'b00;
+        end else begin
+            o_read_data_WB <= i_read_data_M;
+            o_pc_target_WB <= i_pc_target_M;
+            o_pc_plus4_WB <= i_pc_plus4_M;
+            o_rd_WB <= i_rd_M;
+            o_reg_write_WB <= i_reg_write_M;
+            o_result_src_WB <= i_result_src_M;
+        end
     end
+
+    always @(negedge clk) begin
+        if (rst) begin
+            o_alu_result_WB <= {DATA_WIDTH{1'b0}};
+            o_mem_write_WB  <= 1'b0;
+        end else begin
+            o_alu_result_WB <= i_alu_result_M;
+            o_mem_write_WB  <= i_mem_write_M;
+        end
+    end
+
 endmodule

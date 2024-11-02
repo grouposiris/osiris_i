@@ -59,8 +59,13 @@ module register_file #(
         // ! ? synchronous reset ??
         if (i_rst_ID) begin
             for (integer i = 0; i < NUM_REGS; i = i + 1) begin
-                // registers[i] <= 32'b0;
-                registers[i] <= 32'b0 + i;
+                // registers[i] <= {DATA_WIDTH{1'b0}};
+                // if (i == 1) begin
+                //     registers[i] <= {DATA_WIDTH{1'b0}} + i;
+                // end else begin
+                //     registers[i] <= {(DATA_WIDTH / 2) {2'b01}};
+                // end
+                registers[i] <= {DATA_WIDTH{1'b0}} + i;
                 // registers[i] <= 32'b0 - i;
             end
         end else begin

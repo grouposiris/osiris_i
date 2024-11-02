@@ -93,16 +93,16 @@ module tb_core ();
 
         // Monitor data memory
             generate
-                for (i = 0; i < 400; i++) begin
+                for (i = 0; i < DATA_MEM_WORDS; i++) begin
                     always @(mem_data[i]) begin
-                        $display("Time %0t ps: Data Memory [%0d] changed to %d<<<--- \n\n", $time, i, mem_data[i]);
+                        $display("Time %0t ps: Data Memory [%0d]= [%b] changed to %d<<<--- =%b \n\n", $time, i, i, mem_data[i],mem_data[i]);
                     end
                 end
             endgenerate
 
         // Monitor CPU cycle counter
             always @(cycle_counter) begin
-                $display("Time %0t ps:                  Current Clock Counter: %d", $time, cycle_counter);
+                $display("  Current Clock Counter: %d, at Time %0t ps", cycle_counter, $time);
             end
 
         // Incrementing the CPU clock counter
@@ -112,14 +112,14 @@ module tb_core ();
 
         // Monitor changes in the PC register
             always @(core_pc_IF) begin
-                $display("Time %0t ps: [Program Counter] core_pc_IF changed to %0d", $time, core_pc_IF);
-                $fdisplay(f_osiris_core_state_dump, "Clock Cycle: %d | [Program Counter] changed to %h", cycle_counter, core_pc_IF);
+                $display("  Time %0t ps: [Program Counter] core_pc_IF changed to %0d", $time, core_pc_IF);
+                $fdisplay(f_osiris_core_state_dump, "   Clock Cycle: %d | [Program Counter] changed to %h", cycle_counter, core_pc_IF);
             end
 
         // Monitor changes in the Instruction Register
             always @(dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID) begin
-                $display("Time %0t ps: [Instruction Register]  i_instr_ID changed to %h, Assembly: %s", $time, dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID, decode_instruction(dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID));
-                $fdisplay(f_osiris_core_state_dump, "Clock Cycle: %d | [Instruction Register] changed to %h, Assembly: %s", cycle_counter, dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID, decode_instruction(dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID));
+                $display("  Time %0t ps: [Instruction Register]  i_instr_ID changed to %h, Assembly: %s", $time, dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID, decode_instruction(dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID));
+                $fdisplay(f_osiris_core_state_dump, "   Clock Cycle: %d | [Instruction Register] changed to %h, Assembly: %s", cycle_counter, dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID, decode_instruction(dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID));
             end
 
         // Main Test Sequence
@@ -165,7 +165,7 @@ module tb_core ();
                 
                 upload_instructions();
 
-                #(20*CLK_PERIOD);
+                #(1000*CLK_PERIOD);
 
                 rst_core = 0;
                 $display("---------------------------------------");
@@ -180,7 +180,7 @@ module tb_core ();
                 //display_registers();
 
                 // End of simulation
-                #5000;
+                #1000;
                 $display("---------------------------------------");
                 $display("Simulation complete.");
                 $display("---------------------------------------");
@@ -191,8 +191,10 @@ module tb_core ();
             // Memory reads are asynchronous
             always @(*) begin
                 if (!rst_core) begin
-                    core_instr_ID = mem_instr[core_pc_IF[INST_MEM_ADDR_BITS-1:0]];
-                    $display("Time %0t ps: Instruction Fetch: PC = %d, Instruction = %h, Assembly: %s", $time, core_pc_IF, core_instr_ID, decode_instruction(core_instr_ID));
+                    if (core_instr_ID!= 0) begin
+                        core_instr_ID = mem_instr[core_pc_IF[INST_MEM_ADDR_BITS-1:0]];
+                        $display("Time %0t ps: Instruction Fetch: PC = %d, Instruction = %h, Assembly: %s", $time, core_pc_IF, core_instr_ID, decode_instruction(core_instr_ID));
+                    end
                     // decoded_inst = decode_instruction(core_instr_ID);
                 end else begin
                     core_instr_ID = {DATA_WIDTH{1'b1}};
@@ -391,8 +393,9 @@ module tb_core ();
         endfunction
 
     task upload_instructions;
+        integer inst;
+    begin
         // # I-Type Instructions
-
         // # xori
         // #(CLK_PERIOD) $display("Sending xori x1, x2, 0x2");
         // mem_instr[0] = 32'h00214093;  // xori x1, x2, 0x2  // x1 = x2 ^ 0x2 = 2 ^ 2 = 0
@@ -401,7 +404,7 @@ module tb_core ();
         // #(CLK_PERIOD) $display("Sending xori x5, x6, 0xF");
         // mem_instr[8] = 32'h00F34293;  // xori x5, x6, 0xF  // x5 = x6 ^ 0xF = 6 ^ 15 = 9
 
-        // # slti
+        // // # slti
         // #(CLK_PERIOD) $display("Sending slti x7, x8, 10");
         // mem_instr[12] = 32'h00A42393;  // slti x7, x8, 10  // x7 = (x8 < 10) ? 1 : 0 = (8 < 10) ? 1 : 0 = 1
         // #(CLK_PERIOD) $display("Sending slti x9, x10, 20");
@@ -443,30 +446,31 @@ module tb_core ();
         // #(CLK_PERIOD) $display("Sending srai x2, x3, 3");
         // mem_instr[68] = 32'h4031d113;  // srai x2, x3, 3  // x2 = x3 >> 3 (arithmetic) = 3 >> 3 = 0
 
-    //     // # R-Type Instructions
-    //     // # add
-    //     #(CLK_PERIOD) $display("Sending add x1, x2, x3");
-    //     mem_instr[72] = 32'h003100B3;  // add x1, x2, x3  // x1 = x2 + x3 = 2 + 3 = 5
-    //     #(CLK_PERIOD) $display("Sending add x4, x5, x6");
-    //     mem_instr[76] = 32'h00628233;  // add x4, x5, x6  // x4 = x5 + x6 = 4 + 6 = 10
-    //     #(CLK_PERIOD) $display("Sending add x7, x8, x9");
-    //     mem_instr[80] = 32'h009403B3;  // add x7, x8, x9  // x7 = x8 + x9 = 8 + 9 = 17
 
-    //     // # sub
-    //     #(CLK_PERIOD) $display("Sending sub x1, x2, x3");
-    //     mem_instr[84] = 32'h403100B3;  // sub x1, x2, x3  // x1 = x2 - x3 = 2 - 3 = -1
-    //     #(CLK_PERIOD) $display("Sending sub x4, x5, x6");
-    //     mem_instr[88] = 32'h40628233;  // sub x4, x5, x6  // x4 = x5 - x6 = 4 - 6 = -2
-    //     #(CLK_PERIOD) $display("Sending sub x7, x8, x9");
-    //     mem_instr[92] = 32'h409403B3;  // sub x7, x8, x9  // x7 = x8 - x9 = 8 - 9 = -1
+        // # R-Type Instructions
+        // # add
+        // #(CLK_PERIOD) $display("Sending add x1, x2, x3");
+        // mem_instr[8] = 32'h003100B3;  // add x1, x2, x3  // x1 = x2 + x3 = 2 + 3 = 5
+        // #(CLK_PERIOD) $display("Sending add x4, x5, x6");
+        // mem_instr[4] = 32'h00628233;  // add x4, x5, x6  // x4 = x5 + x6 = 5 + 6 = 11
+        // #(CLK_PERIOD) $display("Sending add x7, x8, x9");
+        // mem_instr[80] = 32'h009403B3;  // add x7, x8, x9  // x7 = x8 + x9 = 8 + 9 = 17
 
-    //     // # sll
-    //     #(CLK_PERIOD) $display("Sending sll x1, x2, x3");
-    //     mem_instr[96] = 32'h003110B3;  // sll x1, x2, x3  // x1 = x2 << x3 = 2 << 3 = 16
-    //     #(CLK_PERIOD) $display("Sending sll x4, x5, x6");
-    //     mem_instr[100] = 32'h00629233;  // sll x4, x5, x6  // x4 = x5 << x6 = 4 << 6 = 256
-    //     #(CLK_PERIOD) $display("Sending sll x7, x8, x9");
-    //     mem_instr[104] = 32'h009413B3;  // sll x7, x8, x9  // x7 = x8 << x9 = 8 << 9 = 4096
+        // // # sub
+        // #(CLK_PERIOD) $display("Sending sub x1, x2, x3");
+        // mem_instr[84] = 32'h403100B3;  // sub x1, x2, x3  // x1 = x2 - x3 = 2 - 3 = -1
+        // #(CLK_PERIOD) $display("Sending sub x4, x5, x6");
+        // mem_instr[88] = 32'h40628233;  // sub x4, x5, x6  // x4 = x5 - x6 = 4 - 6 = -2
+        // #(CLK_PERIOD) $display("Sending sub x7, x8, x9");
+        // mem_instr[92] = 32'h409403B3;  // sub x7, x8, x9  // x7 = x8 - x9 = 8 - 9 = -1
+
+        // // # sll
+        // #(CLK_PERIOD) $display("Sending sll x1, x2, x3");
+        // mem_instr[0] = 32'h003110B3;  // sll x1, x2, x3  // x1 = x2 << x3 = 2 << 3 = 16
+        // #(CLK_PERIOD) $display("Sending sll x4, x5, x6");
+        // mem_instr[4] = 32'h00629233;  // sll x4, x5, x6  // x4 = x5 << x6 = 4 << 6 = 256
+        // #(CLK_PERIOD) $display("Sending sll x7, x8, x9");
+        // mem_instr[8] = 32'h009413B3;  // sll x7, x8, x9  // x7 = x8 << x9 = 8 << 9 = 4096
 
     //    // # slt
     //     #(CLK_PERIOD) $display("Sending slt x1, x2, x3");
@@ -524,30 +528,39 @@ module tb_core ();
     //     #(CLK_PERIOD) $display("Sending and x7, x8, x9");
     //     mem_instr[188] = 32'h009473B3;  // and x7, x8, x9  // x7 = x8 & x9 = 8 & 9 = 8
 
-        // # S-Type Instructions
-        // # sb
+        // // # S-Type Instructions
+        // // # sb
+
         #(CLK_PERIOD) $display("Sending sb x1, 0(x1)");
-        mem_instr[192] = 32'h00108023;  // sb x1, 0(x1)  // Store byte from x1 to memory at address x1 + 0
-        #(CLK_PERIOD) $display("Sending sb x2, 1(x1)");
-        mem_instr[196] = 32'h002080A3;  // sb x2, 1(x1)  // Store byte from x2 to memory at address x1 + 1
-        #(CLK_PERIOD) $display("Sending sb x3, 2(x1)");
-        mem_instr[200] = 32'h00308123;  // sb x3, 2(x1)  // Store byte from x3 to memory at address x1 + 2
+        mem_instr[0] = 32'h00108023;  // sb x1, 0(x1)  // Store byte from x1 to memory at address x1 + 0: mem[1] = 1
+        // #(CLK_PERIOD) $display("Sending sb x2, 1(x1)");
+        // mem_instr[4] = 32'h002080A3;  // sb x2, 1(x1)  // Store byte from x2 to memory at address x1 + 1: mem[2] = 2
+        // #(CLK_PERIOD) $display("Sending sb x3, 2(x1)");
+        // mem_instr[8] = 32'h00308123;  // sb x3, 2(x1)  // Store byte from x3 to memory at address x1 + 2: mem[3] = 3
+        // #(CLK_PERIOD) $display("Sending sb x3, -2(x1)");
+        // mem_instr[12] = 32'hfe308f23;  // sb x3, -2(x1)  // Store byte from x3 to memory at address x1 + 2: mem[-1] = 3
+        // // NOP instruction
+        #(CLK_PERIOD);
+        for (inst = 4; inst < 50; inst=inst+1) begin
+            $display("Sending add x0, x0, x0");
+            mem_instr[inst*4] = 32'h00000033;  // NOP add x0, x0, x0
+        end
 
-        // # sh
-        #(CLK_PERIOD) $display("Sending sh x1, 0(x1)");
-        mem_instr[204] = 32'h00109023;  // sh x1, 0(x1)  // Store halfword from x1 to memory at address x1 + 0
-        #(CLK_PERIOD) $display("Sending sh x2, 2(x1)");
-        mem_instr[208] = 32'h00209123;  // sh x2, 2(x1)  // Store halfword from x2 to memory at address x1 + 2
-        #(CLK_PERIOD) $display("Sending sh x3, 4(x1)");
-        mem_instr[212] = 32'h00309223;  // sh x3, 4(x1)  // Store halfword from x3 to memory at address x1 + 4
+        // // # sh
+        // #(CLK_PERIOD) $display("Sending sh x1, 0(x1)");
+        // mem_instr[204] = 32'h00109023;  // sh x1, 0(x1)  // Store halfword from x1 to memory at address x1 + 0
+        // #(CLK_PERIOD) $display("Sending sh x2, 2(x1)");
+        // mem_instr[208] = 32'h00209123;  // sh x2, 2(x1)  // Store halfword from x2 to memory at address x1 + 2
+        // #(CLK_PERIOD) $display("Sending sh x3, 4(x1)");
+        // mem_instr[212] = 32'h00309223;  // sh x3, 4(x1)  // Store halfword from x3 to memory at address x1 + 4
 
-        // # sw
-        #(CLK_PERIOD) $display("Sending sw x1, 0(x1)");
-        mem_instr[216] = 32'h0010A023;  // sw x1, 0(x1)  // Store word from x1 to memory at address x1 + 0
-        #(CLK_PERIOD) $display("Sending sw x2, 2(x1)");
-        mem_instr[220] = 32'h0020A223;  // sw x2, 4(x1)  // Store word from x2 to memory at address x1 + 4
-        #(CLK_PERIOD) $display("Sending sw x3, 8(x1)");
-        mem_instr[224] = 32'h0030A423;  // sw x3, 8(x1)  // Store word from x3 to memory at address x1 + 8
+        // // # sw
+        // #(CLK_PERIOD) $display("Sending sw x1, 0(x1)");
+        // mem_instr[216] = 32'h0010A023;  // sw x1, 0(x1)  // Store word from x1 to memory at address x1 + 0
+        // #(CLK_PERIOD) $display("Sending sw x2, 2(x1)");
+        // mem_instr[220] = 32'h0020A223;  // sw x2, 4(x1)  // Store word from x2 to memory at address x1 + 4
+        // #(CLK_PERIOD) $display("Sending sw x3, 8(x1)");
+        // mem_instr[224] = 32'h0030A423;  // sw x3, 8(x1)  // Store word from x3 to memory at address x1 + 8
 
     //     // # B-Type Instructions
     //     // # beq
@@ -625,6 +638,7 @@ module tb_core ();
     //     mem_instr[332] = 32'h040001EF;  // jal x3, 64  // Jump to PC + 64, x3 = return address
 
         // # exit
+    end
     endtask //automatic
         
 endmodule
