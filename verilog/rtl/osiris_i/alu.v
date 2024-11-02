@@ -173,7 +173,8 @@ module alu #(
 
             SRA: begin
                 // SRA performs arithmetic right shifts (consider sign) on the value in register rs1 by the shift amount held in the lower 5 bits of register rs2.
-                o_alu_result_EX = i_rd1_EX >>> i_rd2_EX[5-1:0];
+                // $display("alu: SRA i_rd1_EX: %b", i_rd1_EX);
+                o_alu_result_EX = $signed(i_rd1_EX) >>> $signed(i_rd2_EX[5-1:0]);
                 o_equal_EX =
                     1'bz;  // todo: verify if this signal is not used on this 'case' @grouposiris
             end
