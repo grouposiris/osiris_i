@@ -396,10 +396,10 @@ module tb_core ();
         // # xori
         #(CLK_PERIOD) $display("Sending xori x1, x2, 0x2");
         mem_instr[0] = 32'h00214093;  // xori x1, x2, 0x2
-        #(CLK_PERIOD) $display("Sending xori x3, x4, 0x8");
-        mem_instr[4] = 32'h00824193;  // xori x3, x4, 0x8
-        #(CLK_PERIOD) $display("Sending xori x5, x6, 0xF");
-        mem_instr[8] = 32'h00F34293;  // xori x5, x6, 0xF
+        // #(CLK_PERIOD) $display("Sending xori x3, x4, 0x8");
+        // mem_instr[4] = 32'h00824193;  // xori x3, x4, 0x8
+        // #(CLK_PERIOD) $display("Sending xori x5, x6, 0xF");
+        // mem_instr[8] = 32'h00F34293;  // xori x5, x6, 0xF
 
         // // # slti
         // #(CLK_PERIOD) $display("Sending slti x7, x8, 10");
