@@ -27,7 +27,7 @@ find $TARGET_DIR -type f \( -name "*.v" -o -name "*.sv" \) ! -name "*copy*.v" ! 
 
 # Add the specific testbench based on the target name unless the compiler is 'verilator'
 if [ "$COMPILER" != "verilator" ]; then
-  echo "tb_$TARGET_NAME.sv" >> $OUTPUT_FILE
+  echo "../src/tb_$TARGET_NAME.sv" >> $OUTPUT_FILE
 fi
 
 # Print a message to confirm that the filelist has been generated

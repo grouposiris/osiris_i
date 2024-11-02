@@ -193,11 +193,11 @@ module tb_core ();
                 if (!rst_core) begin
                     core_instr_ID = mem_instr[core_pc_IF[INST_MEM_ADDR_BITS-1:0]];
                     $display("Time %0t ps: Instruction Fetch: PC = %d, Instruction = %h, Assembly: %s", $time, core_pc_IF, core_instr_ID, decode_instruction(core_instr_ID));
-                    decoded_inst = decode_instruction(core_instr_ID);
+                    // decoded_inst = decode_instruction(core_instr_ID);
                 end else begin
                     core_instr_ID = {DATA_WIDTH{1'b1}};
                     //$display("Time %0t ps: Instruction Fetch: PC = %h, Instruction = %h, Assembly: %s", $time, core_pc_IF, core_instr_ID, decode_instruction(core_instr_ID));
-                    decoded_inst = decode_instruction(core_instr_ID);
+                    // decoded_inst = decode_instruction(core_instr_ID);
                 end
             end
 
@@ -390,7 +390,7 @@ module tb_core ();
         end
         endfunction
 
-    task upload_instructions();
+    task upload_instructions;
         // # I-Type Instructions
 
         // # xori

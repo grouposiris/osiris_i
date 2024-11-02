@@ -27,7 +27,8 @@ DUT ?=core
 
 # Executables and Compiler Choice
 SIM_EXE  =sim_$(DUT)_simulation
-COMPILER ?=verilator# Default to Verilator
+# COMPILER ?=verilator# Default to Verilator
+COMPILER ?=iverilog# Default to Verilator
 
 # Help
 help:
@@ -50,13 +51,15 @@ compile: gen_filelist
 	@echo "####################################################"
 	@echo "Compiling simulation for $(DUT) using $(COMPILER)..."
 	@if [ "$(COMPILER)" = "iverilog" ]; then \
-		iverilog -g2012 -o $(SIM_EXE) -f filelist.txt; \
+		iverilog -g2012 -o $(TESTBENCH_DIR)/$(SIM_EXE) -f filelist.txt; \
 	elif [ "$(COMPILER)" = "verilator" ]; then \
-		verilator --cc -f filelist.txt --exe $(TESTBENCH) --trace --build --top-module $(TOP_MODULE) -Wno-UNOPTFLAT --timing; \
+		#verilator --cc -f filelist.txt --exe $(TESTBENCH) --trace --build --top-module $(TOP_MODULE) -Wno-UNOPTFLAT --timing; \
+		verilator --cc -f filelist.txt --exe $(TESTBENCH) --main --trace --build --top-module $(TOP_MODULE) -Wno-UNOPTFLAT --timing; \
 	else \
 		echo "Unsupported compiler: $(COMPILER). Use 'iverilog' or 'verilator'."; \
 		exit 1; \
 	fi
+	exec mv $(TESTBENCH_DIR)/$(SIM_EXE) ../work
 	@echo "Compilation finished for $(DUT) using $(COMPILER)."
 	@echo "####################################################"
 
