@@ -100,12 +100,12 @@ module id_ex #(
     always @(posedge clk) begin
         if (i_clear) begin
             // Clear the pipeline registers
-            o_rd_EX <= 5'b0;
-            o_rs1_EX <= 5'b0;
-            o_rs2_EX <= 5'b0;
+            o_rd_EX <= 4'b0;
+            o_rs1_EX <= 32'b0;
+            o_rs2_EX <= 32'b0;
             o_imm_ex_EX <= 32'b0;
-            o_rs1Addr_EX <= 5'b0;
-            o_rs2Addr_EX <= 5'b0;
+            o_rs1Addr_EX <= 4'b0;
+            o_rs2Addr_EX <= 4'b0;
             o_pc_EX <= 32'b0;
             o_pc_plus4_EX <= 32'b0;
             o_jump_EX <= 1'b0;

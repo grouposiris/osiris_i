@@ -13,6 +13,7 @@
 ../rtl/osiris_i/mem.v
 ../rtl/osiris_i/mem_wb.v
 ../rtl/osiris_i/mux_2x1.v
+../rtl/osiris_i/mux_3x1.v
 ../rtl/osiris_i/mux_4x1.v
 ../rtl/osiris_i/next_pc.v
 ../rtl/osiris_i/op_decoder.v
@@ -26,4 +27,3 @@
 ../rtl/osiris_i/uart_receiver.v
 ../rtl/osiris_i/uart_transmitter.v
 ../rtl/osiris_i/uart_wbs_bridge.v
-tb_core.sv

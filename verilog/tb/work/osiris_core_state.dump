@@ -1,0 +1,77 @@
+Clock Cycle:     0 | [Program Counter] changed to 00000000
+Clock Cycle:     0 | [Instruction Register] changed to 00000000, Assembly: Unknown instruction
+Clock Cycle:     0 | Register[0] changed to 00000000
+Clock Cycle:     0 | Register[1] changed to 00000001
+Clock Cycle:     0 | Register[2] changed to 00000002
+Clock Cycle:     0 | Register[3] changed to 00000003
+Clock Cycle:     0 | Register[4] changed to 00000004
+Clock Cycle:     0 | Register[5] changed to 00000005
+Clock Cycle:     0 | Register[6] changed to 00000006
+Clock Cycle:     0 | Register[7] changed to 00000007
+Clock Cycle:     0 | Register[8] changed to 00000008
+Clock Cycle:     0 | Register[9] changed to 00000009
+Clock Cycle:     0 | Register[10] changed to 0000000a
+Clock Cycle:     0 | Register[11] changed to 0000000b
+Clock Cycle:     0 | Register[12] changed to 0000000c
+Clock Cycle:     0 | Register[13] changed to 0000000d
+Clock Cycle:     0 | Register[14] changed to 0000000e
+Clock Cycle:     0 | Register[15] changed to 0000000f
+Clock Cycle:     3 | [Program Counter] changed to 00000004
+Clock Cycle:     3 | [Instruction Register] changed to 00214093, Assembly: xori x1, x2, 2
+Clock Cycle:     4 | [Program Counter] changed to 00000008
+Clock Cycle:     4 | [Instruction Register] changed to 00824193, Assembly: xori x3, x4, 8
+Clock Cycle:     5 | [Program Counter] changed to 0000000c
+Clock Cycle:     5 | [Instruction Register] changed to 00f34293, Assembly: xori x5, x6, 15
+Clock Cycle:     6 | [Program Counter] changed to 00000010
+Clock Cycle:     6 | [Instruction Register] changed to 00000000, Assembly: Unknown instruction
+Clock Cycle:     7 | [Program Counter] changed to 00000014
+Clock Cycle:     7 | Register[1] changed to 00000000
+Clock Cycle:     8 | Register[3] changed to 0000000c
+Clock Cycle:     9 | [Program Counter] changed to 00000018
+Clock Cycle:     9 | Register[5] changed to 00000009
+Clock Cycle:    11 | [Program Counter] changed to 0000001c
+Clock Cycle:    13 | [Program Counter] changed to 00000020
+Clock Cycle:    15 | [Program Counter] changed to 00000024
+Clock Cycle:    17 | [Program Counter] changed to 00000028
+Clock Cycle:    19 | [Program Counter] changed to 0000002c
+Clock Cycle:    21 | [Program Counter] changed to 00000030
+Clock Cycle:    23 | [Program Counter] changed to 00000034
+Clock Cycle:    25 | [Program Counter] changed to 00000038
+Clock Cycle:    27 | [Program Counter] changed to 0000003c
+Clock Cycle:    29 | [Program Counter] changed to 00000040
+Clock Cycle:    31 | [Program Counter] changed to 00000044
+Clock Cycle:    33 | [Program Counter] changed to 00000048
+Clock Cycle:    35 | [Program Counter] changed to 0000004c
+Clock Cycle:    37 | [Program Counter] changed to 00000050
+Clock Cycle:    39 | [Program Counter] changed to 00000054
+Clock Cycle:    41 | [Program Counter] changed to 00000058
+Clock Cycle:    43 | [Program Counter] changed to 0000005c
+Clock Cycle:    45 | [Program Counter] changed to 00000060
+Clock Cycle:    47 | [Program Counter] changed to 00000064
+Clock Cycle:    49 | [Program Counter] changed to 00000068
+Clock Cycle:    51 | [Program Counter] changed to 0000006c
+Clock Cycle:    53 | [Program Counter] changed to 00000070
+Clock Cycle:    55 | [Program Counter] changed to 00000074
+Clock Cycle:    57 | [Program Counter] changed to 00000078
+Clock Cycle:    59 | [Program Counter] changed to 0000007c
+Clock Cycle:    61 | [Program Counter] changed to 00000080
+Clock Cycle:    63 | [Program Counter] changed to 00000084
+Clock Cycle:    65 | [Program Counter] changed to 00000088
+Clock Cycle:    67 | [Program Counter] changed to 0000008c
+Clock Cycle:    69 | [Program Counter] changed to 00000090
+Clock Cycle:    71 | [Program Counter] changed to 00000094
+Clock Cycle:    73 | [Program Counter] changed to 00000098
+Clock Cycle:    75 | [Program Counter] changed to 0000009c
+Clock Cycle:    77 | [Program Counter] changed to 000000a0
+Clock Cycle:    79 | [Program Counter] changed to 000000a4
+Clock Cycle:    81 | [Program Counter] changed to 000000a8
+Clock Cycle:    83 | [Program Counter] changed to 000000ac
+Clock Cycle:    85 | [Program Counter] changed to 000000b0
+Clock Cycle:    87 | [Program Counter] changed to 000000b4
+Clock Cycle:    89 | [Program Counter] changed to 000000b8
+Clock Cycle:    91 | [Program Counter] changed to 000000bc
+Clock Cycle:    93 | [Program Counter] changed to 000000c0
+Clock Cycle:    95 | [Program Counter] changed to 000000c4
+Clock Cycle:    97 | [Program Counter] changed to 000000c8
+Clock Cycle:    99 | [Program Counter] changed to 000000cc
+Clock Cycle:   101 | [Program Counter] changed to 000000d0

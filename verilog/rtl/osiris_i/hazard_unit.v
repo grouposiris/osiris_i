@@ -112,36 +112,37 @@ module hazard_unit #(
     // Forward to solve data hazards -> Forward from a stage if that stage will write a destination register and the destination register matches one of the source registers
     always @* begin
         // Checking for a data hazard in the Memory Stage
-        if (((i_rs1Addr_EX == i_rdAddr_M) & i_reg_write_M) & (i_rs1Addr_EX != 5'b0)) begin
-            o_forward_rs1_EX <= 2'b10;
+        if (((i_rs1Addr_EX == i_rdAddr_M) & i_reg_write_M) & (i_rs1Addr_EX != 4'b0)) begin
+            o_forward_rs1_EX = 2'b10;
             // Checking for a data hazard in the WriteBack Stage
         end else
-            if (((i_rs1Addr_EX == i_rdAddr_WB) & i_reg_write_WB) & (i_rs1Addr_EX != 5'b0)) begin
-            o_forward_rs1_EX <= 2'b01;
+            if (((i_rs1Addr_EX == i_rdAddr_WB) & i_reg_write_WB) & (i_rs1Addr_EX != 4'b0)) begin
+            o_forward_rs1_EX = 2'b01;
             // No forwading is necessary
         end else begin
-            o_forward_rs1_EX <= 2'b00;
+            o_forward_rs1_EX = 2'b00;
         end
     end
 
     always @* begin
         // Checking for a data hazard in the Memory Stage
-        if (((i_rs2Addr_EX == i_rdAddr_M) & i_reg_write_M) & (i_rs2Addr_EX != 5'b0)) begin
-            o_forward_rs2_EX <= 2'b10;
+        if (((i_rs2Addr_EX == i_rdAddr_M) & i_reg_write_M) & (i_rs2Addr_EX != 4'b0)) begin
+            o_forward_rs2_EX = 2'b10;
             // Checking for a data hazard in the WriteBack Stage
         end else
-            if (((i_rs2Addr_EX == i_rdAddr_WB) & i_reg_write_WB) & (i_rs2Addr_EX != 5'b0)) begin
-            o_forward_rs2_EX <= 2'b01;
+            if (((i_rs2Addr_EX == i_rdAddr_WB) & i_reg_write_WB) & (i_rs2Addr_EX != 4'b0)) begin
+            o_forward_rs2_EX = 2'b01;
             // No forwading is necessary
         end else begin
-            o_forward_rs2_EX <= 2'b00;
+            o_forward_rs2_EX = 2'b00;
         end
     end
 
     // Stall to solve load hazards
-    assign load_hazard_detect = (i_result_src_EX &
-                                 ((i_rs1Addr_ID == i_rdAddr_EX) | (i_rs2Addr_ID == i_rdAddr_EX)))
-        ;  // Detecting a load hazard
+    // assign load_hazard_detect = (i_result_src_EX & ((i_rs1Addr_ID == i_rdAddr_EX) | (i_rs2Addr_ID == i_rdAddr_EX)));  // Detecting a load hazard
+    assign load_hazard_detect = ((i_result_src_EX == 2'b01) &&
+                                 ((i_rs1Addr_ID == i_rdAddr_EX) || (i_rs2Addr_ID == i_rdAddr_EX)));
+
     assign o_stall_IF = load_hazard_detect;
     assign o_stall_ID = load_hazard_detect;
 

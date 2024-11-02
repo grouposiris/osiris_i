@@ -59,7 +59,8 @@ module register_file #(
         // ! ? synchronous reset ??
         if (i_rst_ID) begin
             for (integer i = 0; i < NUM_REGS; i = i + 1) begin
-                registers[i] <= 32'b0;
+                // registers[i] <= 32'b0;
+                registers[i] <= 32'b0 + i;
             end
         end else begin
             if (i_write_en_WB & (i_rd_WB != 4'b0)) begin

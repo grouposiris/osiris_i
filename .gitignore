@@ -13,3 +13,9 @@
 /mgmt_core_wrapper
 /logs
 /openlane
+*.cpp
+*.d
+*.mk
+*.o
+*.a
+*obj_dir*

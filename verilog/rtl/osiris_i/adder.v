@@ -18,21 +18,23 @@
 //////////////////////////////////////////////////////////////////////////////
 
 module adder #(
-   parameter  WIDTH = 32
+    parameter WIDTH = 32
 ) (
-    input  wire cin,
-    input  wire [WIDTH-1:0] a, b,
+    input wire cin,
+    input wire [WIDTH-1:0] a,
+    b,
     output wire [WIDTH-1:0] sum
     // output wire cout,
 );
-    reg [WIDTH-1:0] internal_sum, carry;
+    wire [WIDTH-1:0] internal_sum;
+    wire [WIDTH-1:0] carry;
 
     genvar i;
     assign sum = internal_sum;
 
     generate
         for (i = 0; i < WIDTH; i = i + 1) begin
-            if (i == 0) begin
+            if (i == 0) begin  // first FA
                 full_adder FA0 (
                     .a(a[i]),
                     .b(b[i]),
@@ -40,9 +42,8 @@ module adder #(
                     .sum(internal_sum[i]),
                     .cout(carry[i])
                 );
-            end
-            // last bit
-            else if (i == WIDTH-1) begin
+            end  // last bit
+                else if (i == WIDTH - 1) begin  // Last FA
                 // full_adder FA_final (
                 //     .a(a[i]),
                 //     .b(b[i]),
@@ -51,8 +52,7 @@ module adder #(
                 //     .cout(cout)
                 // );
                 assign internal_sum[i] = a[i] ^ b[i] ^ carry[i-1];
-            end
-            else begin
+            end else begin  // Middle FAs
                 full_adder FAs_middle (
                     .a(a[i]),
                     .b(b[i]),
@@ -64,5 +64,5 @@ module adder #(
         end
     endgenerate
 
-    
+
 endmodule
