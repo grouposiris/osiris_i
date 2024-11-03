@@ -47,7 +47,6 @@ module ex_mem #(
     // IO declaration
     // ------------------------------------------
     input logic clk;
-    input logic rst;
     input logic [DATA_WIDTH-1:0] i_alu_result_EX;  // Datapath
     input logic [DATA_WIDTH-1:0] i_write_data_EX;
     input logic [DATA_WIDTH-1:0] i_pc_plus4_EX;
