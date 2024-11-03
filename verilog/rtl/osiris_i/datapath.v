@@ -124,7 +124,8 @@ module datapath #(
 
     // MEM
     wire [DATA_WIDTH-1:0] alu_result_M;
-    wire [DATA_WIDTH-1:0] write_data_M, pcplus4_M, pc_target_M;
+    wire [DATA_WIDTH-1:0] write_data_M, pcplus4_M;
+    wire [DATA_WIDTH-1-2:0] pc_target_M;
     wire [DATA_WIDTH-1:0] write_data_WB;  // used for writing on external memory
     wire [3:0] rd_M;
     wire [1:0] result_src_M;
@@ -132,13 +133,15 @@ module datapath #(
 
     // WB
     wire [DATA_WIDTH-1:0] result_WB, read_data_WB;
-    wire [DATA_WIDTH-1:0] alu_result_WB, pc_target_WB, pc_plus4_WB, o_alu_result_WB_neg;
-    wire [3:0] rd_WB;
-    wire       reg_write_WB;
-    wire [1:0] result_src_WB;
+    wire [DATA_WIDTH-1:0] alu_result_WB, pc_plus4_WB, o_alu_result_WB_neg;
+
+    wire [DATA_WIDTH-1-2:0] pc_target_WB;
+    wire [             3:0] rd_WB;
+    wire                    reg_write_WB;
+    wire [             1:0] result_src_WB;
 
     // @spadersimon: added below wire to implement initial reset
-    wire       if_id_rst;
+    wire                    if_id_rst;
 
 
 

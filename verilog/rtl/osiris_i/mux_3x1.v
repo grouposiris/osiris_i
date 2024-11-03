@@ -17,7 +17,9 @@
 // Description: Verilog for a MUX 3x1
 //////////////////////////////////////////////////////////////////////////////
 
-module mux_3x1 (
+module mux_3x1 #(
+    parameter DATA_WIDTH = 32
+) (
     i_sel,
     i_a,
     i_b,
@@ -29,9 +31,9 @@ module mux_3x1 (
     // IO declaration
     // ------------------------------------------
     input [1:0] i_sel;
-    input [31:0] i_a;
-    input [31:0] i_b;
-    input [31:0] i_c;
+    input [DATA_WIDTH-1:0] i_a;
+    input [DATA_WIDTH-1:0] i_b;
+    input [DATA_WIDTH-1:0] i_c;
 
     output  reg [31:0] o_mux;
 

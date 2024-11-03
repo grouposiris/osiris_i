@@ -21,57 +21,71 @@
 //                     vvp extend_unit.vvp
 //                     gtk-wave extend_unit.vcd
 //////////////////////////////////////////////////////////////////////////////
-module extend_unit(
+module extend_unit (
     i_imm_ID,
     i_imm_src_ID,
     o_imm_ex_ID
 );
-// ------------------------------------------
-// IO declaration
-// ------------------------------------------
-    input   logic   [2:0]   i_imm_src_ID;
-    input   logic   [24:0]  i_imm_ID;
+    // ------------------------------------------
+    // IO declaration
+    // ------------------------------------------
+    input logic [2:0] i_imm_src_ID;
+    input logic [24:0] i_imm_ID;
 
-    output  logic   [31:0]  o_imm_ex_ID;
-                            
-// ------------------------------------------
-// Signals deinitions
-// ------------------------------------------
+    output logic [31:0] o_imm_ex_ID;
 
-// ------------------------------------------
-// Logic
-// ------------------------------------------
+    // ------------------------------------------
+    // Signals definitions
+    // ------------------------------------------
+    localparam logic [2:0] I_type = 3'b000,  // 0 ok
+    S_type = 3'b001,  // 1 ok
+    B_type = 3'b010,  // 2 ok
+    J_type = 3'b011,  // 3 ok
+    U_type = 3'b100;  // 4 check
+
+
+    // ------------------------------------------
+    // Logic
+    // ------------------------------------------
     always @(i_imm_src_ID, i_imm_ID) begin
         case (i_imm_src_ID)
-            3'b000:
-                begin
-                    // I-type: 12 bits [24:13] from i_imm_ID, extended to 32 bits
-                    o_imm_ex_ID = {{20{i_imm_ID[24]}}, i_imm_ID[24:13]};
-                end
-            3'b001:
-                begin
-                    // S-type: 5 bits [4:0] and 7 bits [24:18] from i_imm_ID concatenated, extended to 32 bits
-                    o_imm_ex_ID = {{20{i_imm_ID[24]}}, i_imm_ID[24:18], i_imm_ID[4:0]};  
-                end
-            3'b010:
-                begin
-                    // B-type: 1'b0, 4 bits [4:1], 7 bits [23:18], [0], and [24] from i_imm_ID concatenated, extended to 32 bits
-                    o_imm_ex_ID = {{19{i_imm_ID[24]}}, i_imm_ID[24], i_imm_ID[0], i_imm_ID[23:18], i_imm_ID[4:1], 1'b0};                  
-                end
-            3'b011:
-                begin
-                    // J-type: 1'b0, 10 bits [23:14], [13], 8 bits [12:5], and [24] from i_imm_ID concatenated, extended to 32 bits
-                    o_imm_ex_ID = {{11{i_imm_ID[24]}}, i_imm_ID[24], i_imm_ID[12:5], i_imm_ID[13], i_imm_ID[23:14], 1'b0};                  
-                end
-            3'b100:
-                begin
-                    // U-type: 20 bits [24:5] from i_imm_ID, extended to 32 bits
-                    o_imm_ex_ID = {{12{i_imm_ID[24]}}, i_imm_ID[24:5]};                  
-                end
-            default: 
-                begin
-                    o_imm_ex_ID = 32'h0;
-                end
+            I_type: begin
+                // I-type: 12 bits [24:13] from i_imm_ID, extended to 32 bits
+                o_imm_ex_ID = {{20{i_imm_ID[24]}}, i_imm_ID[24:13]};
+            end
+            S_type: begin
+                // S-type: 5 bits [4:0] and 7 bits [24:18] from i_imm_ID concatenated, extended to 32 bits
+                o_imm_ex_ID = {{20{i_imm_ID[24]}}, i_imm_ID[24:18], i_imm_ID[4:0]};
+            end
+            B_type: begin
+                // B-type: 1'b0, 4 bits [4:1], 7 bits [23:18], [0], and [24] from i_imm_ID concatenated, extended to 32 bits
+                o_imm_ex_ID = {
+                    {19{i_imm_ID[24]}},
+                    i_imm_ID[24],
+                    i_imm_ID[0],
+                    i_imm_ID[23:18],
+                    i_imm_ID[4:1],
+                    1'b0
+                };
+            end
+            J_type: begin
+                // J-type: 1'b0, 10 bits [23:14], [13], 8 bits [12:5], and [24] from i_imm_ID concatenated, extended to 32 bits
+                o_imm_ex_ID = {
+                    {11{i_imm_ID[24]}},
+                    i_imm_ID[24],
+                    i_imm_ID[12:5],
+                    i_imm_ID[13],
+                    i_imm_ID[23:14],
+                    1'b0
+                };
+            end
+            U_type: begin
+                // U-type: 20 bits [24:5] from i_imm_ID, extended to 32 bits
+                o_imm_ex_ID = {{12{i_imm_ID[24]}}, i_imm_ID[24:5]};
+            end
+            default: begin
+                o_imm_ex_ID = 32'h0;
+            end
         endcase
     end
 endmodule

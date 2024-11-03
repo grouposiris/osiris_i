@@ -20,7 +20,9 @@
 
 // `include "./next_pc/next_pc.v"
 
-module stage_fetch (
+module stage_fetch #(
+    parameter DATA_WIDTH = 32
+) (
     clk,
     i_pc_target_EX,
     i_pc_src_EX,
@@ -29,38 +31,38 @@ module stage_fetch (
     o_pcplus4_IF,
     o_pc_IF
 );
-// ------------------------------------------
-// IO declaration
-// ------------------------------------------
-    input   logic               clk;
-    input   logic   [31:0]      i_pc_target_EX;
-    input   logic               i_pc_src_EX;
-    input   logic               i_rst_IF;
-    input   logic               i_en_IF;
+    // ------------------------------------------
+    // IO declaration
+    // ------------------------------------------
+    input logic clk;
+    input logic [DATA_WIDTH-1:0] i_pc_target_EX;
+    input logic i_pc_src_EX;
+    input logic i_rst_IF;
+    input logic i_en_IF;
 
-    output  reg     [31:0]      o_pc_IF;
-    output  reg     [31:0]      o_pcplus4_IF;
-                                                    
-                                                          
-// ------------------------------------------
-// Localparams
-// ------------------------------------------
+    output  reg [DATA_WIDTH-1:0] o_pc_IF;
+    output  reg [DATA_WIDTH-1:0] o_pcplus4_IF;
 
-// ------------------------------------------
-// Signals deinitions
-// ------------------------------------------
 
-// ------------------------------------------
-// Logic
-// ------------------------------------------
-   next_pc U_NEXT_PC ( 
-    .clk                (clk),
-    .i_pc_target_EX     (i_pc_target_EX),
-    .i_pc_src_EX        (i_pc_src_EX),
-    .i_rst_IF           (i_rst_IF),
-    .i_en_IF            (i_en_IF),
-    .o_pcplus4_IF       (o_pcplus4_IF),
-    .o_pc_IF            (o_pc_IF)
-); 
+    // ------------------------------------------
+    // Localparams
+    // ------------------------------------------
+
+    // ------------------------------------------
+    // Signals deinitions
+    // ------------------------------------------
+
+    // ------------------------------------------
+    // Logic
+    // ------------------------------------------
+    next_pc U_NEXT_PC (
+        .clk           (clk),
+        .i_pc_target_EX(i_pc_target_EX),
+        .i_pc_src_EX   (i_pc_src_EX),
+        .i_rst_IF      (i_rst_IF),
+        .i_en_IF       (i_en_IF),
+        .o_pcplus4_IF  (o_pcplus4_IF),
+        .o_pc_IF       (o_pc_IF)
+    );
 
 endmodule

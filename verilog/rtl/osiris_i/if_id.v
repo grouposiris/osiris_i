@@ -22,8 +22,6 @@ module if_id #(
     parameter DATA_WIDTH = 32,
     parameter REG_WIDTH  = 4
 ) (
-    // ? where's i_enable?
-    // ? where's i_clear?
     clk,
     i_flush_ID,
     i_stall_ID,
@@ -56,9 +54,11 @@ module if_id #(
     always @(posedge clk) begin
         if (i_flush_ID) begin
             // If a flush signal is asserted, clear the pipeline registers
-            o_pcplus4_ID <= 32'h0;
+            o_pcplus4_ID <= 32'h00000004;
             o_pc_ID <= 32'h0;
-            o_instr_ID <= 32'h0;
+            // o_instr_ID <= 32'h0;
+            o_instr_ID <= 32'h00000033;  // resets to NOP instruction
+            // o_instr_ID <= 32'h007383b3;  // add x7, x7, x7
         end else if (!i_stall_ID) begin
             // Update the pipeline registers with new values
             o_pcplus4_ID <= i_pcplus4_IF;

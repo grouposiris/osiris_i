@@ -17,7 +17,7 @@
 // Description: Verilog module stage_write_back
 ////////////////////////////////////////////////////////////////////////////////
 
-module stage_write_back(
+module stage_write_back (
     i_result_src_WB,
     i_alu_result_WB,
     i_result_data_WB,
@@ -25,47 +25,43 @@ module stage_write_back(
     o_result_WB
 );
 
-// ------------------------------------------
-// IO declaration
-// ------------------------------------------
-    input logic [1:0]   i_result_src_WB;
-    input logic [31:0]  i_alu_result_WB;
-    input logic [31:0]  i_result_data_WB;
-    input logic [31:0]  i_pcplus4_WB;
+    // ------------------------------------------
+    // IO declaration
+    // ------------------------------------------
+    input logic [1:0] i_result_src_WB;
+    input logic [31:0] i_alu_result_WB;
+    input logic [31:0] i_result_data_WB;
+    input logic [31:0] i_pcplus4_WB;
 
     output logic [31:0] o_result_WB;
-                                    
-                                
-// ------------------------------------------
-// Localparams
-// ------------------------------------------
-
-// ------------------------------------------
-// Signals deinitions
-// ------------------------------------------
 
 
-// ------------------------------------------
-// Logic
-// ------------------------------------------
-    always @(i_result_src_WB or i_alu_result_WB or  i_result_data_WB or i_pcplus4_WB) begin
+    // ------------------------------------------
+    // Localparams
+    // ------------------------------------------
+
+    // ------------------------------------------
+    // Signals deinitions
+    // ------------------------------------------
+
+
+    // ------------------------------------------
+    // Logic
+    // ------------------------------------------
+    always @(i_result_src_WB or i_alu_result_WB or i_result_data_WB or i_pcplus4_WB) begin
         case (i_result_src_WB)
-            2'b00:
-                begin
-                    o_result_WB = i_alu_result_WB;
-                end
-            2'b01:
-                begin 
-                    o_result_WB = i_pcplus4_WB;
-                end
-            2'b10:
-                begin
-                    o_result_WB = i_result_data_WB;
-                end
-            default:
-                begin
-                    o_result_WB = 32'bx;
-                end
+            2'b00: begin
+                o_result_WB = i_alu_result_WB;
+            end
+            2'b01: begin
+                o_result_WB = i_pcplus4_WB;
+            end
+            2'b10: begin
+                o_result_WB = i_result_data_WB;
+            end
+            default: begin
+                o_result_WB = 32'bx;
+            end
         endcase
     end
 endmodule

@@ -54,7 +54,7 @@ module mem_wb #(
     input logic [DATA_WIDTH-1:0] i_alu_result_M;  // Datapath
     input logic [DATA_WIDTH-1:0] i_read_data_M;
     input logic [DATA_WIDTH-1:0] i_pc_plus4_M;
-    input logic [DATA_WIDTH-1:0] i_pc_target_M;
+    input logic [DATA_WIDTH-1-2:0] i_pc_target_M;
     input logic [REG_WIDTH-1:0] i_rd_M;
     input logic i_reg_write_M;  // Control
     input logic [1:0] i_result_src_M;
@@ -65,7 +65,7 @@ module mem_wb #(
     output logic [DATA_WIDTH-1:0] o_alu_result_WB_neg;  // for write on Data Memory
     output logic [DATA_WIDTH-1:0] o_read_data_WB;
     output logic [DATA_WIDTH-1:0] o_pc_plus4_WB;
-    output logic [DATA_WIDTH-1:0] o_pc_target_WB;
+    output logic [DATA_WIDTH-1-2:0] o_pc_target_WB;
     output logic [REG_WIDTH-1:0] o_rd_WB;
     output logic o_reg_write_WB;  // Control
     output logic [1:0] o_result_src_WB;

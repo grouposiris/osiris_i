@@ -105,21 +105,21 @@ module alu #(
                 // AND performs and bitwise (bit-by-bit operation) logical operations.
                 o_alu_result_EX = i_rd1_EX & i_rd2_EX;  // ! todo: verify AND TYPE declaration
                 o_equal_EX =
-                    1'bz;  // todo: verify if this signal is not used on this 'case' @grouposiris
+                    1'b0;  // todo: verify if this signal is not used on this 'case' @grouposiris
             end
 
             OR: begin
                 // OR performs or bitwise (bit-by-bit operation) logical operations.
                 o_alu_result_EX = i_rd1_EX | i_rd2_EX;  // OK TODO: verify OR TYPE declaration
                 o_equal_EX =
-                    1'bz;  // todo: verify if this signal is not used on this 'case' @grouposiris
+                    1'b0;  // todo: verify if this signal is not used on this 'case' @grouposiris
             end
 
             XOR: begin
                 // XOR performs xor bitwise (bit-by-bit operation) logical operations.
                 o_alu_result_EX = i_rd1_EX ^ i_rd2_EX;  // OK TODO: verify XOR TYPE declaration
                 o_equal_EX =
-                    1'bz;  // todo: verify if this signal is not used on this 'case' @grouposiris
+                    1'b0;  // todo: verify if this signal is not used on this 'case' @grouposiris
             end
 
             ADD: begin
@@ -127,7 +127,7 @@ module alu #(
                 //o_alu_result_EX = i_rd1_EX + i_rd2_EX; 
                 o_alu_result_EX = adder_result;
                 o_equal_EX =
-                    1'bz;  // todo: verify if this signal is not used on this 'case' @grouposiris
+                    1'b0;  // todo: verify if this signal is not used on this 'case' @grouposiris
             end
 
             SUB: begin
@@ -137,7 +137,7 @@ module alu #(
                 // o_alu_result_EX = i_rd1_EX + not_i_rd2_EX + 1;
                 o_alu_result_EX = adder_result;
                 o_equal_EX =
-                    1'bz;  // todo: verify if this signal is not used on this 'case' @grouposiris
+                    1'b0;  // todo: verify if this signal is not used on this 'case' @grouposiris
             end
 
             SLL: begin
@@ -147,7 +147,7 @@ module alu #(
                 o_alu_result_EX = i_rd1_EX <<
                     i_rd2_EX[5-1:0];  // ! TODO: verify SLL TYPE declaration
                 o_equal_EX =
-                    1'bz;  // todo: verify if this signal is not used on this 'case' @grouposiris
+                    1'b0;  // todo: verify if this signal is not used on this 'case' @grouposiris
             end
 
             SRL: begin
@@ -155,7 +155,7 @@ module alu #(
                 o_alu_result_EX = i_rd1_EX >>
                     i_rd2_EX[5-1:0];  // ! todo: verify SRL TYPE declaration
                 o_equal_EX =
-                    1'bz;  // todo: verify if this signal is not used on this 'case' @grouposiris
+                    1'b0;  // todo: verify if this signal is not used on this 'case' @grouposiris
             end
 
             SLT: begin  // signed comparison
@@ -177,12 +177,14 @@ module alu #(
                 // $display("alu: SRA i_rd1_EX: %b", i_rd1_EX);
                 o_alu_result_EX = $signed(i_rd1_EX) >>> $signed(i_rd2_EX[5-1:0]);
                 o_equal_EX =
-                    1'bz;  // todo: verify if this signal is not used on this 'case' @grouposiris
+                    1'b0;  // todo: verify if this signal is not used on this 'case' @grouposiris
             end
 
             BEQ: begin
+                // $display("alu: BEQ i_rd1_EX: %b, i_rd2_EX: %b", i_rd1_EX, i_rd2_EX);
+                // $display("alu: BEQ o_equal_EX: %b", o_equal_EX);
                 // BEQ performs a branch if the values in registers rs1 and rs2 are equal.
-                o_alu_result_EX = 'bz;
+                o_alu_result_EX = {WIDTH{1'b0}};
                 // o_alu_result_EX = i_rd1_EX + i_rd2_EX; // BTA = PC + SignExt({imm12:1,1'b0}) // ! todo: verify overflow necessity
                 // todo: which signal is used to take a branch, o_equal_EX? @grouposiris
                 o_equal_EX = (i_rd1_EX == i_rd2_EX);  // compare rs1 and rs2
