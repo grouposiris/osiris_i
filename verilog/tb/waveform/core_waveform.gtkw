@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Sun Nov  3 15:03:51 2024
+[*] Sun Nov  3 20:41:17 2024
 [*]
 [dumpfile] "/home/lspadersimon/repos/osiris_i/verilog/tb/work/core.vcd"
-[dumpfile_mtime] "Sun Nov  3 14:59:17 2024"
-[dumpfile_size] 204275
+[dumpfile_mtime] "Sun Nov  3 18:47:09 2024"
+[dumpfile_size] 100720
 [savefile] "/home/lspadersimon/repos/osiris_i/verilog/tb/waveform/core_waveform.gtkw"
-[timestart] 791
+[timestart] 883
 [size] 1870 1016
 [pos] -1 -1
-*-7.000000 1050 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-6.000000 1030 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_core.
 [treeopen] tb_core.dut.
 [treeopen] tb_core.dut.U_DATAPATH.
@@ -57,19 +57,23 @@ tb_core.f_osiris_core_state_dump
 -
 --------- control --------
 @28
+tb_core.dut.U_CONTROL_UNIT.i_op[4:0]
+@200
+-alu related
+@28
+[color] 2
 tb_core.dut.U_CONTROL_UNIT.alu_op[1:0]
-tb_core.dut.U_CONTROL_UNIT.i_branch_EX
 tb_core.dut.U_CONTROL_UNIT.i_funct_3[2:0]
 tb_core.dut.U_CONTROL_UNIT.i_funct_7_5
-tb_core.dut.U_CONTROL_UNIT.i_jump_EX
-@22
-tb_core.dut.U_CONTROL_UNIT.i_op[4:0]
+[color] 2
+tb_core.dut.U_CONTROL_UNIT.o_alu_ctrl_ID[4:0]
+@200
+-
 @28
+tb_core.dut.U_CONTROL_UNIT.i_branch_EX
+tb_core.dut.U_CONTROL_UNIT.i_jump_EX
 tb_core.dut.U_CONTROL_UNIT.i_zero
 tb_core.dut.U_CONTROL_UNIT.o_addr_src_ID
-@22
-tb_core.dut.U_CONTROL_UNIT.o_alu_ctrl_ID[4:0]
-@28
 tb_core.dut.U_CONTROL_UNIT.o_alu_src_ID
 tb_core.dut.U_CONTROL_UNIT.o_branch_ID
 tb_core.dut.U_CONTROL_UNIT.o_fence_ID
@@ -135,7 +139,6 @@ tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_data_WB[31:0]
 tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_rd_ID[3:0]
 tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_rs1_ID[31:0]
 tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_rs2_ID[31:0]
-@24
 tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_imm_ex_ID[31:0]
 @200
 -
@@ -147,7 +150,8 @@ tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_rs2Addr_ID[3:0]
 -
 --------- stage_execute --------
 -comes from control
-@22
+@29
+[color] 2
 tb_core.dut.U_STAGE_EXECUTE.i_alu_ctrl_EX[4:0]
 @28
 tb_core.dut.U_STAGE_EXECUTE.i_alu_src_EX
@@ -201,7 +205,7 @@ tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
 (31)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
 @1401200
 -group_end
-@24
+@22
 tb_core.dut.U_STAGE_EXECUTE.o_alu_result_EX[31:0]
 @28
 tb_core.dut.U_STAGE_EXECUTE.o_equal_EX
@@ -209,7 +213,9 @@ tb_core.dut.U_STAGE_EXECUTE.o_equal_EX
 -
 @24
 tb_core.dut.U_STAGE_EXECUTE.i_pc_EX[31:0]
+@22
 tb_core.dut.U_STAGE_EXECUTE.i_imm_ext_EX[31:0]
+@24
 tb_core.dut.U_STAGE_EXECUTE.o_pc_target_EX[31:0]
 @200
 --------- EX_EM --------
@@ -236,9 +242,7 @@ tb_core.dut.U_STAGE_WRITE_BACK.o_result_WB[31:0]
 @28
 tb_core.dut.U_DATAPATH.U_HAZARD_UNIT.o_stall_IF
 tb_core.dut.U_DATAPATH.U_HAZARD_UNIT.o_stall_ID
-@29
 tb_core.dut.U_DATAPATH.U_HAZARD_UNIT.o_flush_ID
-@28
 tb_core.dut.U_DATAPATH.U_HAZARD_UNIT.o_flush_EX
 tb_core.dut.U_DATAPATH.U_HAZARD_UNIT.o_forward_rs1_EX[1:0]
 tb_core.dut.U_DATAPATH.U_HAZARD_UNIT.o_forward_rs2_EX[1:0]

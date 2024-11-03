@@ -21,7 +21,10 @@
 //                     vvp extend_unit.vvp
 //                     gtk-wave extend_unit.vcd
 //////////////////////////////////////////////////////////////////////////////
-module extend_unit (
+module extend_unit #(
+    parameter WIDTH  = 32,
+    parameter OFFSET = 7
+) (
     i_imm_ID,
     i_imm_src_ID,
     o_imm_ex_ID
@@ -30,9 +33,9 @@ module extend_unit (
     // IO declaration
     // ------------------------------------------
     input logic [2:0] i_imm_src_ID;
-    input logic [24:0] i_imm_ID;
+    input logic [WIDTH-7:0] i_imm_ID;
 
-    output logic [31:0] o_imm_ex_ID;
+    output logic [WIDTH-1:0] o_imm_ex_ID;
 
     // ------------------------------------------
     // Signals definitions
@@ -81,7 +84,9 @@ module extend_unit (
             end
             U_type: begin
                 // U-type: 20 bits [24:5] from i_imm_ID, extended to 32 bits
-                o_imm_ex_ID = {{12{i_imm_ID[24]}}, i_imm_ID[24:5]};
+                o_imm_ex_ID = {i_imm_ID[31-OFFSET:12-OFFSET], {12{1'b0}}};
+                // $display("  extend_unit: U-type: %h", o_imm_ex_ID);
+                // $display("  extend_unit: U-type: %h", o_imm_ex_ID);
             end
             default: begin
                 o_imm_ex_ID = 32'h0;

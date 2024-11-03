@@ -85,8 +85,8 @@ module tb_core ();
             generate
                 for (i = 0; i < 16; i = i + 1) begin : monitor_registers
                     always @(dut.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.registers[i]) begin
-                        $display("      Time %0t ps: Register[x%0d] changed to %d<-  = %b\n\n", $time, i, dut.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.registers[i],dut.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.registers[i]);
-                        $fdisplay(f_osiris_core_state_dump, "Clock Cycle: %d | Register[x%0d] changed to %d<-  = %b\n\n", cycle_counter, i, dut.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.registers[i],dut.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.registers[i]);
+                        $display("      Time %0t ps: Register[x%0d] changed to %d<-  = %b = %h\n\n", $time, i, dut.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.registers[i],dut.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.registers[i],dut.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.registers[i]);
+                        $fdisplay(f_osiris_core_state_dump, "Clock Cycle: %d | Register[x%0d] changed to %d<-  = %b  = %h\n\n", cycle_counter, i, dut.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.registers[i],dut.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.registers[i],dut.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.registers[i]);
                     end
                 end
             endgenerate
@@ -181,7 +181,7 @@ module tb_core ();
                 //display_registers();
 
                 // End of simulation
-                #1000;
+                #700;
                 $display("---------------------------------------");
                 $display("Simulation complete.");
                 $display("---------------------------------------");
@@ -646,14 +646,14 @@ module tb_core ();
         // mem_instr[20] = 32'h00210133;  // add x2, x2, x2 // x2 = 4 // testing if hazard is flushing this instruction
         
 
-    //     // # U-Type Instructions
-    //     // # lui
-    //     #(CLK_PERIOD) $display("Sending lui x1, 0x12345");
-    //     mem_instr[300] = 32'h123450B7;  // lui x1, 0x12345  // x1 = 0x12345000
-    //     #(CLK_PERIOD) $display("Sending lui x2, 0x23456");
-    //     mem_instr[304] = 32'h23456137;  // lui x2, 0x23456  // x2 = 0x23456000
-    //     #(CLK_PERIOD) $display("Sending lui x3, 0x34567");
-    //     mem_instr[308] = 32'h345671B7;  // lui x3, 0x34567  // x3 = 0x34567000
+        // # U-Type Instructions
+        // # lui
+        #(CLK_PERIOD) $display("Sending lui x1, 0x12345");
+        mem_instr[0] = 32'h123450B7;  // lui x1, 0x12345  // x1 = 0x12345000 (305418240₁₀)
+        // #(CLK_PERIOD) $display("Sending lui x2, 0x23456");
+        // mem_instr[4] = 32'h23456137;  // lui x2, 0x23456  // x2 = 0x23456000 (591749120₁₀)
+        // #(CLK_PERIOD) $display("Sending lui x3, 0x34567");
+        // mem_instr[8] = 32'h345671B7;  // lui x3, 0x34567  // x3 = 0x34567000 (878080000₁₀)
 
     //     // # auipc
     //     #(CLK_PERIOD) $display("Sending auipc x4, 0x45678");
