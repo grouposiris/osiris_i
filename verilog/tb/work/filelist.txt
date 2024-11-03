@@ -10,6 +10,7 @@
 ../../rtl/osiris_i/hazard_unit.v
 ../../rtl/osiris_i/id_ex.v
 ../../rtl/osiris_i/if_id.v
+../../rtl/osiris_i/mem_byte.v
 ../../rtl/osiris_i/mem.v
 ../../rtl/osiris_i/mem_wb.v
 ../../rtl/osiris_i/mux_2x1.v

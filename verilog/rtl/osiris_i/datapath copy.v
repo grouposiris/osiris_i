@@ -125,14 +125,13 @@ module datapath #(
     // MEM
     wire [DATA_WIDTH-1:0] alu_result_M;
     wire [DATA_WIDTH-1:0] write_data_M, pcplus4_M, pc_target_M;
-    wire [DATA_WIDTH-1:0] write_data_WB;  // used for writing on external memory
     wire [3:0] rd_M;
     wire [1:0] result_src_M;
     wire reg_write_M, mem_write_M;
 
     // WB
     wire [DATA_WIDTH-1:0] result_WB, read_data_WB;
-    wire [DATA_WIDTH-1:0] alu_result_WB, pc_target_WB, pc_plus4_WB, o_alu_result_WB_neg;
+    wire [DATA_WIDTH-1:0] alu_result_WB, pc_target_WB, pc_plus4_WB;
     wire [3:0] rd_WB;
     wire       reg_write_WB;
     wire [1:0] result_src_WB;
@@ -247,7 +246,6 @@ module datapath #(
     // EX/MEM Pipeline Register
     ex_mem U_EX_MEM (
         .clk(clk),
-        .rst(rst),
         .i_reg_write_EX(reg_write_EX),
         .i_result_src_EX(result_src_EX),
         .i_mem_write_EX(mem_write_EX),
@@ -267,27 +265,13 @@ module datapath #(
     );
 
     // Memory Access Stage
-    // assign o_data_addr_M  = alu_result_WB;
-    // assign o_write_data_M = write_data_M;
-    // assign o_mem_write_M  = mem_write_M;
-
-    // -------------------------------------
-    // Memory Access Stage
-    // assign o_data_addr_M  = alu_result_WB;
-    //// assign o_data_addr_M  = alu_result_M;
-    assign o_data_addr_M  = o_alu_result_WB_neg;
-
-    // assign o_write_data_M = write_data_M;
-    //// assign o_write_data_M = write_data_EX;
-    assign o_write_data_M = write_data_WB;
-
-    // assign o_mem_write_M  = mem_write_M;
-    assign o_mem_write_M  = mem_write_WB;
+    assign o_data_addr_M  = alu_result_WB;
+    assign o_write_data_M = write_data_M;
+    assign o_mem_write_M  = mem_write_M;
 
     // MEM/WB Pipeline Register
     mem_wb U_MEM_WB (
         .clk(clk),
-        .rst(rst),  //*
         .i_alu_result_M(alu_result_M),
         .i_read_data_M(i_read_data_M),
         .i_pc_target_M(pc_target_M),
@@ -295,18 +279,13 @@ module datapath #(
         .i_rd_M(rd_M),
         .i_reg_write_M(reg_write_M),
         .i_result_src_M(result_src_M),
-        .i_mem_write_M(mem_write_M),  //*
-        .i_write_data_M(write_data_M),
         .o_alu_result_WB(alu_result_WB),
-        .o_alu_result_WB_neg(o_alu_result_WB_neg),
         .o_read_data_WB(read_data_WB),
         .o_pc_target_WB(pc_target_WB),
         .o_pc_plus4_WB(pc_plus4_WB),
         .o_rd_WB(rd_WB),
         .o_reg_write_WB(reg_write_WB),
-        .o_result_src_WB(result_src_WB),
-        .o_mem_write_WB(mem_write_WB),  //*
-        .o_write_data_WB(write_data_WB)
+        .o_result_src_WB(result_src_WB)
     );
 
     // Write-Back Stage

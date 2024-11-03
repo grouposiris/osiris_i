@@ -1,4 +1,4 @@
-module mem #(
+module mem_byte #(
     parameter DATA_WIDTH = 32,
     parameter MEM_SIZE   = 64   // in KB
 ) (
@@ -13,6 +13,8 @@ module mem #(
     output reg  [DATA_WIDTH-1:0] wb_dat_o,  // Wishbone data output
     output reg                   wb_ack_o   // Wishbone acknowledge
 );
+    // xxx -> instr -> LSB 
+    // 0000000000000001 10
 
     // Calculate the memory depth (number of entries)
     localparam MEM_DEPTH = (MEM_SIZE * 1024) / (DATA_WIDTH / 8);
