@@ -548,19 +548,32 @@ module tb_core ();
 
         // // # sh
         // #(CLK_PERIOD) $display("Sending sh x1, 0(x1)");
-        // mem_instr[204] = 32'h00109023;  // sh x1, 0(x1)  // Store halfword from x1 to memory at address x1 + 0
+        // mem_instr[0] = 32'h00109023;  // sh x1, 0(x1)  // Store halfword from x1 to memory at address x1 + 0: mem[1] = 1
         // #(CLK_PERIOD) $display("Sending sh x2, 2(x1)");
-        // mem_instr[208] = 32'h00209123;  // sh x2, 2(x1)  // Store halfword from x2 to memory at address x1 + 2
+        // mem_instr[4] = 32'h00209123;  // sh x2, 2(x1)  // Store halfword from x2 to memory at address x1 + 2: mem[3] = 2
         // #(CLK_PERIOD) $display("Sending sh x3, 4(x1)");
-        // mem_instr[212] = 32'h00309223;  // sh x3, 4(x1)  // Store halfword from x3 to memory at address x1 + 4
+        // mem_instr[8] = 32'h00309223;  // sh x3, 4(x1)  // Store halfword from x3 to memory at address x1 + 4: mem[5] = 3
+        // // NOP instruction
+        // #(CLK_PERIOD);
+        // for (inst = 3; inst < 50; inst=inst+1) begin
+        //     $display("Sending add x0, x0, x0");
+        //     mem_instr[inst*4] = 32'h00000033;  // NOP add x0, x0, x0
+        // end
 
         // // # sw
         // #(CLK_PERIOD) $display("Sending sw x1, 0(x1)");
-        // mem_instr[216] = 32'h0010A023;  // sw x1, 0(x1)  // Store word from x1 to memory at address x1 + 0
+        // mem_instr[0] = 32'h0010A023;  // sw x1, 0(x1)  // Store word from x1 to memory at address x1 + 0: mem[1] = 1
         // #(CLK_PERIOD) $display("Sending sw x2, 2(x1)");
-        // mem_instr[220] = 32'h0020A223;  // sw x2, 4(x1)  // Store word from x2 to memory at address x1 + 4
+        // mem_instr[4] = 32'h0020A123;  // sw x2, 4(x1)  // Store word from x2 to memory at address x1 + 4: mem[3] = 2
         // #(CLK_PERIOD) $display("Sending sw x3, 8(x1)");
-        // mem_instr[224] = 32'h0030A423;  // sw x3, 8(x1)  // Store word from x3 to memory at address x1 + 8
+        // mem_instr[8] = 32'h0030A423;  // sw x3, 8(x1)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
+        // // NOP instruction
+        // #(CLK_PERIOD);
+        // for (inst = 3; inst < 50; inst=inst+1) begin
+        //     $display("Sending add x0, x0, x0");
+        //     mem_instr[inst*4] = 32'h00000033;  // NOP add x0, x0, x0
+        // end
+
 
     //     // # B-Type Instructions
     //     // # beq
