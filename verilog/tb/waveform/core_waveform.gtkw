@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Sat Nov  2 22:29:24 2024
+[*] Sun Nov  3 01:52:02 2024
 [*]
 [dumpfile] "/home/lspadersimon/repos/osiris_i/verilog/tb/work/core.vcd"
-[dumpfile_mtime] "Sat Nov  2 22:28:08 2024"
-[dumpfile_size] 104253
+[dumpfile_mtime] "Sun Nov  3 01:51:50 2024"
+[dumpfile_size] 113957
 [savefile] "/home/lspadersimon/repos/osiris_i/verilog/tb/waveform/core_waveform.gtkw"
-[timestart] 1028
+[timestart] 1086
 [size] 1870 1016
 [pos] -1 -1
-*-4.000000 1062 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-6.000000 1110 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_core.
 [treeopen] tb_core.dut.
 [treeopen] tb_core.dut.U_DATAPATH.
@@ -42,9 +42,8 @@ tb_core.cycle_counter[15:0]
 -group_end
 @24
 tb_core.core_pc_IF[31:0]
-@28
-tb_core.core_instr_ID[31:0]
 @22
+tb_core.core_instr_ID[31:0]
 tb_core.core_read_data_M[31:0]
 @28
 tb_core.core_mem_write_M
@@ -124,8 +123,9 @@ tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_funct_7_5
 -decode: writeback
 @28
 tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_write_en_WB
-@22
+@23
 tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_rd_WB[3:0]
+@24
 tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_data_WB[31:0]
 @200
 -
@@ -199,7 +199,7 @@ tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
 (31)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
 @1401200
 -group_end
-@25
+@24
 tb_core.dut.U_STAGE_EXECUTE.o_alu_result_EX[31:0]
 @28
 tb_core.dut.U_STAGE_EXECUTE.o_equal_EX

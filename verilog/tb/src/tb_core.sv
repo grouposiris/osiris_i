@@ -395,31 +395,14 @@ module tb_core ();
     task upload_instructions;
         integer inst;
     begin
-        // # I-Type Instructions
-        // # xori
-        #(CLK_PERIOD) $display("Sending xori x1, x2, 0x2");
-        mem_instr[0] = 32'h00214093;  // xori x1, x2, 0x2  // x1 = x2 ^ 0x2 = 2 ^ 2 = 0
-        #(CLK_PERIOD) $display("Sending xori x3, x4, 0x8");
-        mem_instr[4] = 32'h00824193;  // xori x3, x4, 0x8  // x3 = x4 ^ 0x8 = 4 ^ 8 = 12
-        #(CLK_PERIOD) $display("Sending xori x5, x6, 0xF");
-        mem_instr[8] = 32'h00F34293;  // xori x5, x6, 0xF  // x5 = x6 ^ 0xF = 6 ^ 15 = 9
-
-
-
-        // #(CLK_PERIOD) $display("Sending sb x1, 0(x1)");
-        // mem_instr[12] = 32'h00108023;  // sb x1, 0(x1)  // Store byte from x1 to memory at address x1 + 0: mem[1] = 1
-        #(CLK_PERIOD) $display("Sending sb x2, 1(x1)");
-        mem_instr[12] = 32'h002080A3;  // sb x2, 1(x1)  // Store byte from x2 to memory at address x1 + 1: mem[2] = 2
-        // #(CLK_PERIOD) $display("Sending sb x3, 2(x1)");
-        // mem_instr[8] = 32'h00308123;  // sb x3, 2(x1)  // Store byte from x3 to memory at address x1 + 2: mem[3] = 3
-        // #(CLK_PERIOD) $display("Sending sb x3, -2(x1)");
-        // mem_instr[12] = 32'hfe308f23;  // sb x3, -2(x1)  // Store byte from x3 to memory at address x1 + 2: mem[-1] = 3
-        // // NOP instruction
-        #(CLK_PERIOD);
-        for (inst = 5; inst < 50; inst=inst+1) begin
-            $display("Sending add x0, x0, x0");
-            mem_instr[inst*4] = 32'h00000033;  // NOP add x0, x0, x0
-        end
+        // // # I-Type Instructions
+        // // # xori
+        // #(CLK_PERIOD) $display("Sending xori x1, x2, 0x2");
+        // mem_instr[0] = 32'h00214093;  // xori x1, x2, 0x2  // x1 = x2 ^ 0x2 = 2 ^ 2 = 0
+        // #(CLK_PERIOD) $display("Sending xori x3, x4, 0x8");
+        // mem_instr[4] = 32'h00824193;  // xori x3, x4, 0x8  // x3 = x4 ^ 0x8 = 4 ^ 8 = 12
+        // #(CLK_PERIOD) $display("Sending xori x5, x6, 0xF");
+        // mem_instr[8] = 32'h00F34293;  // xori x5, x6, 0xF  // x5 = x6 ^ 0xF = 6 ^ 15 = 9
 
         // // # slti
         // #(CLK_PERIOD) $display("Sending slti x7, x8, 10");

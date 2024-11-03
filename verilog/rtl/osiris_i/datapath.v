@@ -313,6 +313,7 @@ module datapath #(
     stage_write_back U_STAGE_WRITE_BACK (
         .i_result_src_WB(result_src_WB),
         .i_alu_result_WB(alu_result_WB),
+        // .i_alu_result_WB(o_alu_result_WB_neg),  //* reg file adjustment
         .i_result_data_WB(read_data_WB),
         .i_pcplus4_WB(pc_plus4_WB),
         .o_result_WB(result_WB)
