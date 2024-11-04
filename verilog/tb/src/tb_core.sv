@@ -402,32 +402,32 @@ module tb_core ();
         // lb (Load byte)
         // #(CLK_PERIOD) $display("Sending lb x1, 0(x2)");
         // mem_instr[16] = 32'h00010083;  // lb x1, 0(x2)  // Load byte from address x2 + 0 into x1 (value depends on memory content)
-        #(CLK_PERIOD) $display("Sending lb x3, -4(x4)");
-        mem_instr[20] = 32'hffc20183;  // lb x3, -4(x4)  // Load byte from address x4 - 4 into x3 (value depends on memory content)
+        // #(CLK_PERIOD) $display("Sending lb x3, -4(x4)");
+        // mem_instr[20] = 32'hffc20183;  // lb x3, -4(x4)  // Load byte from address x4 - 4 into x3 (value depends on memory content)
 
         // // lh (Load halfword)
         // #(CLK_PERIOD) $display("Sending lh x5, 2(x6)");
-        // mem_instr[24] = 32'h00231283;  // lh x5, 2(x6)  // Load halfword from address x6 + 2 into x5 (value depends on memory content)
+        // mem_instr[24] = 32'h00231283;  // lh x5, 2(x6)  // Load halfword from address x6 + 2 into x5 (value depends on memory content): reg[5] = 8
         // #(CLK_PERIOD) $display("Sending lh x7, -8(x8)");
-        // mem_instr[28] = 32'hff841383;  // lh x7, -8(x8)  // Load halfword from address x8 - 8 into x7 (value depends on memory content)
+        // mem_instr[28] = 32'hff841383;  // lh x7, -8(x8)  // Load halfword from address x8 - 8 into x7 (value depends on memory content): reg[7] = 0
 
-        // // lw (Load word)
+        // lw (Load word)
         // #(CLK_PERIOD) $display("Sending lw x9, 4(x10)");
-        // mem_instr[32] = 32'h00452483;  // lw x9, 4(x10)  // Load word from address x10 + 4 into x9 (value depends on memory content)
+        // mem_instr[32] = 32'h00452483;  // lw x9, 4(x10)  // Load word from address x10 + 4 into x9 (value depends on memory content): reg[9] = 14
         // #(CLK_PERIOD) $display("Sending lw x11, -12(x12)");
-        // mem_instr[36] = 32'hff462583;  // lw x11, -12(x12)  // Load word from address x12 - 12 into x11 (value depends on memory content)
+        // mem_instr[36] = 32'hff462583;  // lw x11, -12(x12)  // Load word from address x12 - 12 into x11 (value depends on memory content): reg[11] = 0
 
-        // // lbu (Load byte unsigned)
+        // lbu (Load byte unsigned)
         // #(CLK_PERIOD) $display("Sending lbu x13, 0(x14)");
-        // mem_instr[40] = 32'h00074683;  // lbu x13, 0(x14)  // Load byte from address x14 + 0 into x13 (unsigned, value depends on memory content)
-        // #(CLK_PERIOD) $display("Sending lbu x15, -4(x1)");
-        // mem_instr[44] = 32'hffc0c783;  // lbu x15, -4(x1)  // Load byte from address x1 - 4 into x15 (unsigned, value depends on memory content)
+        // mem_instr[40] = 32'h00074683;  // lbu x13, 0(x14)  // Load byte from address x14 + 0 into x13 (unsigned, value depends on memory content): reg[13] = 14
+        // #(CLK_PERIOD) $display("Sending lbu x15, -4(x1)"); // unsigned -4 (12 bits) = FFFFFFFE₁₆. 
+        // mem_instr[44] = 32'hffc0c783;  // lbu x15, -4(x1)  // Load byte from address x1 - 4 into x15 (unsigned, value depends on memory content): reg[15] = data_from_addr(FFFFFFFE₁₆ + 1) = data_from_addr(FFFFFFFD₁₆)
 
-        // // lhu (Load halfword unsigned)
+        // lhu (Load halfword unsigned)
         // #(CLK_PERIOD) $display("Sending lhu x2, 2(x3)");
-        // mem_instr[48] = 32'h0021d103;  // lhu x2, 2(x3)  // Load halfword from address x3 + 2 into x2 (unsigned, value depends on memory content)
+        // mem_instr[48] = 32'h0021d103;  // lhu x2, 2(x3)  // Load halfword from address x3 + 2 into x2 (unsigned, value depends on memory content): reg[2] = 5
         // #(CLK_PERIOD) $display("Sending lhu x4, -8(x5)");
-        // mem_instr[52] = 32'hff82d203;  // lhu x4, -8(x5)  // Load halfword from address x5 - 8 into x4 (unsigned, value depends on memory content)
+        // mem_instr[52] = 32'hff82d203;  // lhu x4, -8(x5)  // Load halfword from address x5 - 8 into x4 (unsigned, value depends on memory content): reg[4] = data_from_address(-3)
 
 
         // // jalr (Jump and link register)

@@ -99,7 +99,7 @@ module alu #(
     end
 
     always @(*) begin
-        $display("      alu: i_alu_ctrl_EX: %b", i_alu_ctrl_EX);
+        // $display("      alu: i_alu_ctrl_EX: %b", i_alu_ctrl_EX);
         case (i_alu_ctrl_EX)
 
             AND: begin

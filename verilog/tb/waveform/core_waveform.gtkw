@@ -1,20 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Mon Nov  4 01:37:07 2024
+[*] Mon Nov  4 22:11:59 2024
 [*]
 [dumpfile] "/home/lspadersimon/repos/osiris_i/verilog/tb/work/core.vcd"
-[dumpfile_mtime] "Mon Nov  4 01:36:09 2024"
-[dumpfile_size] 142508
+[dumpfile_mtime] "Mon Nov  4 22:02:17 2024"
+[dumpfile_size] 147057
 [savefile] "/home/lspadersimon/repos/osiris_i/verilog/tb/waveform/core_waveform.gtkw"
-[timestart] 2541
+[timestart] 1099
 [size] 1870 1016
 [pos] -1 -1
-*-6.000000 2630 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-5.000000 1130 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_core.
 [treeopen] tb_core.dut.
 [treeopen] tb_core.dut.U_CONTROL_UNIT.
 [treeopen] tb_core.dut.U_DATAPATH.
-[treeopen] tb_core.dut.U_STAGE_EXECUTE.
+[treeopen] tb_core.dut.U_DATAPATH.U_STAGE_DECODE.
 [treeopen] tb_core.dut.U_STAGE_FETCH.
 [sst_width] 303
 [signals_width] 370
@@ -155,6 +155,15 @@ tb_core.dut.U_DATAPATH.U_ID_EX.i_result_src_ID[1:0]
 tb_core.dut.U_DATAPATH.U_ID_EX.o_result_src_EX[1:0]
 @200
 -
+@201
+--------- extend_unit --------
+@28
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.U_EXTEND_UNIT.i_imm_src_ID[2:0]
+@22
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.U_EXTEND_UNIT.i_imm_ID[25:0]
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.U_EXTEND_UNIT.o_imm_ex_ID[31:0]
+@200
+-
 --------- stage_execute --------
 -comes from control
 @28
@@ -224,6 +233,8 @@ tb_core.dut.U_STAGE_EXECUTE.o_pc_target_EX[31:0]
 @200
 -
 --------- alu --------
+@28
+tb_core.dut.U_STAGE_EXECUTE.U_ALU.i_alu_ctrl_EX[4:0]
 @22
 tb_core.dut.U_STAGE_EXECUTE.U_ALU.i_rd1_EX[31:0]
 tb_core.dut.U_STAGE_EXECUTE.U_ALU.i_rd2_EX[31:0]
@@ -245,7 +256,6 @@ tb_core.dut.U_DATAPATH.U_EX_MEM.o_mem_write_M
 @22
 tb_core.dut.U_DATAPATH.U_EX_MEM.o_write_data_M[31:0]
 tb_core.dut.U_DATAPATH.U_EX_MEM.i_pc_target_EX[31:0]
-@23
 tb_core.dut.U_DATAPATH.U_EX_MEM.o_pc_target_M[31:0]
 @200
 -
