@@ -142,7 +142,7 @@ module tb_core ();
                     // mem_instr[i] = {DATA_WIDTH{1'b0}};
                     mem_instr[i] = 32'h00000033;
                     // mem_data[i] = {DATA_WIDTH{1'b0}};
-                    mem_data[i] = 32'hAAAAAAAA;
+                    mem_data[i] = 32'h0 + i;
                 end
                 // mem_instr[0] = 32'h00000093;  // Example: addi x1, x0, 0 (loads 0 into x1)
                 // mem_instr[4] = 32'h00100113;  // Example: addi x2, x0, 1 (loads 1 into x2)
@@ -212,7 +212,6 @@ module tb_core ();
                 if (core_mem_write_M & !rst_core) begin
                     mem_data[core_data_addr_M[DATA_MEM_ADDR_BITS-1:0]] <= core_write_data_M;
                     $fdisplay(f_osiris_core_state_dump, "Clock Cycle: %d | [Data Memory] - Write - Addr = %h, Data = %h", cycle_counter, core_data_addr_M, mem_data[core_data_addr_M[DATA_MEM_ADDR_BITS-1:0]]);
-                    //$display("Time %0t ps: [Data Memory] Write: Addr = %h, Data = %h",$time, core_data_addr_M, core_write_data_M);
                 end
             end
 
@@ -403,8 +402,8 @@ module tb_core ();
         // lb (Load byte)
         #(CLK_PERIOD) $display("Sending lb x1, 0(x2)");
         mem_instr[16] = 32'h00010083;  // lb x1, 0(x2)  // Load byte from address x2 + 0 into x1 (value depends on memory content)
-        #(CLK_PERIOD) $display("Sending lb x3, -4(x4)");
-        mem_instr[20] = 32'hffc20183;  // lb x3, -4(x4)  // Load byte from address x4 - 4 into x3 (value depends on memory content)
+        // #(CLK_PERIOD) $display("Sending lb x3, -4(x4)");
+        // mem_instr[20] = 32'hffc20183;  // lb x3, -4(x4)  // Load byte from address x4 - 4 into x3 (value depends on memory content)
 
         // // lh (Load halfword)
         // #(CLK_PERIOD) $display("Sending lh x5, 2(x6)");
@@ -430,6 +429,14 @@ module tb_core ();
         // #(CLK_PERIOD) $display("Sending lhu x4, -8(x5)");
         // mem_instr[420] = 32'hff82d203;  // lhu x4, -8(x5)  // Load halfword from address x5 - 8 into x4 (unsigned, value depends on memory content)
 
+
+        // // jalr (Jump and link register)
+        // #(CLK_PERIOD) $display("Sending jalr x1, 0(x2)");
+        // mem_instr[448] = 32'h000100e7;  // jalr x1, 0(x2)  // Jump to address x2 + 0, x1 = return address = 1 (decimal)
+        // #(CLK_PERIOD) $display("Sending jalr x3, -4(x4)");
+        // mem_instr[452] = 32'hffc201e7;  // jalr x3, -4(x4)  // Jump to address x4 - 4, x3 = return address = 3 (decimal)
+        // #(CLK_PERIOD) $display("Sending jalr x5, 8(x6)");
+        // mem_instr[456] = 32'h008302e7;  // jalr x5, 8(x6)  // Jump to address x6 + 8, x5 = return address = 5 (decimal)
 
 
         // // andi (AND immediate)
