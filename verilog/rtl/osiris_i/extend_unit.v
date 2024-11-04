@@ -29,11 +29,11 @@ module extend_unit #(
     i_imm_src_ID,
     o_imm_ex_ID
 );
-    // ------------------------------------------
+    // ---------------ssd---------------------------
     // IO declaration
     // ------------------------------------------
     input logic [2:0] i_imm_src_ID;
-    input logic [WIDTH-7:0] i_imm_ID;
+    input logic [WIDTH-7-1:0] i_imm_ID;
 
     output logic [WIDTH-1:0] o_imm_ex_ID;
 
