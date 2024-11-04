@@ -72,7 +72,7 @@ module datapath #(
     input wire i_mem_write_ID;
     input wire [4:0] i_alu_ctrl_ID;
     input wire i_alu_src_ID;
-    input wire i_addr_src_ID;
+    input wire i_addr_src_ID, o_addr_src_EX;
     input wire [2:0] i_imm_src_ID;
     input wire i_fence_ID;
     input wire [DATA_WIDTH-1:0] i_instr_IF;
@@ -213,6 +213,7 @@ module datapath #(
         .i_alu_ctrl_ID(i_alu_ctrl_ID),
         .i_alu_src_ID(i_alu_src_ID),
         .i_clear(flush_EX),
+        .i_addr_src_ID(i_addr_src_ID),
         .o_rd_EX(rd_EX),
         .o_rs1_EX(rs1_EX),
         .o_rs2_EX(rs2_EX),
@@ -227,7 +228,8 @@ module datapath #(
         .o_result_src_EX(result_src_EX),
         .o_mem_write_EX(mem_write_EX),
         .o_alu_ctrl_EX(alu_ctrl_EX),
-        .o_alu_src_EX(alu_src_EX)
+        .o_alu_src_EX(alu_src_EX),
+        .o_addr_src_EX(o_addr_src_EX)
     );
 
     // Execute Stage
@@ -237,6 +239,8 @@ module datapath #(
         .i_pc_EX(pc_EX),
         .i_imm_ext_EX(imm_ext_EX),
         .i_alu_src_EX(alu_src_EX),
+        .i_addr_src_EX(
+            o_addr_src_EX),  //selects which source will sum with immediate: PC(0) or rs1(1) (JALR)
         .i_result_WB(result_WB),
         .i_alu_result_M(alu_result_M),
         .i_forward_rs1_EX(forward_rs1_EX),

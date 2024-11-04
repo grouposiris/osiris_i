@@ -430,11 +430,16 @@ module tb_core ();
         // mem_instr[52] = 32'hff82d203;  // lhu x4, -8(x5)  // Load halfword from address x5 - 8 into x4 (unsigned, value depends on memory content): reg[4] = data_from_address(-3)
 
 
-        // // jalr (Jump and link register)
-        // #(CLK_PERIOD) $display("Sending jalr x1, 0(x2)");
-        // mem_instr[448] = 32'h000100e7;  // jalr x1, 0(x2)  // Jump to address x2 + 0, x1 = return address = 1 (decimal)
+        // jalr (Jump and link register)
+        #(CLK_PERIOD) $display("Sending jalr x1, 32(x8)");
+        mem_instr[56] = 32'h020400e7;  // jalr x1, 32(x8)  // Jump to address x8 + 32 = 40, x1 = return address = PC + 4 = 60 (decimal)
+        mem_instr[60] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
+        
+        #(CLK_PERIOD) $display("Sending jal x1, 32");
+        mem_instr[92] = 32'h020000EF;  // jal x1, 32  // Jump to PC + 32, x1 = return address
+        mem_instr[96] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
         // #(CLK_PERIOD) $display("Sending jalr x3, -4(x4)");
-        // mem_instr[452] = 32'hffc201e7;  // jalr x3, -4(x4)  // Jump to address x4 - 4, x3 = return address = 3 (decimal)
+        // mem_instr[452] = 32'hffc201e7;  // jalr x3, -4(x4)  // Jump to address x4 - 4 = 0, x3 = return address = 0 (decimal)
         // #(CLK_PERIOD) $display("Sending jalr x5, 8(x6)");
         // mem_instr[456] = 32'h008302e7;  // jalr x5, 8(x6)  // Jump to address x6 + 8, x5 = return address = 5 (decimal)
 

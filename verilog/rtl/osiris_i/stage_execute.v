@@ -27,6 +27,7 @@ module stage_execute #(
     i_pc_EX,
     i_imm_ext_EX,
     i_alu_src_EX,
+    i_addr_src_EX,
     i_result_WB,
     i_alu_result_M,
     i_forward_rs1_EX,
@@ -42,6 +43,7 @@ module stage_execute #(
     // IO declaration
     // ------------------------------------------
     input i_alu_src_EX;
+    input i_addr_src_EX;
     input [DATA_WIDTH-1:0] i_rd1_EX;
     input [DATA_WIDTH-1:0] i_rd2_EX;
     input [DATA_WIDTH-1:0] i_pc_EX;
@@ -66,12 +68,22 @@ module stage_execute #(
     // ------------------------------------------
     wire [DATA_WIDTH-1:0] srcA_EX;
     wire [DATA_WIDTH-1:0] srcB_EX;
+    wire [DATA_WIDTH-1:0] o_mux_rs1_pcEX;
 
     // ------------------------------------------
     // Logic
     // ------------------------------------------
+
+    // this mux selects between PC(branch, JAL) or rs1 (JALR)
+    mux_2x1 U_MUX_PC_TARGET (
+        .i_sel(i_addr_src_EX),
+        .i_a(i_pc_EX),  // i_sel = 0
+        .i_b(i_rd1_EX),  // i_sel = 1
+        .o_mux(o_mux_rs1_pcEX)
+    );
+
     pc_target U_PC_TARGET (
-        .i_pc_EX(i_pc_EX),
+        .i_pc_EX(o_mux_rs1_pcEX),
         .i_imm_ext_EX(i_imm_ext_EX),
         .o_pc_target_EX(o_pc_target_EX)
     );

@@ -1,20 +1,22 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Mon Nov  4 22:11:59 2024
+[*] Mon Nov  4 23:49:57 2024
 [*]
 [dumpfile] "/home/lspadersimon/repos/osiris_i/verilog/tb/work/core.vcd"
-[dumpfile_mtime] "Mon Nov  4 22:02:17 2024"
-[dumpfile_size] 147057
+[dumpfile_mtime] "Mon Nov  4 23:46:09 2024"
+[dumpfile_size] 146897
 [savefile] "/home/lspadersimon/repos/osiris_i/verilog/tb/waveform/core_waveform.gtkw"
-[timestart] 1099
+[timestart] 1188
 [size] 1870 1016
 [pos] -1 -1
-*-5.000000 1130 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-6.000000 1310 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_core.
 [treeopen] tb_core.dut.
 [treeopen] tb_core.dut.U_CONTROL_UNIT.
 [treeopen] tb_core.dut.U_DATAPATH.
 [treeopen] tb_core.dut.U_DATAPATH.U_STAGE_DECODE.
+[treeopen] tb_core.dut.U_STAGE_EXECUTE.
+[treeopen] tb_core.dut.U_STAGE_EXECUTE.U_PC_TARGET.
 [treeopen] tb_core.dut.U_STAGE_FETCH.
 [sst_width] 303
 [signals_width] 370
@@ -155,12 +157,10 @@ tb_core.dut.U_DATAPATH.U_ID_EX.i_result_src_ID[1:0]
 tb_core.dut.U_DATAPATH.U_ID_EX.o_result_src_EX[1:0]
 @200
 -
-@201
 --------- extend_unit --------
 @28
 tb_core.dut.U_DATAPATH.U_STAGE_DECODE.U_EXTEND_UNIT.i_imm_src_ID[2:0]
 @22
-tb_core.dut.U_DATAPATH.U_STAGE_DECODE.U_EXTEND_UNIT.i_imm_ID[25:0]
 tb_core.dut.U_DATAPATH.U_STAGE_DECODE.U_EXTEND_UNIT.o_imm_ex_ID[31:0]
 @200
 -
@@ -181,10 +181,10 @@ tb_core.dut.U_STAGE_EXECUTE.i_forward_rs2_EX[1:0]
 @200
 -
 -operation
-@22
+@24
 tb_core.dut.U_STAGE_EXECUTE.i_imm_ext_EX[31:0]
 tb_core.dut.U_STAGE_EXECUTE.i_rd1_EX[31:0]
-@c00022
+@c00024
 tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
 @28
 (0)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
@@ -221,28 +221,35 @@ tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
 (31)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
 @1401200
 -group_end
-@22
+@24
 tb_core.dut.U_STAGE_EXECUTE.o_alu_result_EX[31:0]
-@28
 tb_core.dut.U_STAGE_EXECUTE.o_equal_EX
 @200
 -
-@24
-tb_core.dut.U_STAGE_EXECUTE.i_pc_EX[31:0]
-tb_core.dut.U_STAGE_EXECUTE.o_pc_target_EX[31:0]
-@200
--
 --------- alu --------
-@28
+@24
 tb_core.dut.U_STAGE_EXECUTE.U_ALU.i_alu_ctrl_EX[4:0]
-@22
 tb_core.dut.U_STAGE_EXECUTE.U_ALU.i_rd1_EX[31:0]
 tb_core.dut.U_STAGE_EXECUTE.U_ALU.i_rd2_EX[31:0]
 tb_core.dut.U_STAGE_EXECUTE.U_ALU.o_alu_result_EX[31:0]
+@201
+-
+@200
+--------- mux_pc_target --------
+@22
+tb_core.dut.U_STAGE_EXECUTE.U_PC_TARGET.i_imm_ext_EX[31:0]
+tb_core.dut.U_STAGE_EXECUTE.U_PC_TARGET.i_pc_EX[31:0]
+tb_core.dut.U_STAGE_EXECUTE.U_PC_TARGET.o_pc_target_EX[31:0]
+@200
+--------- pc_target --------
+@24
+tb_core.dut.U_STAGE_EXECUTE.U_PC_TARGET.i_pc_EX[31:0]
+tb_core.dut.U_STAGE_EXECUTE.U_PC_TARGET.i_imm_ext_EX[31:0]
+tb_core.dut.U_STAGE_EXECUTE.U_PC_TARGET.o_pc_target_EX[31:0]
 @200
 -
 --------- next_pc --------
-@22
+@24
 tb_core.dut.U_STAGE_EXECUTE.U_PC_TARGET.i_imm_ext_EX[31:0]
 tb_core.dut.U_STAGE_EXECUTE.U_PC_TARGET.i_pc_EX[31:0]
 tb_core.dut.U_STAGE_EXECUTE.U_PC_TARGET.o_pc_target_EX[31:0]
