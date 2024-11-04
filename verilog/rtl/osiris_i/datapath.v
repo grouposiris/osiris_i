@@ -139,6 +139,7 @@ module datapath #(
     wire [           3:0] rd_WB;
     wire                  reg_write_WB;
     wire [           1:0] result_src_WB;
+    wire                  mem_write_WB;
 
     // @spadersimon: added below wire to implement initial reset
     wire                  if_id_rst;
