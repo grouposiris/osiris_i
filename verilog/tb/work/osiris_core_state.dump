@@ -53,16 +53,16 @@ Clock Cycle:     0 | Register[x15] changed to         15<-  = 000000000000000000
    Clock Cycle:     4 | [Program Counter] changed to 0000000c
    Clock Cycle:     5 | [Program Counter] changed to 00000010
    Clock Cycle:     6 | [Program Counter] changed to 00000014
-   Clock Cycle:     6 | [Instruction Register] changed to 00010083, Assembly: lb x1, 0(x2)
    Clock Cycle:     7 | [Program Counter] changed to 00000018
-   Clock Cycle:     7 | [Instruction Register] changed to 00000033, Assembly: add x0, x0, x0
+   Clock Cycle:     7 | [Instruction Register] changed to ffc20183, Assembly: lb x3, -4(x4)
    Clock Cycle:     8 | [Program Counter] changed to 0000001c
+   Clock Cycle:     8 | [Instruction Register] changed to 00000033, Assembly: add x0, x0, x0
    Clock Cycle:     9 | [Program Counter] changed to 00000020
    Clock Cycle:    10 | [Program Counter] changed to 00000024
-Clock Cycle:    10 | Register[x1] changed to          2<-  = 00000000000000000000000000000010  = 00000002
-
-
    Clock Cycle:    11 | [Program Counter] changed to 00000028
+Clock Cycle:    11 | Register[x3] changed to          0<-  = 00000000000000000000000000000000  = 00000000
+
+
    Clock Cycle:    12 | [Program Counter] changed to 0000002c
    Clock Cycle:    13 | [Program Counter] changed to 00000030
    Clock Cycle:    14 | [Program Counter] changed to 00000034

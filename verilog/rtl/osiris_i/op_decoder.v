@@ -108,9 +108,8 @@ module op_decoder (
     // 01: PC + 4
     // 10: Data from Data Memory
     // 11:  PC + imm (comes from stage_execute.next_pc)
-    assign o_result_src_ID =
-        // write_back mux selection: stage_write_back.o_result_WB
-        (i_op == R_TYPE) ? 2'b00 :  // ALU result
+    // o_result_src_ID: write_back mux selection: stage_write_back.o_result_WB
+    assign o_result_src_ID = (i_op == R_TYPE) ? 2'b00 :  // ALU result
         // (i_op == I_TYPE_LOAD) ? 2'b01 :  // PC + 4
         (i_op == I_TYPE_LOAD) ? 2'b10 :  // 
         (i_op == I_TYPE_ARITH) ? 2'b00 :  // ALU result
@@ -148,7 +147,7 @@ module op_decoder (
         // (i_op == 5'b00100) ? OP_ARITH :
 
         // Load instructions
-        (i_op == 5'b00000) ? OP_ADD_SUB :
+        (i_op == 5'b00000) ? OP_ADD :
 
         // Store instructions
         (i_op == 5'b01000) ? OP_ADD_SUB :
