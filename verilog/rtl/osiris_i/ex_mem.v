@@ -55,7 +55,7 @@ module ex_mem #(
     input logic i_reg_write_EX;  // Control
     input logic [1:0] i_result_src_EX;
     input logic i_mem_write_EX;
-    input logic [DATA_WIDTH-1-2:0] i_pc_target_EX;
+    input logic [DATA_WIDTH-1:0] i_pc_target_EX;
 
     output logic [DATA_WIDTH-1:0] o_alu_result_M;  // Datapath
     output logic [DATA_WIDTH-1:0] o_write_data_M;
@@ -64,7 +64,7 @@ module ex_mem #(
     output logic o_reg_write_M;  // Control
     output logic [1:0] o_result_src_M;
     output logic o_mem_write_M;
-    output logic [DATA_WIDTH-1-2:0] o_pc_target_M;
+    output logic [DATA_WIDTH-1:0] o_pc_target_M;
 
     // ------------------------------------------
     // Logic

@@ -125,7 +125,7 @@ module datapath #(
     // MEM
     wire [DATA_WIDTH-1:0] alu_result_M;
     wire [DATA_WIDTH-1:0] write_data_M, pcplus4_M;
-    wire [DATA_WIDTH-1-2:0] pc_target_M;
+    wire [DATA_WIDTH-1:0] pc_target_M;
     wire [DATA_WIDTH-1:0] write_data_WB;  // used for writing on external memory
     wire [3:0] rd_M;
     wire [1:0] result_src_M;
@@ -135,13 +135,13 @@ module datapath #(
     wire [DATA_WIDTH-1:0] result_WB, read_data_WB;
     wire [DATA_WIDTH-1:0] alu_result_WB, pc_plus4_WB, o_alu_result_WB_neg;
 
-    wire [DATA_WIDTH-1-2:0] pc_target_WB;
-    wire [             3:0] rd_WB;
-    wire                    reg_write_WB;
-    wire [             1:0] result_src_WB;
+    wire [DATA_WIDTH-1:0] pc_target_WB;
+    wire [           3:0] rd_WB;
+    wire                  reg_write_WB;
+    wire [           1:0] result_src_WB;
 
     // @spadersimon: added below wire to implement initial reset
-    wire                    if_id_rst;
+    wire                  if_id_rst;
 
 
 
@@ -303,7 +303,7 @@ module datapath #(
         .o_alu_result_WB(alu_result_WB),
         .o_alu_result_WB_neg(o_alu_result_WB_neg),
         .o_read_data_WB(read_data_WB),
-        .o_pc_target_WB(pc_target_WB),
+        .o_pc_target_WB(pc_target_WB),  // ! not being used??
         .o_pc_plus4_WB(pc_plus4_WB),
         .o_rd_WB(rd_WB),
         .o_reg_write_WB(reg_write_WB),
@@ -317,6 +317,7 @@ module datapath #(
         .i_result_src_WB(result_src_WB),
         .i_alu_result_WB(alu_result_WB),
         // .i_alu_result_WB(o_alu_result_WB_neg),  //* reg file adjustment
+        .i_pc_target_WB(pc_target_WB),
         .i_result_data_WB(read_data_WB),
         .i_pcplus4_WB(pc_plus4_WB),
         .o_result_WB(result_WB)

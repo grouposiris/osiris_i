@@ -1,18 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Sun Nov  3 20:41:17 2024
+[*] Mon Nov  4 01:37:07 2024
 [*]
 [dumpfile] "/home/lspadersimon/repos/osiris_i/verilog/tb/work/core.vcd"
-[dumpfile_mtime] "Sun Nov  3 18:47:09 2024"
-[dumpfile_size] 100720
+[dumpfile_mtime] "Mon Nov  4 01:36:09 2024"
+[dumpfile_size] 142508
 [savefile] "/home/lspadersimon/repos/osiris_i/verilog/tb/waveform/core_waveform.gtkw"
-[timestart] 883
+[timestart] 2541
 [size] 1870 1016
 [pos] -1 -1
-*-6.000000 1030 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-6.000000 2630 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_core.
 [treeopen] tb_core.dut.
+[treeopen] tb_core.dut.U_CONTROL_UNIT.
 [treeopen] tb_core.dut.U_DATAPATH.
+[treeopen] tb_core.dut.U_STAGE_EXECUTE.
 [treeopen] tb_core.dut.U_STAGE_FETCH.
 [sst_width] 303
 [signals_width] 370
@@ -62,9 +64,10 @@ tb_core.dut.U_CONTROL_UNIT.i_op[4:0]
 -alu related
 @28
 [color] 2
-tb_core.dut.U_CONTROL_UNIT.alu_op[1:0]
 tb_core.dut.U_CONTROL_UNIT.i_funct_3[2:0]
 tb_core.dut.U_CONTROL_UNIT.i_funct_7_5
+[color] 2
+tb_core.dut.U_CONTROL_UNIT.alu_op[2:0]
 [color] 2
 tb_core.dut.U_CONTROL_UNIT.o_alu_ctrl_ID[4:0]
 @200
@@ -130,7 +133,6 @@ tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_funct_7_5
 tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_write_en_WB
 @22
 tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_rd_WB[3:0]
-@24
 tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_data_WB[31:0]
 @200
 -
@@ -147,26 +149,31 @@ tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_imm_ex_ID[31:0]
 tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_rs1Addr_ID[3:0]
 tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_rs2Addr_ID[3:0]
 @200
+--------- id_ex --------
+@28
+tb_core.dut.U_DATAPATH.U_ID_EX.i_result_src_ID[1:0]
+tb_core.dut.U_DATAPATH.U_ID_EX.o_result_src_EX[1:0]
+@200
 -
 --------- stage_execute --------
 -comes from control
-@29
+@28
 [color] 2
 tb_core.dut.U_STAGE_EXECUTE.i_alu_ctrl_EX[4:0]
-@28
-tb_core.dut.U_STAGE_EXECUTE.i_alu_src_EX
 @200
 -
 -comes from hazard
 @22
 tb_core.dut.U_STAGE_EXECUTE.i_alu_result_M[31:0]
 @28
+tb_core.dut.U_STAGE_EXECUTE.i_alu_src_EX
 tb_core.dut.U_STAGE_EXECUTE.i_forward_rs1_EX[1:0]
 tb_core.dut.U_STAGE_EXECUTE.i_forward_rs2_EX[1:0]
 @200
 -
 -operation
 @22
+tb_core.dut.U_STAGE_EXECUTE.i_imm_ext_EX[31:0]
 tb_core.dut.U_STAGE_EXECUTE.i_rd1_EX[31:0]
 @c00022
 tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
@@ -213,11 +220,23 @@ tb_core.dut.U_STAGE_EXECUTE.o_equal_EX
 -
 @24
 tb_core.dut.U_STAGE_EXECUTE.i_pc_EX[31:0]
-@22
-tb_core.dut.U_STAGE_EXECUTE.i_imm_ext_EX[31:0]
-@24
 tb_core.dut.U_STAGE_EXECUTE.o_pc_target_EX[31:0]
 @200
+-
+--------- alu --------
+@22
+tb_core.dut.U_STAGE_EXECUTE.U_ALU.i_rd1_EX[31:0]
+tb_core.dut.U_STAGE_EXECUTE.U_ALU.i_rd2_EX[31:0]
+tb_core.dut.U_STAGE_EXECUTE.U_ALU.o_alu_result_EX[31:0]
+@200
+-
+--------- next_pc --------
+@22
+tb_core.dut.U_STAGE_EXECUTE.U_PC_TARGET.i_imm_ext_EX[31:0]
+tb_core.dut.U_STAGE_EXECUTE.U_PC_TARGET.i_pc_EX[31:0]
+tb_core.dut.U_STAGE_EXECUTE.U_PC_TARGET.o_pc_target_EX[31:0]
+@200
+-
 --------- EX_EM --------
 @28
 tb_core.dut.U_DATAPATH.U_EX_MEM.clk
@@ -225,16 +244,25 @@ tb_core.dut.U_DATAPATH.U_EX_MEM.i_mem_write_EX
 tb_core.dut.U_DATAPATH.U_EX_MEM.o_mem_write_M
 @22
 tb_core.dut.U_DATAPATH.U_EX_MEM.o_write_data_M[31:0]
+tb_core.dut.U_DATAPATH.U_EX_MEM.i_pc_target_EX[31:0]
+@23
+tb_core.dut.U_DATAPATH.U_EX_MEM.o_pc_target_M[31:0]
+@200
+-
+--------- mem_wb --------
+@22
+tb_core.dut.U_DATAPATH.U_MEM_WB.i_pc_target_M[31:0]
+tb_core.dut.U_DATAPATH.U_MEM_WB.o_pc_target_WB[31:0]
 @200
 -
 --------- stage_writeback --------
+@28
+tb_core.dut.U_STAGE_WRITE_BACK.i_result_src_WB[1:0]
 @22
 tb_core.dut.U_STAGE_WRITE_BACK.i_alu_result_WB[31:0]
 tb_core.dut.U_STAGE_WRITE_BACK.i_result_data_WB[31:0]
 tb_core.dut.U_STAGE_WRITE_BACK.i_pcplus4_WB[31:0]
-@28
-tb_core.dut.U_STAGE_WRITE_BACK.i_result_src_WB[1:0]
-@22
+tb_core.dut.U_STAGE_WRITE_BACK.i_pc_target_WB[31:0]
 tb_core.dut.U_STAGE_WRITE_BACK.o_result_WB[31:0]
 @200
 -

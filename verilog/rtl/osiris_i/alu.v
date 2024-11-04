@@ -99,7 +99,7 @@ module alu #(
     end
 
     always @(*) begin
-        $display("alu: i_alu_ctrl_EX: %b", i_alu_ctrl_EX);
+        $display("      alu: i_alu_ctrl_EX: %b", i_alu_ctrl_EX);
         case (i_alu_ctrl_EX)
 
             AND: begin
@@ -144,7 +144,7 @@ module alu #(
             SLL: begin
                 // SLL performs logical left shifts (ignores sign) on the value in register rs1 by the shift amount held in the lower 5 bits of register rs2.
                 // rd1 shifted left by rd2: we can only shift 32 bits so we need to use 5 bits of rd2
-                $display("alu: SLL i_rd1_EX: %b", i_rd1_EX);
+                // $display("alu: SLL i_rd1_EX: %b", i_rd1_EX);
                 o_alu_result_EX = i_rd1_EX <<
                     i_rd2_EX[5-1:0];  // ! TODO: verify SLL TYPE declaration
                 o_equal_EX =
@@ -239,31 +239,31 @@ module alu #(
                 o_equal_EX = 1'bz;
             end
 
-            AUIPC: begin
-                // AUIPC adds the immediate value to the upper 20 bits of the PC, filling in the lowest 12 bits with zeros. The bit extension is done by decode stage. The rd2 source selection is done by stage_execute (outside alu block).
-                // *bits 11-0 of rd1 are set to 0.
-                o_alu_result_EX = 'bz;  // original osiris described version (o_pc_target_EX is executed outside 'alu' block, it is on 'pc_target' block)
-                // o_alu_result_EX = i_rd1_EX + i_rd2_EX; // suggested by @LuisSpader (using a mux with i_rd1_ex) -> calculates the BTA = PC + SignExt({imm12:1,1'b0})
-                o_equal_EX = 1'bz;
-            end
+            // AUIPC: begin
+            //     // AUIPC adds the immediate value to the upper 20 bits of the PC, filling in the lowest 12 bits with zeros. The bit extension is done by decode stage. The rd2 source selection is done by stage_execute (outside alu block).
+            //     // *bits 11-0 of rd1 are set to 0.
+            //     o_alu_result_EX = 'bz;  // original osiris described version (o_pc_target_EX is executed outside 'alu' block, it is on 'pc_target' block)
+            //     // o_alu_result_EX = i_rd1_EX + i_rd2_EX; // suggested by @LuisSpader (using a mux with i_rd1_ex) -> calculates the BTA = PC + SignExt({imm12:1,1'b0})
+            //     o_equal_EX = 1'bz;
+            // end
 
-            FENCE: begin
-                // FENCE is a memory fence instruction. It does not operate on registers.
-                o_alu_result_EX = 'bz;
-                o_equal_EX = 1'bz;
-            end
+            // FENCE: begin
+            //     // FENCE is a memory fence instruction. It does not operate on registers.
+            //     o_alu_result_EX = 'bz;
+            //     o_equal_EX = 1'bz;
+            // end
 
-            ECALL: begin
-                // ECALL is a system call instruction. It does not operate on registers.
-                o_alu_result_EX = 'bz;
-                o_equal_EX = 1'bz;
-            end
+            // ECALL: begin
+            //     // ECALL is a system call instruction. It does not operate on registers.
+            //     o_alu_result_EX = 'bz;
+            //     o_equal_EX = 1'bz;
+            // end
 
-            EBREAK: begin
-                // EBREAK is a breakpoint instruction. It does not operate on registers.
-                o_alu_result_EX = 'bz;
-                o_equal_EX = 1'bz;
-            end
+            // EBREAK: begin
+            //     // EBREAK is a breakpoint instruction. It does not operate on registers.
+            //     o_alu_result_EX = 'bz;
+            //     o_equal_EX = 1'bz;
+            // end
 
 
             default: begin
