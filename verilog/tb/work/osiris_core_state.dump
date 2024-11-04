@@ -53,11 +53,20 @@ Clock Cycle:     0 | Register[x15] changed to         15<-  = 000000000000000000
    Clock Cycle:     4 | [Program Counter] changed to 0000000c
    Clock Cycle:     5 | [Program Counter] changed to 00000010
    Clock Cycle:     6 | [Program Counter] changed to 00000014
+   Clock Cycle:     6 | [Instruction Register] changed to 00010083, Assembly: lb x1, 0(x2)
    Clock Cycle:     7 | [Program Counter] changed to 00000018
+   Clock Cycle:     7 | [Instruction Register] changed to ffc20183, Assembly: lb x3, -4(x4)
    Clock Cycle:     8 | [Program Counter] changed to 0000001c
+   Clock Cycle:     8 | [Instruction Register] changed to 00000033, Assembly: add x0, x0, x0
    Clock Cycle:     9 | [Program Counter] changed to 00000020
    Clock Cycle:    10 | [Program Counter] changed to 00000024
+Clock Cycle:    10 | Register[x1] changed to         20<-  = 00000000000000000000000000010100  = 00000014
+
+
    Clock Cycle:    11 | [Program Counter] changed to 00000028
+Clock Cycle:    11 | Register[x3] changed to         24<-  = 00000000000000000000000000011000  = 00000018
+
+
    Clock Cycle:    12 | [Program Counter] changed to 0000002c
    Clock Cycle:    13 | [Program Counter] changed to 00000030
    Clock Cycle:    14 | [Program Counter] changed to 00000034
@@ -136,20 +145,15 @@ Clock Cycle:     0 | Register[x15] changed to         15<-  = 000000000000000000
    Clock Cycle:    87 | [Program Counter] changed to 00000158
    Clock Cycle:    88 | [Program Counter] changed to 0000015c
    Clock Cycle:    89 | [Program Counter] changed to 00000160
-   Clock Cycle:    89 | [Instruction Register] changed to 020000ef, Assembly: jal x1, 32
    Clock Cycle:    90 | [Program Counter] changed to 00000164
-   Clock Cycle:    90 | [Instruction Register] changed to 00000033, Assembly: add x0, x0, x0
-   Clock Cycle:    91 | [Program Counter] changed to 0000017c
-   Clock Cycle:    92 | [Program Counter] changed to 00000180
-   Clock Cycle:    93 | [Program Counter] changed to 00000184
-Clock Cycle:    93 | Register[x1] changed to        352<-  = 00000000000000000000000101100000  = 00000160
-
-
-   Clock Cycle:    94 | [Program Counter] changed to 00000188
-   Clock Cycle:    95 | [Program Counter] changed to 0000018c
-   Clock Cycle:    96 | [Program Counter] changed to 00000190
-   Clock Cycle:    97 | [Program Counter] changed to 00000194
-   Clock Cycle:    98 | [Program Counter] changed to 00000198
-   Clock Cycle:    99 | [Program Counter] changed to 0000019c
-   Clock Cycle:   100 | [Program Counter] changed to 000001a0
-   Clock Cycle:   101 | [Program Counter] changed to 000001a4
+   Clock Cycle:    91 | [Program Counter] changed to 00000168
+   Clock Cycle:    92 | [Program Counter] changed to 0000016c
+   Clock Cycle:    93 | [Program Counter] changed to 00000170
+   Clock Cycle:    94 | [Program Counter] changed to 00000174
+   Clock Cycle:    95 | [Program Counter] changed to 00000178
+   Clock Cycle:    96 | [Program Counter] changed to 0000017c
+   Clock Cycle:    97 | [Program Counter] changed to 00000180
+   Clock Cycle:    98 | [Program Counter] changed to 00000184
+   Clock Cycle:    99 | [Program Counter] changed to 00000188
+   Clock Cycle:   100 | [Program Counter] changed to 0000018c
+   Clock Cycle:   101 | [Program Counter] changed to 00000190
