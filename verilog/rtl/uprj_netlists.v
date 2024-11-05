@@ -22,7 +22,7 @@
     `default_nettype wire
     `include "gl/user_project_wrapper.v"
     `include "gl/user_proj_example.v"
-    `include "./osiris_i/osiris_i.v"
+    `include "gl/osiris_i.v"
 `else
     `include "user_project_wrapper.v"
     `include "./osiris_i/adder.v"
