@@ -20,6 +20,10 @@
 module core #(
     parameter DATA_WIDTH = 32
 ) (
+ `ifdef USE_POWER_PINS
+    vccd1,
+    vssd1,
+`endif
     clk,
     rst,
     i_instr_ID,
@@ -34,7 +38,10 @@ module core #(
     // ------------------------------------------
     // IO declaration
     // ------------------------------------------
-
+`ifdef USE_POWER_PINS
+    inout vccd1;
+    inout vssd1;
+`endif
     input wire clk;
     input wire rst;
     input wire [DATA_WIDTH-1:0] i_instr_ID;  // Input instruction from instruction memory
