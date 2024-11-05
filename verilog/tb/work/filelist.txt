@@ -28,4 +28,4 @@
 ../../rtl/osiris_i/uart_receiver.v
 ../../rtl/osiris_i/uart_transmitter.v
 ../../rtl/osiris_i/uart_wbs_bridge.v
-../src/tb_core.sv
+../src/tb_osiris_i.sv

@@ -1,7 +1,7 @@
 module mem #(
-    parameter DATA_WIDTH = 32,
+    parameter DATA_WIDTH  = 32,
     // parameter ADDR_WIDTH = 14   // 13 = 32kB, 14 = 64KB
-    parameter MEM_SIZE   = 64   // in KB
+    parameter MEM_SIZE_KB = 64   // in KB
 ) (
     clk,  // Clock
     rst,  // Reset
@@ -15,15 +15,15 @@ module mem #(
     wb_ack_o  // Wishbone acknowledge
 );
     // Memory array: 64KB Memory, 32-bit wide
-    // reg [DATA_WIDTH-1:0] mem[0:(MEM_SIZE * 1024 / 4) - 1];
+    // reg [DATA_WIDTH-1:0] mem[0:(MEM_SIZE_KB * 1024 / 4) - 1];
 
     // // Memory depth calculation   based on ADDR_WIDTH
     // localparam MEM_DEPTH = 2 ** ADDR_WIDTH;
     // // Memory array with calculated depth
     // reg [DATA_WIDTH-1:0] mem[0:MEM_DEPTH - 1];
 
-    // Calculate the memory depth (number of entries) based on MEM_SIZE and DATA_WIDTH
-    localparam MEM_DEPTH = (MEM_SIZE * 1024 * 8) / DATA_WIDTH;
+    // Calculate the memory depth (number of entries) based on MEM_SIZE_KB and DATA_WIDTH
+    localparam MEM_DEPTH = (MEM_SIZE_KB * 1024 * 8) / DATA_WIDTH;
 
     // Define the memory array with calculated depth
     reg [DATA_WIDTH-1:0] mem[0:MEM_DEPTH-1];
@@ -45,7 +45,7 @@ module mem #(
         if (rst) begin
             wb_ack_o <= 0;
             // Reset all memory contents to zero
-            for (i = 0; i < (MEM_SIZE * 1024 / 4); i = i + 1) begin
+            for (i = 0; i < (MEM_SIZE_KB * 1024 / 4); i = i + 1) begin
                 // mem[i] <= {(DATA_WIDTH / 2) {2'b10}};
                 mem[i] <= 32'h00000033;
                 // mem[i] <= {DATA_WIDTH{1'b0}};

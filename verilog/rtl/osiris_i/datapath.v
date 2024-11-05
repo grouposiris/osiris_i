@@ -55,7 +55,8 @@ module datapath #(
     o_op,
     o_funct3,
     o_funct_7_5,
-    o_pc_IF
+    o_pc_IF,
+    o_funct3_MEM
 );
 
 
@@ -88,6 +89,7 @@ module datapath #(
     output wire [2:0] o_funct3;
     output wire o_funct_7_5;
     output wire [DATA_WIDTH-1:0] o_pc_IF;
+    output wire [2:0] o_funct3_MEM;
 
     // ------------------------------------------
     // Localparams
@@ -140,6 +142,8 @@ module datapath #(
     wire                  reg_write_WB;
     wire [           1:0] result_src_WB;
     wire                  mem_write_WB;
+
+    wire [           2:0] funct3_EX;
 
     // @spadersimon: added below wire to implement initial reset
     wire                  if_id_rst;
@@ -214,6 +218,7 @@ module datapath #(
         .i_alu_src_ID(i_alu_src_ID),
         .i_clear(flush_EX),
         .i_addr_src_ID(i_addr_src_ID),
+        .i_funct3_ID(o_funct3),
         .o_rd_EX(rd_EX),
         .o_rs1_EX(rs1_EX),
         .o_rs2_EX(rs2_EX),
@@ -229,7 +234,8 @@ module datapath #(
         .o_mem_write_EX(mem_write_EX),
         .o_alu_ctrl_EX(alu_ctrl_EX),
         .o_alu_src_EX(alu_src_EX),
-        .o_addr_src_EX(o_addr_src_EX)
+        .o_addr_src_EX(o_addr_src_EX),
+        .o_funct3_EX(funct3_EX)
     );
 
     // Execute Stage
@@ -264,6 +270,7 @@ module datapath #(
         .i_pc_plus4_EX(pcplus4_EX),
         .i_rd_EX(rd_EX),
         .i_pc_target_EX(pc_target_EX),
+        .i_funct3_EX(funct3_EX),
         .o_reg_write_M(reg_write_M),
         .o_result_src_M(result_src_M),
         .o_mem_write_M(mem_write_M),
@@ -271,7 +278,8 @@ module datapath #(
         .o_write_data_M(write_data_M),
         .o_pc_plus4_M(pcplus4_M),
         .o_rd_M(rd_M),
-        .o_pc_target_M(pc_target_M)
+        .o_pc_target_M(pc_target_M),
+        .o_funct3_MEM(o_funct3_MEM)
     );
 
     // Memory Access Stage

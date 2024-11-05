@@ -20,7 +20,7 @@
 module core #(
     parameter DATA_WIDTH = 32
 ) (
- `ifdef USE_POWER_PINS
+`ifdef USE_POWER_PINS
     vccd1,
     vssd1,
 `endif
@@ -28,6 +28,7 @@ module core #(
     rst,
     i_instr_ID,
     i_read_data_M,
+    o_funct3_MEM,
     o_pc_IF,
     o_mem_write_M,
     o_data_addr_M,
@@ -48,6 +49,7 @@ module core #(
     input wire [DATA_WIDTH-1:0] i_read_data_M;  // Input data from memory
     // input wire [DATA_WIDTH-1:0] loaded_data;  // load data
 
+    output wire [2:0] o_funct3_MEM;
     output wire [DATA_WIDTH-1:0] o_pc_IF;  // Output program counter (IF stage)
     output wire o_mem_write_M;  // Output memory write enable (M stage)
     output wire [DATA_WIDTH-1:0] o_data_addr_M;  // Output data address (M stage)
@@ -183,7 +185,8 @@ module core #(
         .o_op(o_op),
         .o_funct3(o_funct3),
         .o_funct_7_5(o_funct_7_5),
-        .o_pc_IF(o_pc_IF)
+        .o_pc_IF(o_pc_IF),
+        .o_funct3_MEM(o_funct3_MEM)
     );
 
 endmodule

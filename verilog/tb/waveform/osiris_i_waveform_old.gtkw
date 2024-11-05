@@ -1,11 +1,11 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Tue Nov  5 08:25:44 2024
+[*] Tue Nov  5 08:25:35 2024
 [*]
 [dumpfile] "/home/lspadersimon/repos/osiris_i/verilog/tb/work/osiris_i.vcd"
 [dumpfile_mtime] "Tue Nov  5 08:11:53 2024"
 [dumpfile_size] 19133778
-[savefile] "/home/lspadersimon/repos/osiris_i/verilog/tb/waveform/osiris_i_waveform.gtkw"
+[savefile] "/home/lspadersimon/repos/osiris_i/verilog/tb/waveform/osiris_i_waveform_old.gtkw"
 [timestart] 44523347
 [size] 1870 1016
 [pos] -1 -1

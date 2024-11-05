@@ -83,6 +83,7 @@ module osiris_i #(
         .rst           (rst_core),
         .i_instr_ID    (core_instr_ID),     // Instruction input to core
         .i_read_data_M (core_read_data_M),  // Data read input to core
+        .o_funct3_MEM(mux_funct3),
         .o_pc_IF       (core_pc_IF),        // Program Counter output from core
         .o_mem_write_M (core_mem_write_M),  // Memory write enable output from core
         .o_data_addr_M (core_data_addr_M),  // Data address output from core
@@ -99,6 +100,7 @@ module osiris_i #(
     wire inst_mem_cyc_i;
     wire [DATA_WIDTH-1:0] inst_mem_dat_o;
     wire inst_mem_ack_o;
+    wire [2:0] funct3;
 
     // Mux between core and UART bridge for Instruction Memory access
     assign inst_mem_adr_i = (i_select_mem == 1'b0 && uart_wb_stb_o) ? uart_wb_adr_o[INST_MEM_ADDR_WIDTH-1:0] :
@@ -127,6 +129,7 @@ module osiris_i #(
     wire data_mem_cyc_i;
     wire [DATA_WIDTH-1:0] data_mem_dat_o;
     wire data_mem_ack_o;
+    wire [2:0] mux_funct3;
 
     // Mux between core and UART bridge for Data Memory access
     assign data_mem_adr_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_adr_o[DATA_MEM_ADDR_WIDTH-1:0] : core_data_addr_M[DATA_MEM_ADDR_WIDTH-1:0];
@@ -152,6 +155,7 @@ module osiris_i #(
     // Instantiate Instruction Memory
     // ------------------------------------------
     mem_byte #(
+    // mem #(
         .DATA_WIDTH(DATA_WIDTH),
         .MEM_SIZE_KB(INST_MEM_SIZE)  // 4KB Instruction Memory
     ) U_INST_MEM (
@@ -162,6 +166,7 @@ module osiris_i #(
         .wb_we_i (inst_mem_we_i),   // Write enable input
         .wb_stb_i(inst_mem_stb_i),  // Strobe input
         .wb_cyc_i(inst_mem_cyc_i),  // Cycle input
+        .funct3(3'b010), // always word
         .wb_dat_o(inst_mem_dat_o),  // Data output
         .wb_ack_o(inst_mem_ack_o)   // Acknowledge output
     );
@@ -169,7 +174,11 @@ module osiris_i #(
     // ------------------------------------------
     // Instantiate Data Memory
     // ------------------------------------------
+    
+    assign mux_funct3 = (i_select_mem == 1'b1 && uart_wb_cyc_o) ? 3'b010 : funct3; // when UART is selecting, communicate by word (3'b010), when i_select_mem == 0 (connect to core), so core decides with funct3
+
     mem_byte #(
+    // mem #(
         .DATA_WIDTH(DATA_WIDTH),
         .MEM_SIZE_KB(DATA_MEM_SIZE)  // 4KB Data Memory
     ) U_DATA_MEM (
@@ -179,7 +188,8 @@ module osiris_i #(
         .wb_dat_i(data_mem_dat_i),  // Data input
         .wb_we_i (data_mem_we_i),   // Write enable input
         .wb_stb_i(data_mem_stb_i),  // Strobe input
-        .wb_cyc_i(data_mem_cyc_i),  // Cycle input
+        .wb_cyc_i(data_mem_cyc_i),  // Cycle 
+        .funct3(mux_funct3),
         .wb_dat_o(data_mem_dat_o),  // Data output
         .wb_ack_o(data_mem_ack_o)   // Acknowledge output
     );
