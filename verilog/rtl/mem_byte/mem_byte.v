@@ -1,6 +1,6 @@
 module mem_byte #(
     parameter DATA_WIDTH  = 32,
-    parameter MEM_SIZE_KB = 2   // Memory size in KB
+    parameter MEM_SIZE_KB = 2    // Memory size in KB
 ) (
     clk,  // Clock
     rst,  // Reset
@@ -16,12 +16,15 @@ module mem_byte #(
 );
 
     // Calculate total memory size in bytes
-    localparam MEM_SIZE_BYTES = MEM_SIZE_KB * 128;
-    localparam MEM_DEPTH = (MEM_SIZE_KB * 128 * 8) / DATA_WIDTH;
+    localparam
+        MEM_SIZE_BYTES = MEM_SIZE_KB * 128;  // convert KB to Bytes --> total Bytes = 1000 Bytes
+    // localparam MEM_DEPTH = (MEM_SIZE_KB * 1024 * 8) / DATA_WIDTH;
 
     input wire clk;  // Clock
     input wire rst;  // Reset
-    input wire [$clog2(MEM_DEPTH)-1:0] wb_adr_i;  // Adjusted address input width
+    input wire [$clog2(
+MEM_SIZE_BYTES
+)-1:0] wb_adr_i;  // Adjusted address input width // if MEM_SIZE_BYTES = 256, clog2(MEM_SIZE_BYTES) = 8 bits for addressing
     input wire [DATA_WIDTH-1:0] wb_dat_i;  // Wishbone data input
     input wire wb_we_i;  // Wishbone write enable
     input wire wb_stb_i;  // Wishbone strobe
@@ -38,20 +41,22 @@ module mem_byte #(
     // assign wb_dat_o = data_reg;
 
     // Internal wire for address
-    wire [15:0] addr = wb_adr_i;
+    wire [$clog2(MEM_SIZE_BYTES)-1:0] addr = wb_adr_i;
 
     integer i;
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             wb_ack_o <= 1'b0;
-            data_reg = {DATA_WIDTH{1'b0}};
+
             // Initialize memory contents if needed
             for (i = 0; i < (MEM_SIZE_BYTES / 4); i = i + 4) begin
-                mem[i]   = 8'h33;
-                mem[i+1] = 8'b0;
-                mem[i+2] = 8'b0;
-                mem[i+3] = 8'b0;
+                // total words = MEM_SIZE_BYTES / 4 ## each iteration is a word
+                mem[i]   <= 8'h33;  // byte 0
+                mem[i+1] <= 8'b0;  // byte 1
+                mem[i+2] <= 8'b0;  // byte 2
+                mem[i+3] <= 8'b0;  // byte 3
+                // h00000033 = NOP = add x0, x0, x0
             end
         end else begin
             // if (wb_cyc_i && wb_stb_i && !wb_ack_o) begin
@@ -114,26 +119,30 @@ module mem_byte #(
 
     // asynchronous reading
     always @(*) begin
-        case (funct3)
-            3'b000: begin  // lb (Load Byte): rd = SignExt([wb_adr_i]7:0)
-                data_reg = {{24{mem[addr][7]}}, mem[addr]};
-            end
-            3'b001: begin  // lh (Load Halfword): rd = SignExt([wb_adr_i]15:0)
-                data_reg = {{16{mem[addr+1][7]}}, mem[addr+1], mem[addr]};
-            end
-            3'b010: begin  // lw (Load Word): rd = [wb_adr_i]31:0
-                data_reg = {mem[addr+3], mem[addr+2], mem[addr+1], mem[addr]};
-            end
-            3'b100: begin  // lbu (Load Byte Unsigned): rd = ZeroExt([wb_adr_i]7:0
-                data_reg = {24'b0, mem[addr]};
-            end
-            3'b101: begin  // lhu (Load Halfword Unsigned): rd = ZeroExt([wb_adr_i]15:0
-                data_reg = {16'b0, mem[addr+1], mem[addr]};
-            end
-            default: begin
-                data_reg = {mem[addr+3], mem[addr+2], mem[addr+1], mem[addr]};
-            end
-        endcase
+        if (rst) begin
+            data_reg = {DATA_WIDTH{1'b0}};
+        end else begin
+            case (funct3)
+                3'b000: begin  // lb (Load Byte): rd = SignExt([wb_adr_i]7:0)
+                    data_reg = {{24{mem[addr][7]}}, mem[addr]};
+                end
+                3'b001: begin  // lh (Load Halfword): rd = SignExt([wb_adr_i]15:0)
+                    data_reg = {{16{mem[addr+1][7]}}, mem[addr+1], mem[addr]};
+                end
+                3'b010: begin  // lw (Load Word): rd = [wb_adr_i]31:0
+                    data_reg = {mem[addr+3], mem[addr+2], mem[addr+1], mem[addr]};
+                end
+                3'b100: begin  // lbu (Load Byte Unsigned): rd = ZeroExt([wb_adr_i]7:0
+                    data_reg = {24'b0, mem[addr]};
+                end
+                3'b101: begin  // lhu (Load Halfword Unsigned): rd = ZeroExt([wb_adr_i]15:0
+                    data_reg = {16'b0, mem[addr+1], mem[addr]};
+                end
+                default: begin
+                    data_reg = {mem[addr+3], mem[addr+2], mem[addr+1], mem[addr]};
+                end
+            endcase
+        end
     end
     // Assign data output asynchronously
     assign wb_dat_o = (wb_cyc_i && wb_stb_i && !wb_we_i) ? data_reg : {DATA_WIDTH{1'b0}};

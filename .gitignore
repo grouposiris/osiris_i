@@ -17,4 +17,5 @@
 *.o
 *.a
 *obj_dir*
-*/venv-cocotb
+*/venv-cocotb*
+*venv-cocotb*
