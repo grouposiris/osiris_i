@@ -232,7 +232,7 @@ module alu #(
             end
 
             LUI: begin
-                $display("alu: LUI i_rd1_EX: %b", i_rd1_EX);
+                // $display("alu: LUI i_rd1_EX: %b", i_rd1_EX);
                 // LUI loads the immediate value into the upper 20 bits of the destination register rd, filling in the lowest 12 bits with zeros. The bit extension is done by decode stage. The rd2 source selection is done by stage_execute (outside alu block).
                 // *bits 11-0 of rd1 are set to 0.
                 o_alu_result_EX = i_rd2_EX;
