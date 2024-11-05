@@ -28,16 +28,16 @@ module mem_byte #(
     input  wire                  wb_we_i;   // Wishbone write enable
     input  wire                  wb_stb_i;  // Wishbone strobe
     input  wire                  wb_cyc_i;  // Wishbone cycle
-    output reg  [DATA_WIDTH-1:0] wb_dat_o;  // Wishbone data output
+    output wire [DATA_WIDTH-1:0] wb_dat_o;  // Wishbone data output
     output reg                   wb_ack_o;  // Wishbone acknowledge
 
     // Define the memory array with calculated depth
     reg [DATA_WIDTH-1:0] mem[0:MEM_DEPTH-1];
 
     // Word address calculation (byte address divided by 4)
-    wire [$clog2(MEM_DEPTH)-1:0] word_addr = wb_adr_i[15:2];
-    wire [1:0] byte_selection              = wb_adr_i[1:0];
-    reg [3:0] byte_one_hot_sel;
+    wire [ADDR_WIDTH-1:0] word_addr            = wb_adr_i[ADDR_WIDTH-1:2];
+    wire [1:0]            byte_selection       = wb_adr_i[1:0];
+    reg  [3:0]            byte_one_hot_sel;
 
     integer i;
 
@@ -56,7 +56,6 @@ module mem_byte #(
     always @(posedge clk) begin
         if (rst) begin
             wb_ack_o <= 0;
-            wb_dat_o <= {DATA_WIDTH{1'b0}};
             // Reset all memory contents to zero
             for (i = 0; i < MEM_DEPTH; i = i + 1) begin
                 mem[i] <= {DATA_WIDTH{1'b0}};
@@ -71,12 +70,11 @@ module mem_byte #(
                     if (byte_one_hot_sel[1]) mem[word_addr][15:8]  <= wb_dat_i[15:8];
                     if (byte_one_hot_sel[2]) mem[word_addr][23:16] <= wb_dat_i[23:16];
                     if (byte_one_hot_sel[3]) mem[word_addr][31:24] <= wb_dat_i[31:24];
-                end else begin
-                    // Read operation
-                    wb_dat_o <= mem[wb_adr_i];
                 end
             end
         end
     end
+    // Read operation
+    assign wb_dat_o = (wb_cyc_i && wb_stb_i && !wb_we_i) ? mem[wb_adr_i] : {DATA_WIDTH{1'b0}};
 
 endmodule
