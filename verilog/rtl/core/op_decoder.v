@@ -80,27 +80,35 @@ module op_decoder (
     ECALL = 5'b10011,  // 19 dummy (check if it is necessary)
     EBREAK = 5'b10100;  // 20 dummy (check if it is necessary)
 
-    localparam logic [4:0] R_TYPE = 5'b01100,  //
-    I_TYPE_LOAD = 5'b00000,  //
-    I_TYPE_ARITH = 5'b00100,  //
-    I_TYPE_JALR = 5'b11001,  //
-    J_TYPE_JAL = 5'b11011,  //
-    U_TYPE_LUI = 5'b11001,  //
-    U_TYPE_AUIPC = 5'b00101;  //
+    localparam logic [4:0] OP_R_TYPE = 5'b01100,  //
+    OP_I_TYPE_LOAD = 5'b00000,  //
+    OP_I_TYPE_ARITH = 5'b00100,  //
+    OP_I_TYPE_JALR = 5'b11001,  //
+    OP_J_TYPE_JAL = 5'b11011,  //
+    OP_U_TYPE_LUI = 5'b01101,  //
+    OP_U_TYPE_AUIPC = 5'b00101,  //
+    OP_S_TYPE = 5'b01000,  //
+    OP_B_TYPE = 5'b11000,  //
+    OP_ECALL_EBREAK_TYPE = 5'b11100,  //
+    OP_FENCE_TYPE = 5'b00011;  //
 
 
     // ------------------------------------------
     // Logic
     // ------------------------------------------
 
-    assign o_jump_ID = (i_op == 5'b11011) ? 1'b1 : 1'b0;  //ok
-    assign o_branch_ID = (i_op == 5'b11000) ? 1'b1 : 1'b0;  //ok
+    assign o_jump_ID = (i_op == OP_J_TYPE_JAL) ? 1'b1 :  //
+        (i_op == OP_I_TYPE_JALR) ? 1'b1 :  // 
+        1'b0;  //ok
 
-    assign o_reg_write_ID = (i_op == 5'b01101 | i_op == 5'b00101 | i_op == 5'b11011 |
-                             i_op == 5'b11001 |  // ok
-        i_op == 5'b00000 | i_op == 5'b00100 | i_op == 5'b01100 | i_op == 5'b11100) ? 1'b1 : 1'b0;
+    assign o_branch_ID = (i_op == OP_B_TYPE) ? 1'b1 : 1'b0;  //ok
 
-    // assign o_result_src_ID = (i_op == 5'b00101) ?
+    assign o_reg_write_ID = (i_op == OP_U_TYPE_LUI | i_op == OP_U_TYPE_AUIPC |
+                             i_op == OP_J_TYPE_JAL | i_op == OP_I_TYPE_JALR |  // ok
+        i_op == OP_I_TYPE_LOAD | i_op == OP_I_TYPE_ARITH | i_op == OP_R_TYPE |
+            i_op == OP_ECALL_EBREAK_TYPE) ? 1'b1 : 1'b0;
+
+    // assign o_result_src_ID = (i_op == OP_U_TYPE_AUIPC) ?
     //     2'b11 : (i_op == 5'b11011) ? 2'b10 : (i_op == 5'b00000) ? 2'b01 :  // ok
     //     2'b00;
 
@@ -108,32 +116,32 @@ module op_decoder (
     // 01: PC + 4
     // 10: Data from Data Memory
     // 11:  PC + imm (comes from stage_execute.next_pc)
-    assign o_result_src_ID =
-        // write_back mux selection: stage_write_back.o_result_WB
-        (i_op == R_TYPE) ? 2'b00 :  // ALU result
-        // (i_op == I_TYPE_LOAD) ? 2'b01 :  // PC + 4
-        (i_op == I_TYPE_LOAD) ? 2'b10 :  // 
-        (i_op == I_TYPE_ARITH) ? 2'b00 :  // ALU result
-        (i_op == I_TYPE_JALR) ? 2'b10 :  // Data from Data Memory
-        (i_op == J_TYPE_JAL) ? 2'b01 :  // PC + 4
-        (i_op == U_TYPE_LUI) ? 2'b00 :  // ALU result: add: 0 + imm ({upimm, 12'b0})
-        (i_op == U_TYPE_AUIPC) ? 2'b11 :  // next_pc result: add: PC + imm ({upimm, 12'b0})
-        2'bxx;  // bx
+    // o_result_src_ID: write_back mux selection: stage_write_back.o_result_WB
+    assign o_result_src_ID = (i_op == OP_R_TYPE) ? 2'b00 :  // ALU result
+        // (i_op == OP_I_TYPE_LOAD) ? 2'b01 :  // PC + 4
+        (i_op == OP_I_TYPE_LOAD) ? 2'b10 :  // 
+        (i_op == OP_I_TYPE_ARITH) ? 2'b00 :  // ALU result
+        (i_op == OP_I_TYPE_JALR) ? 2'b01 :  // Data from Data Memory
+        (i_op == OP_J_TYPE_JAL) ? 2'b01 :  // PC + 4
+        (i_op == OP_U_TYPE_LUI) ? 2'b00 :  // ALU result: add: 0 + imm ({upimm, 12'b0})
+        (i_op == OP_U_TYPE_AUIPC) ? 2'b11 :  // next_pc result: add: PC + imm ({upimm, 12'b0})
+        2'b00;  // bx
 
-    assign o_mem_write_ID = (i_op == 5'b01000) ? 1'b1 : 1'b0;  // ok
+    assign o_mem_write_ID = (i_op == OP_S_TYPE) ? 1'b1 : 1'b0;  // ok
 
-    assign o_alu_src_ID = (i_op == 5'b01101 | i_op == 5'b00101 | i_op == 5'b11001 |
-                           i_op == 5'b00000 |  // ok
-        i_op == 5'b01000 | i_op == 5'b00100 | i_op == 5'b11100) ? 1'b1 : 1'b0;
+    assign o_alu_src_ID = (i_op == OP_U_TYPE_LUI | i_op == OP_U_TYPE_AUIPC |
+                           i_op == OP_I_TYPE_JALR | i_op == OP_I_TYPE_LOAD |  // ok
+        i_op == OP_S_TYPE | i_op == OP_I_TYPE_ARITH | i_op == OP_FENCE_TYPE) ? 1'b1 : 1'b0;
 
-    assign o_imm_src_ID = (i_op == 5'b01101) ?
-        3'b100 : (i_op == 5'b00101) ? 3'b100 : (i_op == 5'b11011) ? 3'b011 :  // ok
-        (i_op == 5'b11000) ? 3'b010 : (i_op == 5'b01000) ? 3'b001 : 3'b000;
+    assign o_imm_src_ID = (i_op == OP_U_TYPE_LUI) ?
+        3'b100 : (i_op == OP_U_TYPE_AUIPC) ? 3'b100 : (i_op == OP_J_TYPE_JAL) ? 3'b011 :  // ok
+        (i_op == OP_B_TYPE) ? 3'b010 : (i_op == OP_S_TYPE) ? 3'b001 : 3'b000;
 
-    // assign o_alu_op = (i_op == 5'b11000) ? 2'b11 :  //
-    //     (i_op == 5'b00100 & (i_funct_3 != 3'b000)) ? 2'b01 :  // ok
+    // assign o_alu_op = (i_op == OP_B_TYPE) ? 2'b11 :  //
+    //     (i_op == OP_I_TYPE_ARITH & (i_funct_3 != 3'b000)) ? 2'b01 :  // ok
     //     (i_op == 5'b01100 & (i_funct_7_5 == 1'b1) & (i_funct_3 == 3'b000)) ? 2'b10 :  // 
     //     (i_op == 5'b01100 & (i_funct_3 != 3'b000)) ? 2'b01 : 2'b00;  // 
+
 
 
     // 00 else: LUI
@@ -142,23 +150,23 @@ module op_decoder (
     // 11 branch
     assign o_alu_op =
         // Branch instructions (e.g., BEQ, BNE)
-        (i_op == 5'b11000) ? OP_BRANCH :
+        (i_op == OP_B_TYPE) ? OP_BRANCH :
 
         // // Immediate arithmetic instructions (e.g., AND, OR, etc.)
-        // (i_op == 5'b00100) ? OP_ARITH :
+        // (i_op == OP_I_TYPE_ARITH) ? OP_ARITH :
 
         // Load instructions
-        (i_op == 5'b00000) ? OP_ADD_SUB :
+        (i_op == OP_I_TYPE_LOAD) ? OP_ADD :
 
         // Store instructions
-        (i_op == 5'b01000) ? OP_ADD_SUB :
+        (i_op == OP_S_TYPE) ? OP_ADD :
 
 
         // Immediate arithmetic instructions (e.g., ANDI, ORI, etc.)
-        (i_op == 5'b00100) ? OP_ARITH :
+        (i_op == OP_I_TYPE_ARITH) ? OP_ARITH :
 
         // Register-Register arithmetic instructions
-        (i_op == 5'b01100) ? (
+        (i_op == OP_R_TYPE) ? (
 
         // SUB instruction (funct7[5] == 1 and funct3 == 000)
         (i_funct_3 == 3'b000) ? OP_ADD_SUB :
@@ -167,22 +175,25 @@ module op_decoder (
         OP_ARITH) :
 
         // LUI instruction
-        (i_op == 5'b01101) ? OP_LUI :
+        (i_op == OP_U_TYPE_LUI) ? OP_LUI :
 
         // AUIPC instruction
-        (i_op == 5'b00101) ? OP_ADD :
+        (i_op == OP_U_TYPE_AUIPC) ? OP_ADD :
 
         // FENCE instruction
-        (i_op == 5'b00011) ? OP_ADD_SUB :
+        (i_op == OP_FENCE_TYPE) ? OP_ADD_SUB :
 
         // ECALL and EBREAK instructions
-        (i_op == 5'b11100) ? OP_ADD_SUB :
+        (i_op == OP_ECALL_EBREAK_TYPE) ? OP_ADD_SUB :
 
         // JALR instruction: PC = rs1 + imm, rd = PC + 4 (selects pc_plus4 instead of alu result)
-        (i_op == 5'b11001) ? OP_ADD :
+        (i_op == OP_I_TYPE_JALR) ? OP_ADD :
+
+        // JAL instruction: PC = PC + SignExt({imm20:1,1'b0}), rd = PC + 4;
+        (i_op == OP_J_TYPE_JAL) ? OP_ADD :
 
         // // JAL instruction: PC = JTA, rd = PC + 4 (selects pc_plus4 instead of alu result)
-        // (i_op == 5'b11011) ? OP_ADD_SUB :
+        // (i_op == OP_J_TYPE_JAL) ? OP_ADD_SUB :
 
 
         // Default case
@@ -191,9 +202,9 @@ module op_decoder (
 
 
 
-    assign o_addr_src_ID = (i_op == 5'b11001) ? 1'b1 : 1'b0;  //ok
+    assign o_addr_src_ID = (i_op == OP_I_TYPE_JALR) ? 1'b1 : 1'b0;  //ok
 
-    assign o_fence_ID = (i_op == 5'b00011) ? 1'b1 : 1'b0;  //ok
+    assign o_fence_ID = (i_op == OP_FENCE_TYPE) ? 1'b1 : 1'b0;  //ok
 
 
 endmodule

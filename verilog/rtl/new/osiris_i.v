@@ -1,88 +1,30 @@
-// SPDX-FileCopyrightText: 2020 Efabless Corporation
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// SPDX-License-Identifier: Apache-2.0
-
-`default_nettype none
-/*
- *-------------------------------------------------------------
- *
- * user_proj_example
- *
- * This is an example of a (trivially simple) user project,
- * showing how the user project can connect to the logic
- * analyzer, the wishbone bus, and the I/O pads.
- *
- * This project generates an integer count, which is output
- * on the user area GPIO pads (digital output only).  The
- * wishbone connection allows the project to be controlled
- * (start and stop) from the management SoC program.
- *
- * See the testbenches in directory "mprj_counter" for the
- * example programs that drive this user project.  The three
- * testbenches are "io_ports", "la_test1", and "la_test2".
- *
- *-------------------------------------------------------------
- */
-
-module osiris_i_wrapper #(
-    parameter BITS = 16,
+module osiris_i #(
     parameter DATA_WIDTH = 32,
-    parameter ADDR_WIDTH = 16,
-    parameter INST_MEM_SIZE = 2, // in KB
-    parameter DATA_MEM_SIZE = 2, // in KB
+    parameter ADDR_WIDTH = 32,
+    parameter INST_MEM_SIZE = 4, // in KB
+    parameter DATA_MEM_SIZE = 4, // in KB
     parameter BAUD_RATE  = 9600,
     parameter CLOCK_FREQ = 50000000,  // 50 MHz
     parameter CMD_READ = 8'h01,  // Command to read from memory and send data via UART
     parameter CMD_WRITE=8'hAA  // Command to write data received via UART to memory (changed value for distinction)
-)(
-`ifdef USE_POWER_PINS
-    inout vccd1,	// User area 1 1.8V supply
-    inout vssd1,	// User area 1 digital ground
-`endif
-
-    // Wishbone Slave ports (WB MI A)
-    input wb_clk_i,
-    input wb_rst_i,
-    input wbs_stb_i,
-    input wbs_cyc_i,
-    input wbs_we_i,
-    input [31:0] wbs_dat_i,
-    input [31:0] wbs_adr_i,
-
-
-    // Logic Analyzer Signals
-
-
-    // IOs
-    input  [BITS-1:0] io_in,
-    output [BITS-1:0] io_out,
-
-    // IRQ
+) (
+    input wire clk,
+    input wire rst_core,
+    input wire rst_mem_uart,
+    input wire i_uart_rx,  // UART receive signal from external device
+    input wire
+        i_select_mem,  // Select memory for UART communication: 0 = Instruction Mem, 1 = Data Mem
+    input wire i_start_rx,  // Control signal to start UART reception
+    output wire o_uart_tx  // UART transmit signal to external device
 );
-
-
-    assign io_out[15:1] = {15'h0};
-
-
     // ------------------------------------------
     // Localparam Declarations
     // ------------------------------------------
     // Calculating the Address Width of the Instruction Memory
-    localparam INST_MEM_DEPTH = (INST_MEM_SIZE * 128) / (DATA_WIDTH / 8);
+    localparam INST_MEM_DEPTH = (INST_MEM_SIZE * 1024) / (DATA_WIDTH / 8);
     localparam INST_MEM_ADDR_WIDTH = $clog2(INST_MEM_DEPTH);
     // Calculating the Address Width of the Data Memory
-    localparam DATA_MEM_DEPTH = (DATA_MEM_SIZE * 128) / (DATA_WIDTH / 8);
+    localparam DATA_MEM_DEPTH = (DATA_MEM_SIZE * 1024) / (DATA_WIDTH / 8);
     localparam DATA_MEM_ADDR_WIDTH = $clog2(DATA_MEM_DEPTH);
 
     // ------------------------------------------
@@ -117,10 +59,10 @@ module osiris_i_wrapper #(
         .CMD_READ(CMD_READ),
         .CMD_WRITE(CMD_WRITE)
     ) U_UART_WB_BRIDGE (
-        .clk     (wb_clk_i),
-        .rst     (io_in[6]),
-        .i_uart_rx (io_in[7]),        // UART receive signal
-        .o_uart_tx (io_out[0]),        // UART transmit signal
+        .clk     (clk),
+        .rst     (rst_mem_uart),
+        .i_uart_rx (i_uart_rx),        // UART receive signal
+        .o_uart_tx (o_uart_tx),        // UART transmit signal
         .i_start_rx(i_start_rx),       // Start UART reception
         .wb_cyc_o(uart_wb_cyc_o),  // Cycle output to memory
         .wb_stb_o(uart_wb_stb_o),  // Strobe output to memory
@@ -137,8 +79,8 @@ module osiris_i_wrapper #(
     core #(
         .DATA_WIDTH(DATA_WIDTH)
     ) U_CORE (
-        .clk           (wb_clk_i),
-        .rst           (io_in[5]),
+        .clk           (clk),
+        .rst           (rst_core),
         .i_instr_ID    (core_instr_ID),     // Instruction input to core
         .i_read_data_M (core_read_data_M),  // Data read input to core
         .o_funct3_MEM(mux_funct3),
@@ -166,14 +108,14 @@ module osiris_i_wrapper #(
     assign inst_mem_dat_i = uart_wb_dat_o;  // Only UART bridge writes to Instruction Memory
     assign inst_mem_we_i = (i_select_mem == 1'b0 && uart_wb_stb_o) ? uart_wb_we_o :
         1'b0;  // Core does not write to Instruction Memory
-
+    
     // todo: fix the code below here
     // https://docs.google.com/spreadsheets/d/1JdC8AXBfz5wbBwStkz3v9DsegNWgmpZwvWYa5DVXGxc/edit?gid=1772642847#gid=1772642847
     assign inst_mem_stb_i = (i_select_mem == 1'b0 && uart_wb_stb_o) ? uart_wb_stb_o :
         1'b1;  // Core always reads instructions // ! here it should be activated only based on core instruction. if is a i-type instruction of Load-type, then ResultSrc would be 2'b01
     assign inst_mem_cyc_i = (i_select_mem == 1'b0 && uart_wb_cyc_o) ? uart_wb_cyc_o :
         1'b1;  // Core always reads instructions
-
+    
     // Connect instruction memory data output to core
     assign core_instr_ID = inst_mem_dat_o;
 
@@ -192,10 +134,10 @@ module osiris_i_wrapper #(
     // Mux between core and UART bridge for Data Memory access
     assign data_mem_adr_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_adr_o[DATA_MEM_ADDR_WIDTH-1:0] : core_data_addr_M[DATA_MEM_ADDR_WIDTH-1:0];
     // assign data_mem_adr_i = 32'b0;
-
+    
     assign data_mem_dat_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_dat_o : core_write_data_M;
     // assign data_mem_dat_i = 32'b0;
-
+    
     assign data_mem_we_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_we_o : core_mem_write_M;
     // assign data_mem_we_i = 1'b0;
 
@@ -217,8 +159,8 @@ module osiris_i_wrapper #(
         .DATA_WIDTH(DATA_WIDTH),
         .MEM_SIZE_KB(INST_MEM_SIZE)  // 4KB Instruction Memory
     ) U_INST_MEM (
-        .clk     (wb_clk_i),
-        .rst     (io_in[6]),
+        .clk     (clk),
+        .rst     (rst_mem_uart),
         .wb_adr_i(inst_mem_adr_i),  // Address input
         .wb_dat_i(inst_mem_dat_i),  // Data input
         .wb_we_i (inst_mem_we_i),   // Write enable input
@@ -232,7 +174,7 @@ module osiris_i_wrapper #(
     // ------------------------------------------
     // Instantiate Data Memory
     // ------------------------------------------
-
+    
     assign mux_funct3 = (i_select_mem == 1'b1 && uart_wb_cyc_o) ? 3'b010 : funct3; // when UART is selecting, communicate by word (3'b010), when i_select_mem == 0 (connect to core), so core decides with funct3
 
     mem_byte #(
@@ -240,13 +182,13 @@ module osiris_i_wrapper #(
         .DATA_WIDTH(DATA_WIDTH),
         .MEM_SIZE_KB(DATA_MEM_SIZE)  // 4KB Data Memory
     ) U_DATA_MEM (
-        .clk     (wb_clk_i),
-        .rst     (io_in[6]),
+        .clk     (clk),
+        .rst     (rst_mem_uart),
         .wb_adr_i(data_mem_adr_i),  // Address input
         .wb_dat_i(data_mem_dat_i),  // Data input
         .wb_we_i (data_mem_we_i),   // Write enable input
         .wb_stb_i(data_mem_stb_i),  // Strobe input
-        .wb_cyc_i(data_mem_cyc_i),  // Cycle
+        .wb_cyc_i(data_mem_cyc_i),  // Cycle 
         .funct3(mux_funct3),
         .wb_dat_o(data_mem_dat_o),  // Data output
         .wb_ack_o(data_mem_ack_o)   // Acknowledge output
@@ -281,7 +223,7 @@ module osiris_i_wrapper #(
     //! 4. **Data Memory Access:**
     //    - Both the core and the UART bridge can read from and write to the Data Memory.
     //    - When the UART bridge is accessing the Data Memory (`select_mem == 1` and `uart_wb_stb_o` is asserted), the core's access is not hindered due to the way the strobe (`data_mem_stb_i`) and cycle (`data_mem_cyc_i`) signals are managed.
-    //*    - However, to prevent bus conflicts, in a real-world scenario, additional arbitration logic might be necessary.
+    //*    - However, to prevent bus conflicts, in a real-world scenario, additional arbitration logic might be necessary. 
     //todo: check this and fix
 
     // 5. **Acknowledge Signals:**
@@ -300,7 +242,4 @@ module osiris_i_wrapper #(
     //    - For this design, it's assumed that the UART bridge access to the memories is infrequent or managed externally to prevent conflicts.
     //    - Alternatively, you could introduce a signal that pauses the core when the UART bridge is accessing the memories.
 
-
 endmodule
-
-`default_nettype wire

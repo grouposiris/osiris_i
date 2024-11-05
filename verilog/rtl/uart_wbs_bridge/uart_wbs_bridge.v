@@ -8,8 +8,8 @@ module uart_wbs_bridge #(
         8'hAA  // Command to write data received via UART to memory (changed value for distinction)
 ) (
 `ifdef USE_POWER_PINS
-    inout vccd1,
-    inout vssd1,
+    inout vccd1,	// User area 1 1.8V supply
+    inout vssd1,	// User area 1 digital ground
 `endif
     input  wire clk,
     input  wire rst,

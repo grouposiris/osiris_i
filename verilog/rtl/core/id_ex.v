@@ -39,6 +39,8 @@ module id_ex #(
     i_alu_ctrl_ID,
     i_alu_src_ID,
     i_clear,
+    i_addr_src_ID,
+    i_funct3_ID,
     o_rd_EX,
     o_rs1_EX,
     o_rs2_EX,
@@ -53,7 +55,9 @@ module id_ex #(
     o_result_src_EX,
     o_mem_write_EX,
     o_alu_ctrl_EX,
-    o_alu_src_EX
+    o_alu_src_EX,
+    o_addr_src_EX,
+    o_funct3_EX
 );
 
 
@@ -77,6 +81,8 @@ module id_ex #(
     input logic [4:0] i_alu_ctrl_ID;
     input logic i_alu_src_ID;
     input logic i_clear;  // Hazard
+    input logic i_addr_src_ID;
+    input logic [2:0] i_funct3_ID;
 
     output logic [REG_WIDTH-1:0] o_rd_EX;  // Datapath
     output logic [DATA_WIDTH-1:0] o_rs1_EX;
@@ -93,6 +99,8 @@ module id_ex #(
     output logic o_mem_write_EX;
     output logic [4:0] o_alu_ctrl_EX;
     output logic o_alu_src_EX;
+    output logic o_addr_src_EX;
+    output logic [2:0] o_funct3_EX;
 
     // ------------------------------------------
     // Logic
@@ -101,13 +109,13 @@ module id_ex #(
         if (i_clear) begin
             // Clear the pipeline registers
             o_rd_EX <= 4'b0;
-            o_rs1_EX <= 32'b0;
-            o_rs2_EX <= 32'b0;
-            o_imm_ex_EX <= 32'b0;
+            o_rs1_EX <= {DATA_WIDTH{1'b0}};
+            o_rs2_EX <= {DATA_WIDTH{1'b0}};
+            o_imm_ex_EX <= {DATA_WIDTH{1'b0}};
             o_rs1Addr_EX <= 4'b0;
             o_rs2Addr_EX <= 4'b0;
-            o_pc_EX <= 32'b0;
-            o_pc_plus4_EX <= 32'b0;
+            o_pc_EX <= {DATA_WIDTH{1'b0}};
+            o_pc_plus4_EX <= {DATA_WIDTH{1'b0}};
             o_jump_EX <= 1'b0;
             o_branch_EX <= 1'b0;
             o_reg_write_EX <= 1'b0;
@@ -115,6 +123,8 @@ module id_ex #(
             o_mem_write_EX <= 1'b0;
             o_alu_ctrl_EX <= 5'b0;
             o_alu_src_EX <= 1'b0;
+            o_addr_src_EX <= 1'b0;
+            o_funct3_EX <= 3'b000;
         end else begin
             // Update the pipeline registers
             o_rd_EX <= i_rd_ID;
@@ -132,7 +142,8 @@ module id_ex #(
             o_mem_write_EX <= i_mem_write_ID;
             o_alu_ctrl_EX <= i_alu_ctrl_ID;
             o_alu_src_EX <= i_alu_src_ID;
+            o_addr_src_EX <= i_addr_src_ID;
+            o_funct3_EX <= i_funct3_ID;
         end
-
     end
 endmodule

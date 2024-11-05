@@ -32,6 +32,7 @@ module ex_mem #(
     i_result_src_EX,
     i_mem_write_EX,
     i_pc_target_EX,
+    i_funct3_EX,
     o_alu_result_M,
     o_write_data_M,
     o_pc_plus4_M,
@@ -39,7 +40,8 @@ module ex_mem #(
     o_reg_write_M,
     o_result_src_M,
     o_mem_write_M,
-    o_pc_target_M
+    o_pc_target_M,
+    o_funct3_MEM
 );
 
 
@@ -56,6 +58,7 @@ module ex_mem #(
     input logic [1:0] i_result_src_EX;
     input logic i_mem_write_EX;
     input logic [DATA_WIDTH-1:0] i_pc_target_EX;
+    input logic [2:0] i_funct3_EX;
 
     output logic [DATA_WIDTH-1:0] o_alu_result_M;  // Datapath
     output logic [DATA_WIDTH-1:0] o_write_data_M;
@@ -65,6 +68,7 @@ module ex_mem #(
     output logic [1:0] o_result_src_M;
     output logic o_mem_write_M;
     output logic [DATA_WIDTH-1:0] o_pc_target_M;
+    output logic [2:0] o_funct3_MEM;
 
     // ------------------------------------------
     // Logic
@@ -79,6 +83,7 @@ module ex_mem #(
             o_mem_write_M <= 1'b0;  //*
             o_alu_result_M <= {DATA_WIDTH{1'b0}};  //*
             o_write_data_M <= {DATA_WIDTH{1'b0}};  //*
+            o_funct3_MEM <= 3'b000;
         end else begin
             o_pc_plus4_M <= i_pc_plus4_EX;
             o_rd_M <= i_rd_EX;
@@ -88,6 +93,7 @@ module ex_mem #(
             o_mem_write_M <= i_mem_write_EX;  //*
             o_alu_result_M <= i_alu_result_EX;  //*
             o_write_data_M <= i_write_data_EX;  //*
+            o_funct3_MEM <= i_funct3_EX;
         end
     end
 
