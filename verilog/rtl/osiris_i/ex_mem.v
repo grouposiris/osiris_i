@@ -70,18 +70,6 @@ module ex_mem #(
     // Logic
     // ------------------------------------------
     always @(posedge clk) begin
-        // Clear the pipeline registers
-        o_alu_result_M <= i_alu_result_EX;
-        o_write_data_M <= i_write_data_EX;
-        o_pc_plus4_M <= i_pc_plus4_EX;
-        o_rd_M <= i_rd_EX;
-        o_reg_write_M <= i_reg_write_EX;
-        o_result_src_M <= i_result_src_EX;
-        o_mem_write_M <= i_mem_write_EX;
-        o_pc_target_M <= i_pc_target_EX;
-    end
-
-    always @(posedge clk) begin
         if (rst) begin
             o_pc_plus4_M <= {DATA_WIDTH{1'b0}};
             o_rd_M <= {REG_WIDTH{1'b0}};
@@ -103,16 +91,5 @@ module ex_mem #(
         end
     end
 
-    // always @(negedge clk) begin
-    //     if (rst) begin
-    //         o_mem_write_M <= 1'b0;
-    //         // o_alu_result_M <= {DATA_WIDTH{1'b0}};
-    //         // o_write_data_M <= {DATA_WIDTH{1'b0}};
-    //     end else begin
-    //         o_mem_write_M <= i_mem_write_EX;
-    //         // o_alu_result_M <= i_alu_result_EX;
-    //         // o_write_data_M <= i_write_data_EX;
-    //     end
-    // end
 
 endmodule

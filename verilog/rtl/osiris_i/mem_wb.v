@@ -77,17 +77,6 @@ module mem_wb #(
     // Logic
     // ------------------------------------------
     always @(posedge clk) begin
-        // Clear the pipeline registers
-        o_alu_result_WB <= i_alu_result_M;
-        o_read_data_WB <= i_read_data_M;
-        o_pc_target_WB <= i_pc_target_M;
-        o_pc_plus4_WB <= i_pc_plus4_M;
-        o_rd_WB <= i_rd_M;
-        o_reg_write_WB <= i_reg_write_M;
-        o_result_src_WB <= i_result_src_M;
-    end
-
-    always @(posedge clk) begin
         if (rst) begin
             // Clear the pipeline registers
             o_read_data_WB  <= {DATA_WIDTH{1'b0}};
@@ -106,7 +95,7 @@ module mem_wb #(
             o_reg_write_WB  <= i_reg_write_M;
             o_result_src_WB <= i_result_src_M;
 
-            // o_rd_WB <= i_rd_M;  // reg file
+            o_rd_WB <= i_rd_M;  // reg file
             o_alu_result_WB <= i_alu_result_M;  //*
             // o_mem_write_WB <= i_mem_write_M;  //* new
         end
