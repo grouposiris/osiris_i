@@ -99,7 +99,6 @@ module alu #(
     end
 
     always @(*) begin
-        // $display("      alu: i_alu_ctrl_EX: %b", i_alu_ctrl_EX);
         case (i_alu_ctrl_EX)
 
             AND: begin
@@ -144,7 +143,6 @@ module alu #(
             SLL: begin
                 // SLL performs logical left shifts (ignores sign) on the value in register rs1 by the shift amount held in the lower 5 bits of register rs2.
                 // rd1 shifted left by rd2: we can only shift 32 bits so we need to use 5 bits of rd2
-                // $display("alu: SLL i_rd1_EX: %b", i_rd1_EX);
                 o_alu_result_EX = i_rd1_EX <<
                     i_rd2_EX[5-1:0];  // ! TODO: verify SLL TYPE declaration
                 o_equal_EX =
@@ -175,15 +173,12 @@ module alu #(
 
             SRA: begin
                 // SRA performs arithmetic right shifts (consider sign) on the value in register rs1 by the shift amount held in the lower 5 bits of register rs2.
-                // $display("alu: SRA i_rd1_EX: %b", i_rd1_EX);
                 o_alu_result_EX = $signed(i_rd1_EX) >>> $signed(i_rd2_EX[5-1:0]);
                 o_equal_EX =
                     1'b0;  // todo: verify if this signal is not used on this 'case' @grouposiris
             end
 
             BEQ: begin
-                // $display("alu: BEQ i_rd1_EX: %b, i_rd2_EX: %b", i_rd1_EX, i_rd2_EX);
-                // $display("alu: BEQ o_equal_EX: %b", o_equal_EX);
                 // BEQ performs a branch if the values in registers rs1 and rs2 are equal.
                 o_alu_result_EX = {WIDTH{1'b0}};
                 // o_alu_result_EX = i_rd1_EX + i_rd2_EX; // BTA = PC + SignExt({imm12:1,1'b0}) // ! todo: verify overflow necessity
@@ -232,7 +227,6 @@ module alu #(
             end
 
             LUI: begin
-                // $display("alu: LUI i_rd1_EX: %b", i_rd1_EX);
                 // LUI loads the immediate value into the upper 20 bits of the destination register rd, filling in the lowest 12 bits with zeros. The bit extension is done by decode stage. The rd2 source selection is done by stage_execute (outside alu block).
                 // *bits 11-0 of rd1 are set to 0.
                 o_alu_result_EX = i_rd2_EX;
