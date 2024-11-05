@@ -168,21 +168,21 @@ Clock Cycle:     0 | Register[x15] changed to         15<-  = 000000000000000000
    Clock Cycle:   119 | [Program Counter] changed to 000001d8
    Clock Cycle:   120 | [Program Counter] changed to 000001dc
    Clock Cycle:   121 | [Program Counter] changed to 000001e0
-   Clock Cycle:   121 | [Instruction Register] changed to 00012083, Assembly: lw x1, 0(x2)
+   Clock Cycle:   121 | [Instruction Register] changed to 00312023, Assembly: sw x3, 0(x2)
    Clock Cycle:   122 | [Program Counter] changed to 000001e4
-   Clock Cycle:   122 | [Instruction Register] changed to 00312023, Assembly: sw x3, 0(x2)
+   Clock Cycle:   122 | [Instruction Register] changed to 00012083, Assembly: lw x1, 0(x2)
    Clock Cycle:   123 | [Program Counter] changed to 000001e8
    Clock Cycle:   123 | [Instruction Register] changed to 00412203, Assembly: lw x4, 4(x2)
+Clock Cycle:   123 | [Data Memory] - Write - Addr = 00000002, Data = 00000002
    Clock Cycle:   124 | [Program Counter] changed to 000001ec
-   Clock Cycle:   124 | [Instruction Register] changed to 00512223, Assembly: sw x5, 4(x2)
-Clock Cycle:   124 | [Data Memory] - Write - Addr = 00000002, Data = 00000002
+   Clock Cycle:   124 | [Instruction Register] changed to 00522223, Assembly: sw x5, 4(x4)
    Clock Cycle:   125 | [Program Counter] changed to 000001f0
    Clock Cycle:   125 | [Instruction Register] changed to 00000033, Assembly: add x0, x0, x0
-Clock Cycle:   125 | Register[x1] changed to          2<-  = 00000000000000000000000000000010  = 00000002
-
-
    Clock Cycle:   126 | [Program Counter] changed to 000001f4
-Clock Cycle:   126 | [Data Memory] - Write - Addr = 00000006, Data = 00000006
+Clock Cycle:   126 | Register[x1] changed to          3<-  = 00000000000000000000000000000011  = 00000003
+
+
+Clock Cycle:   126 | [Data Memory] - Write - Addr = 0000000a, Data = 0000000a
    Clock Cycle:   127 | [Program Counter] changed to 000001f8
 Clock Cycle:   127 | Register[x4] changed to          6<-  = 00000000000000000000000000000110  = 00000006
 

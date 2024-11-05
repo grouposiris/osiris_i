@@ -741,32 +741,32 @@ module tb_core ();
     task test_hazards;
         integer inst;
     begin
-        // // Data Hazard Test Sequence
-        // #(CLK_PERIOD) $display("Sending add x1, x2, x3");
-        // mem_instr[460] = 32'h003100b3;  // add x1, x2, x3  // x1 = x2 + x3 = 2 + 3 = 5
+        // Data Hazard Test Sequence
+        #(CLK_PERIOD) $display("Sending add x1, x2, x3");
+        mem_instr[460] = 32'h003100b3;  // add x1, x2, x3  // x1 = x2 + x3 = 2 + 3 = 5
 
-        // #(CLK_PERIOD) $display("Sending sub x4, x1, x5");
-        // mem_instr[464] = 32'h40508233;  // sub x4, x1, x5  // x4 = x1 - x5 = 5 - 5 = 0 (depends on x1)
+        #(CLK_PERIOD) $display("Sending sub x4, x1, x5");
+        mem_instr[464] = 32'h40508233;  // sub x4, x1, x5  // x4 = x1 - x5 = 5 - 5 = 0 (depends on x1)
 
-        // #(CLK_PERIOD) $display("Sending and x6, x4, x7");
-        // mem_instr[468] = 32'h00727333;  // and x6, x4, x7  // x6 = x4 & x7 = 0 & 7 = 0 (depends on x4)
+        #(CLK_PERIOD) $display("Sending and x6, x4, x7");
+        mem_instr[468] = 32'h00727333;  // and x6, x4, x7  // x6 = x4 & x7 = 0 & 7 = 0 (depends on x4)
 
-        // #(CLK_PERIOD) $display("Sending or x8, x6, x9");
-        // mem_instr[472] = 32'h00936433;  // or x8, x6, x9  // x8 = (x6 | x9) = (0 | 9) = 9 (depends on x6)
+        #(CLK_PERIOD) $display("Sending or x8, x6, x9");
+        mem_instr[472] = 32'h00936433;  // or x8, x6, x9  // x8 = (x6 | x9) = (0 | 9) = 9 (depends on x6)
 
 
         // Structural Hazard Test Sequence
         #(CLK_PERIOD) $display("Sending sw x3, 0(x2)");
-        mem_instr[480] = 32'h00312023;  // sw x3, 0(x2)  // Store word from x3 into memory address x2 + 0: mem[2] = 3
+        mem_instr[476] = 32'h00312023;  // sw x3, 0(x2)  // Store word from x3 into memory address x2 + 0: mem[2] = 3
 
         #(CLK_PERIOD) $display("Sending lw x1, 0(x2)"); // same memory from previos instruction
-        mem_instr[476] = 32'h00012083;  // lw x1, 0(x2)  // Load word from memory address x2 + 0 into x1: reg[1] = 3
+        mem_instr[480] = 32'h00012083;  // lw x1, 0(x2)  // Load word from memory address x2 + 0 into x1: reg[1] = 3
 
         #(CLK_PERIOD) $display("Sending lw x4, 4(x2)");
         mem_instr[484] = 32'h00412203;  // lw x4, 4(x2)  // Load word from memory address x2 + 4 into x4: reg[4] = 6
 
         #(CLK_PERIOD) $display("Sending sw x5, 4(x4)");
-        mem_instr[488] = 32'h00512223;  // sw x5, 4(x2)  // Store word from x5 into memory address x2 + 4 (same memory address as the previous lw):  mem[4(x4)] = mem[4(6)] -> mem[10] = 5
+        mem_instr[488] = 32'h00522223;  // sw x5, 4(x2)  // Store word from x5 into memory address x2 + 4 (same memory address as the previous lw):  mem[4(x4)] = mem[4(6)] -> mem[10] = 5
 
     end
     endtask
