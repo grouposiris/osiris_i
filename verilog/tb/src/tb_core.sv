@@ -397,33 +397,34 @@ module tb_core ();
     task upload_instructions;
         integer inst;
     begin
+
         // # I-Type Instructions
 
         // lb (Load byte)
         // #(CLK_PERIOD) $display("Sending lb x1, 0(x2)");
-        // mem_instr[16] = 32'h00010083;  // lb x1, 0(x2)  // Load byte from address x2 + 0 into x1 (value depends on memory content)
+        // mem_instr[0] = 32'h00010083;  // lb x1, 0(x2)  // Load byte from address x2 + 0 into x1 (value depends on memory content): reg[1] = 2
         // #(CLK_PERIOD) $display("Sending lb x3, -4(x4)");
-        // mem_instr[20] = 32'hffc20183;  // lb x3, -4(x4)  // Load byte from address x4 - 4 into x3 (value depends on memory content)
+        // mem_instr[4] = 32'hffc20183;  // lb x3, -4(x4)  // Load byte from address x4 - 4 into x3 (value depends on memory content): reg[3] = 0
 
-        // // lh (Load halfword)
+        // lh (Load halfword)
         // #(CLK_PERIOD) $display("Sending lh x5, 2(x6)");
         // mem_instr[24] = 32'h00231283;  // lh x5, 2(x6)  // Load halfword from address x6 + 2 into x5 (value depends on memory content): reg[5] = 8
         // #(CLK_PERIOD) $display("Sending lh x7, -8(x8)");
         // mem_instr[28] = 32'hff841383;  // lh x7, -8(x8)  // Load halfword from address x8 - 8 into x7 (value depends on memory content): reg[7] = 0
 
-        // lw (Load word)
+        // // lw (Load word)
         // #(CLK_PERIOD) $display("Sending lw x9, 4(x10)");
         // mem_instr[32] = 32'h00452483;  // lw x9, 4(x10)  // Load word from address x10 + 4 into x9 (value depends on memory content): reg[9] = 14
         // #(CLK_PERIOD) $display("Sending lw x11, -12(x12)");
         // mem_instr[36] = 32'hff462583;  // lw x11, -12(x12)  // Load word from address x12 - 12 into x11 (value depends on memory content): reg[11] = 0
 
-        // lbu (Load byte unsigned)
+        // // lbu (Load byte unsigned)
         // #(CLK_PERIOD) $display("Sending lbu x13, 0(x14)");
         // mem_instr[40] = 32'h00074683;  // lbu x13, 0(x14)  // Load byte from address x14 + 0 into x13 (unsigned, value depends on memory content): reg[13] = 14
         // #(CLK_PERIOD) $display("Sending lbu x15, -4(x1)"); // unsigned -4 (12 bits) = FFFFFFFE₁₆. 
         // mem_instr[44] = 32'hffc0c783;  // lbu x15, -4(x1)  // Load byte from address x1 - 4 into x15 (unsigned, value depends on memory content): reg[15] = data_from_addr(FFFFFFFE₁₆ + 1) = data_from_addr(FFFFFFFD₁₆)
 
-        // lhu (Load halfword unsigned)
+        // // lhu (Load halfword unsigned)
         // #(CLK_PERIOD) $display("Sending lhu x2, 2(x3)");
         // mem_instr[48] = 32'h0021d103;  // lhu x2, 2(x3)  // Load halfword from address x3 + 2 into x2 (unsigned, value depends on memory content): reg[2] = 5
         // #(CLK_PERIOD) $display("Sending lhu x4, -8(x5)");
@@ -431,17 +432,13 @@ module tb_core ();
 
 
         // jalr (Jump and link register)
-        #(CLK_PERIOD) $display("Sending jalr x1, 32(x8)");
-        mem_instr[56] = 32'h020400e7;  // jalr x1, 32(x8)  // Jump to address x8 + 32 = 40, x1 = return address = PC + 4 = 60 (decimal)
-        mem_instr[60] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
-        
-        #(CLK_PERIOD) $display("Sending jal x1, 32");
-        mem_instr[92] = 32'h020000EF;  // jal x1, 32  // Jump to PC + 32, x1 = return address
-        mem_instr[96] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
+        // #(CLK_PERIOD) $display("Sending jalr x1, 32(x8)");
+        // mem_instr[56] = 32'h020400e7;  // jalr x1, 32(x8)  // Jump to address x8 + 32 = 40, x1 = return address = PC + 4 = 60 (decimal)
+        // mem_instr[60] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
         // #(CLK_PERIOD) $display("Sending jalr x3, -4(x4)");
-        // mem_instr[452] = 32'hffc201e7;  // jalr x3, -4(x4)  // Jump to address x4 - 4 = 0, x3 = return address = 0 (decimal)
+        // mem_instr[100] = 32'hffc201e7;  // jalr x3, -4(x4)  // Jump to address x4 - 4 = 0, x3 = return address = 0 (decimal)
         // #(CLK_PERIOD) $display("Sending jalr x5, 8(x6)");
-        // mem_instr[456] = 32'h008302e7;  // jalr x5, 8(x6)  // Jump to address x6 + 8, x5 = return address = 5 (decimal)
+        // mem_instr[104] = 32'h008302e7;  // jalr x5, 8(x6)  // Jump to address x6 + 8, x5 = return address = 5 (decimal)
 
 
         // // andi (AND immediate)
@@ -469,148 +466,148 @@ module tb_core ();
         // #(CLK_PERIOD) $display("Sending xori x5, x6, 0xF");
         // mem_instr[8] = 32'h00F34293;  // xori x5, x6, 0xF  // x5 = x6 ^ 0xF = 6 ^ 15 = 9
 
-    //     // # slti
-    //     #(CLK_PERIOD) $display("Sending slti x7, x8, 10");
-    //     mem_instr[12] = 32'h00A42393;  // slti x7, x8, 10  // x7 = (x8 < 10) ? 1 : 0 = (8 < 10) ? 1 : 0 = 1
-    //     #(CLK_PERIOD) $display("Sending slti x9, x10, 20");
-    //     mem_instr[16] = 32'h01452493;  // slti x9, x10, 20  // x9 = (x10 < 20) ? 1 : 0 = (10 < 20) ? 1 : 0 = 1
-    //     #(CLK_PERIOD) $display("Sending slti x11, x12, 30");
-    //     mem_instr[20] = 32'h01E62593;  // slti x11, x12, 30  // x11 = (x12 < 30) ? 1 : 0 = (12 < 30) ? 1 : 0 = 1
-    //     #(CLK_PERIOD) $display("Sending slti x11, x12, 10");
-    //     mem_instr[24] = 32'h00A62593;  // slti x11, x12, 10  // x11 = (x12 < 10) ? 1 : 0 = (12 < 10) ? 1 : 0 = 0
+        // // # slti
+        // #(CLK_PERIOD) $display("Sending slti x7, x8, 10");
+        // mem_instr[12] = 32'h00A42393;  // slti x7, x8, 10  // x7 = (x8 < 10) ? 1 : 0 = (8 < 10) ? 1 : 0 = 1
+        // #(CLK_PERIOD) $display("Sending slti x9, x10, 20");
+        // mem_instr[16] = 32'h01452493;  // slti x9, x10, 20  // x9 = (x10 < 20) ? 1 : 0 = (10 < 20) ? 1 : 0 = 1
+        // #(CLK_PERIOD) $display("Sending slti x11, x12, 30");
+        // mem_instr[20] = 32'h01E62593;  // slti x11, x12, 30  // x11 = (x12 < 30) ? 1 : 0 = (12 < 30) ? 1 : 0 = 1
+        // #(CLK_PERIOD) $display("Sending slti x11, x12, 10");
+        // mem_instr[24] = 32'h00A62593;  // slti x11, x12, 10  // x11 = (x12 < 10) ? 1 : 0 = (12 < 10) ? 1 : 0 = 0
 
-    //     // # sltiu
-    //     #(CLK_PERIOD) $display("Sending sltiu x13, x14, 5");
-    //     mem_instr[24] = 32'h00573693;  // sltiu x13, x14, 5  // x13 = (x14 < 5) ? 1 : 0 (unsigned) = (14 < 5) ? 0 = 0
-    //     #(CLK_PERIOD) $display("Sending sltiu x15, x1, 15");
-    //     mem_instr[28] = 32'h00F0B793;  // sltiu x15, x1, 15  // x15 = (x1 < 15) ? 1 : 0 (unsigned) = (1 < 15) ? 1 = 1
-    //     #(CLK_PERIOD) $display("Sending sltiu x2, x3, 25");
-    //     mem_instr[32] = 32'h0191B113;  // sltiu x2, x3, 25  // x2 = (x3 < 25) ? 1 : 0 (unsigned) = (3 < 25) ? 1 = 1
+        // // # sltiu
+        // #(CLK_PERIOD) $display("Sending sltiu x13, x14, 5");
+        // mem_instr[24] = 32'h00573693;  // sltiu x13, x14, 5  // x13 = (x14 < 5) ? 1 : 0 (unsigned) = (14 < 5) ? 0 = 0
+        // #(CLK_PERIOD) $display("Sending sltiu x15, x1, 15");
+        // mem_instr[28] = 32'h00F0B793;  // sltiu x15, x1, 15  // x15 = (x1 < 15) ? 1 : 0 (unsigned) = (1 < 15) ? 1 = 1
+        // #(CLK_PERIOD) $display("Sending sltiu x2, x3, 25");
+        // mem_instr[32] = 32'h0191B113;  // sltiu x2, x3, 25  // x2 = (x3 < 25) ? 1 : 0 (unsigned) = (3 < 25) ? 1 = 1
 
-    //     // # slli
-    //     #(CLK_PERIOD) $display("Sending slli x1, x2, 1");
-    //     mem_instr[36] = 32'h00111093;  // slli x1, x2, 1  // x1 = x2 << 1 = 2 << 1 = 4
-    //     #(CLK_PERIOD) $display("Sending slli x3, x4, 2");
-    //     mem_instr[40] = 32'h00221193;  // slli x3, x4, 2  // x3 = x4 << 2 = 4 << 2 = 16
-    //     #(CLK_PERIOD) $display("Sending slli x5, x6, 3");
-    //     mem_instr[44] = 32'h00331293;  // slli x5, x6, 3  // x5 = x6 << 3 = 6 << 3 = 48
+        // // # slli
+        // #(CLK_PERIOD) $display("Sending slli x1, x2, 1");
+        // mem_instr[36] = 32'h00111093;  // slli x1, x2, 1  // x1 = x2 << 1 = 2 << 1 = 4
+        // #(CLK_PERIOD) $display("Sending slli x3, x4, 2");
+        // mem_instr[40] = 32'h00221193;  // slli x3, x4, 2  // x3 = x4 << 2 = 4 << 2 = 16
+        // #(CLK_PERIOD) $display("Sending slli x5, x6, 3");
+        // mem_instr[44] = 32'h00331293;  // slli x5, x6, 3  // x5 = x6 << 3 = 6 << 3 = 48
 
-    //     // # srli
-    //     #(CLK_PERIOD) $display("Sending srli x7, x8, 1");
-    //     mem_instr[48] = 32'h00145393;  // srli x7, x8, 1  // x7 = x8 >> 1 = 8 >> 1 = 4
-    //     #(CLK_PERIOD) $display("Sending srli x9, x10, 2");
-    //     mem_instr[52] = 32'h00255493;  // srli x9, x10, 2  // x9 = x10 >> 2 = 10 >> 2 = 2
-    //     #(CLK_PERIOD) $display("Sending srli x11, x12, 3");
-    //     mem_instr[56] = 32'h00365593;  // srli x11, x12, 3  // x11 = x12 >> 3 = 12 >> 3 = 1
+        // // # srli
+        // #(CLK_PERIOD) $display("Sending srli x7, x8, 1");
+        // mem_instr[48] = 32'h00145393;  // srli x7, x8, 1  // x7 = x8 >> 1 = 8 >> 1 = 4
+        // #(CLK_PERIOD) $display("Sending srli x9, x10, 2");
+        // mem_instr[52] = 32'h00255493;  // srli x9, x10, 2  // x9 = x10 >> 2 = 10 >> 2 = 2
+        // #(CLK_PERIOD) $display("Sending srli x11, x12, 3");
+        // mem_instr[56] = 32'h00365593;  // srli x11, x12, 3  // x11 = x12 >> 3 = 12 >> 3 = 1
 
-    //     // # srai
-    //     #(CLK_PERIOD) $display("Sending srai x13, x14, 1");
-    //     mem_instr[60] = 32'h40175693;  // srai x13, x14, 1  // x13 = x14 >> 1 (arithmetic) = 14 >> 1 = 7
-    //     #(CLK_PERIOD) $display("Sending srai x15, x1, 2");
-    //     mem_instr[64] = 32'h4020d793;  // srai x15, x1, 2  // x15 = x1 >> 2 (arithmetic) = 1 >> 2 = 0
-    //     #(CLK_PERIOD) $display("Sending srai x2, x3, 3");
-    //     mem_instr[68] = 32'h4031d113;  // srai x2, x3, 3  // x2 = x3 >> 3 (arithmetic) = 3 >> 3 = 0
+        // // # srai
+        // #(CLK_PERIOD) $display("Sending srai x13, x14, 1");
+        // mem_instr[60] = 32'h40175693;  // srai x13, x14, 1  // x13 = x14 >> 1 (arithmetic) = 14 >> 1 = 7
+        // #(CLK_PERIOD) $display("Sending srai x15, x1, 2");
+        // mem_instr[64] = 32'h4020d793;  // srai x15, x1, 2  // x15 = x1 >> 2 (arithmetic) = 1 >> 2 = 0
+        // #(CLK_PERIOD) $display("Sending srai x2, x3, 3");
+        // mem_instr[68] = 32'h4031d113;  // srai x2, x3, 3  // x2 = x3 >> 3 (arithmetic) = 3 >> 3 = 0
 
 
-    //     // # R-Type Instructions
+        // # R-Type Instructions
 
-    //     // # add
-    //     #(CLK_PERIOD) $display("Sending add x1, x2, x3");
-    //     mem_instr[72] = 32'h003100B3;  // add x1, x2, x3  // x1 = x2 + x3 = 2 + 3 = 5
-    //     #(CLK_PERIOD) $display("Sending add x4, x5, x6");
-    //     mem_instr[76] = 32'h00628233;  // add x4, x5, x6  // x4 = x5 + x6 = 5 + 6 = 11
-    //     #(CLK_PERIOD) $display("Sending add x7, x8, x9");
-    //     mem_instr[80] = 32'h009403B3;  // add x7, x8, x9  // x7 = x8 + x9 = 8 + 9 = 17
+        // # add
+        // #(CLK_PERIOD) $display("Sending add x1, x2, x3");
+        // mem_instr[72] = 32'h003100B3;  // add x1, x2, x3  // x1 = x2 + x3 = 2 + 3 = 5
+        // #(CLK_PERIOD) $display("Sending add x4, x5, x6");
+        // mem_instr[76] = 32'h00628233;  // add x4, x5, x6  // x4 = x5 + x6 = 5 + 6 = 11
+        // #(CLK_PERIOD) $display("Sending add x7, x8, x9");
+        // mem_instr[80] = 32'h009403B3;  // add x7, x8, x9  // x7 = x8 + x9 = 8 + 9 = 17
 
-    //     // # sub
-    //     #(CLK_PERIOD) $display("Sending sub x1, x2, x3");
-    //     mem_instr[84] = 32'h403100B3;  // sub x1, x2, x3  // x1 = x2 - x3 = 2 - 3 = -1
-    //     #(CLK_PERIOD) $display("Sending sub x4, x5, x6");
-    //     mem_instr[88] = 32'h40628233;  // sub x4, x5, x6  // x4 = x5 - x6 = 4 - 6 = -1
-    //     #(CLK_PERIOD) $display("Sending sub x7, x8, x9");
-    //     mem_instr[92] = 32'h409403B3;  // sub x7, x8, x9  // x7 = x8 - x9 = 8 - 9 = -1
+        // # sub
+        // #(CLK_PERIOD) $display("Sending sub x1, x2, x3");
+        // mem_instr[84] = 32'h403100B3;  // sub x1, x2, x3  // x1 = x2 - x3 = 2 - 3 = -1
+        // #(CLK_PERIOD) $display("Sending sub x4, x5, x6");
+        // mem_instr[88] = 32'h40628233;  // sub x4, x5, x6  // x4 = x5 - x6 = 4 - 6 = -1
+        // #(CLK_PERIOD) $display("Sending sub x7, x8, x9");
+        // mem_instr[92] = 32'h409403B3;  // sub x7, x8, x9  // x7 = x8 - x9 = 8 - 9 = -1
 
-    //     // # sll
-    //     #(CLK_PERIOD) $display("Sending sll x1, x2, x3");
-    //     mem_instr[96] = 32'h003110B3;  // sll x1, x2, x3  // x1 = x2 << x3 = 2 << 3 = 16
-    //     #(CLK_PERIOD) $display("Sending sll x4, x5, x6");
-    //     mem_instr[100] = 32'h00629233;  // sll x4, x5, x6  // x4 = x5 << x6 = 5 << 6 = 320
-    //     #(CLK_PERIOD) $display("Sending sll x7, x8, x9");
-    //     mem_instr[104] = 32'h009413B3;  // sll x7, x8, x9  // x7 = x8 << x9 = 8 << 9 = 4096
+        // // # sll
+        // #(CLK_PERIOD) $display("Sending sll x1, x2, x3");
+        // mem_instr[96] = 32'h003110B3;  // sll x1, x2, x3  // x1 = x2 << x3 = 2 << 3 = 16
+        // #(CLK_PERIOD) $display("Sending sll x4, x5, x6");
+        // mem_instr[100] = 32'h00629233;  // sll x4, x5, x6  // x4 = x5 << x6 = 5 << 6 = 320
+        // #(CLK_PERIOD) $display("Sending sll x7, x8, x9");
+        // mem_instr[104] = 32'h009413B3;  // sll x7, x8, x9  // x7 = x8 << x9 = 8 << 9 = 4096
 
     //    // # slt
-    //     #(CLK_PERIOD) $display("Sending slt x1, x2, x3"); // *
-    //     mem_instr[108] = 32'h003120B3;  // slt x1, x2, x3  // x1 = (x2 < x3) ? 1 : 0 = (2 < 3) ? 1 = 1
+    //     // #(CLK_PERIOD) $display("Sending slt x1, x2, x3"); // * since x1 is already 1 the tb won't detect any change
+    //     // mem_instr[108] = 32'h003120B3;  // slt x1, x2, x3  // x1 = (x2 < x3) ? 1 : 0 = (2 < 3) ? 1 = 1
     //     #(CLK_PERIOD) $display("Sending slt x4, x5, x6");
     //     mem_instr[112] = 32'h0062A233;  // slt x4, x5, x6  // x4 = (x5 < x6) ? 1 : 0 = (4 < 6) ? 1 = 1
     //     #(CLK_PERIOD) $display("Sending slt x7, x8, x9");
     //     mem_instr[116] = 32'h009423B3;  // slt x7, x8, x9  // x7 = (x8 < x9) ? 1 : 0 = (8 < 9) ? 1 = 1
 
-    //     # sltu
-    //     #(CLK_PERIOD) $display("Sending sltu x1, x2, x3"); // *
-    //     mem_instr[120] = 32'h003130B3;  // sltu x1, x2, x3  // x1 = (x2 < x3) ? 1 : 0 (unsigned) = (2 < 3) ? 1 = 1
-    //     #(CLK_PERIOD) $display("Sending sltu x4, x5, x6");
-    //     mem_instr[124] = 32'h0062B233;  // sltu x4, x5, x6  // x4 = (x5 < x6) ? 1 : 0 (unsigned) = (4 < 6) ? 1 = 1
-    //     #(CLK_PERIOD) $display("Sending sltu x7, x8, x9");
-    //     mem_instr[128] = 32'h009433B3;  // sltu x7, x8, x9  // x7 = (x8 < x9) ? 1 : 0 (unsigned) = (8 < 9) ? 1 = 1
+        // # sltu
+        // #(CLK_PERIOD) $display("Sending sltu x1, x2, x3"); // * since x1 is already 1 the tb won't detect any change
+        // mem_instr[120] = 32'h003130B3;  // sltu x1, x2, x3  // x1 = (x2 < x3) ? 1 : 0 (unsigned) = (2 < 3) ? 1 = 1
+        // #(CLK_PERIOD) $display("Sending sltu x4, x5, x6");
+        // mem_instr[124] = 32'h0062B233;  // sltu x4, x5, x6  // x4 = (x5 < x6) ? 1 : 0 (unsigned) = (4 < 6) ? 1 = 1
+        // #(CLK_PERIOD) $display("Sending sltu x7, x8, x9");
+        // mem_instr[128] = 32'h009433B3;  // sltu x7, x8, x9  // x7 = (x8 < x9) ? 1 : 0 (unsigned) = (8 < 9) ? 1 = 1
 
-    //     // # xor
-    //     #(CLK_PERIOD) $display("Sending xor x1, x2, x3");
-    //     mem_instr[132] = 32'h003140B3;  // xor x1, x2, x3  // x1 = x2 ^ x3 = 2 ^ 3 = 1
-    //     #(CLK_PERIOD) $display("Sending xor x4, x5, x6");
-    //     mem_instr[136] = 32'h0062C233;  // xor x4, x5, x6  // x4 = x5 ^ x6 = 4 ^ 6 = 3
-    //     #(CLK_PERIOD) $display("Sending xor x7, x8, x9");
-    //     mem_instr[140] = 32'h009443B3;  // xor x7, x8, x9  // x7 = x8 ^ x9 = 8 ^ 9 = 1
+        // // # xor
+        // // #(CLK_PERIOD) $display("Sending xor x1, x2, x3"); // * since x1 is already 1 the tb won't detect any change
+        // // mem_instr[132] = 32'h003140B3;  // xor x1, x2, x3  // x1 = x2 ^ x3 = 2 ^ 3 = 1
+        // #(CLK_PERIOD) $display("Sending xor x4, x5, x6");
+        // mem_instr[136] = 32'h0062C233;  // xor x4, x5, x6  // x4 = x5 ^ x6 = 4 ^ 6 = 3
+        // #(CLK_PERIOD) $display("Sending xor x7, x8, x9");
+        // mem_instr[140] = 32'h009443B3;  // xor x7, x8, x9  // x7 = x8 ^ x9 = 8 ^ 9 = 1
 
-    //     // # srl
-    //     #(CLK_PERIOD) $display("Sending srl x1, x2, x3");
-    //     mem_instr[144] = 32'h003150B3;  // srl x1, x2, x3  // x1 = x2 >> x3 = 2 >> 3 = 0
-    //     #(CLK_PERIOD) $display("Sending srl x4, x5, x6");
-    //     mem_instr[148] = 32'h062D233;   // srl x4, x5, x6  // x4 = x5 >> x6 = 4 >> 6 = 0
-    //     #(CLK_PERIOD) $display("Sending srl x7, x8, x9");
-    //     mem_instr[152] = 32'h009453B3;  // srl x7, x8, x9  // x7 = x8 >> x9 = 8 >> 9 = 0
+        // // # srl
+        // #(CLK_PERIOD) $display("Sending srl x1, x2, x3");
+        // mem_instr[144] = 32'h003150B3;  // srl x1, x2, x3  // x1 = x2 >> x3 = 2 >> 3 = 0
+        // #(CLK_PERIOD) $display("Sending srl x4, x5, x6");
+        // mem_instr[148] = 32'h062D233;   // srl x4, x5, x6  // x4 = x5 >> x6 = 4 >> 6 = 0
+        // #(CLK_PERIOD) $display("Sending srl x7, x8, x9");
+        // mem_instr[152] = 32'h009453B3;  // srl x7, x8, x9  // x7 = x8 >> x9 = 8 >> 9 = 0
 
-    //     // # sra
-    //     #(CLK_PERIOD) $display("Sending sra x1, x2, x3");
-    //     mem_instr[156] = 32'h403150B3;  // sra x1, x2, x3  // x1 = x2 >> x3 (arithmetic) = 2 >> 3 = 0
-    //     #(CLK_PERIOD) $display("Sending sra x4, x5, x6");
-    //     mem_instr[160] = 32'h4062D233;  // sra x4, x5, x6  // x4 = x5 >> x6 (arithmetic) = 4 >> 6 = 0
-    //     #(CLK_PERIOD) $display("Sending sra x7, x8, x9");
-    //     mem_instr[164] = 32'h409453B3;  // sra x7, x8, x9  // x7 = x8 >> x9 (arithmetic) = 8 >> 9 = 0
+        // // # sra
+        // #(CLK_PERIOD) $display("Sending sra x1, x2, x3");
+        // mem_instr[156] = 32'h403150B3;  // sra x1, x2, x3  // x1 = x2 >> x3 (arithmetic) = 2 >> 3 = 0
+        // #(CLK_PERIOD) $display("Sending sra x4, x5, x6");
+        // mem_instr[160] = 32'h4062D233;  // sra x4, x5, x6  // x4 = x5 >> x6 (arithmetic) = 4 >> 6 = 0
+        // #(CLK_PERIOD) $display("Sending sra x7, x8, x9");
+        // mem_instr[164] = 32'h409453B3;  // sra x7, x8, x9  // x7 = x8 >> x9 (arithmetic) = 8 >> 9 = 0
 
-    //     // # or
-    //     #(CLK_PERIOD) $display("Sending or x1, x2, x3");
-    //     mem_instr[168] = 32'h003160B3;  // or x1, x2, x3  // x1 = x2 | x3 = 2 --> = 3
-    //     #(CLK_PERIOD) $display("Sending or x4, x5, x6");
-    //     mem_instr[172] = 32'h0062E233;  // or x4, x5, x6  // x5 = 5 | x6 = 6  --> = 7
-    //     #(CLK_PERIOD) $display("Sending or x7, x8, x9");
-    //     mem_instr[176] = 32'h009463B3;  // or x7, x8, x9  // x7 = x8 | x9 = 8 --> = 9
+        // // # or
+        // #(CLK_PERIOD) $display("Sending or x1, x2, x3");
+        // mem_instr[168] = 32'h003160B3;  // or x1, x2, x3  // x1 = (x2 | x3) = 2 --> = 3
+        // #(CLK_PERIOD) $display("Sending or x4, x5, x6");
+        // mem_instr[172] = 32'h0062E233;  // or x4, x5, x6  // x4 = (5 | x6) = 6  --> = 7
+        // #(CLK_PERIOD) $display("Sending or x7, x8, x9");
+        // mem_instr[176] = 32'h009463B3;  // or x7, x8, x9  // x7 = (x8 | x9) = 8 --> = 9
 
-    //     // # and
-    //     #(CLK_PERIOD) $display("Sending and x1, x2, x3");
-    //     mem_instr[180] = 32'h003170B3;  // and x1, x2, x3  // x1 = x2 & x3 = 2 & 3 = 2
-    //     #(CLK_PERIOD) $display("Sending and x4, x5, x6");
-    //     mem_instr[184] = 32'h0062F233;  // and x4, x5, x6  // x4 = x5 & x6 = 4 & 6 = 4
-    //     #(CLK_PERIOD) $display("Sending and x7, x8, x9");
-    //     mem_instr[188] = 32'h009473B3;  // and x7, x8, x9  // x7 = x8 & x9 = 8 & 9 = 8
+        // // # and
+        // #(CLK_PERIOD) $display("Sending and x1, x2, x3");
+        // mem_instr[180] = 32'h003170B3;  // and x1, x2, x3  // x1 = x2 & x3 = 2 & 3 = 2
+        // // #(CLK_PERIOD) $display("Sending and x4, x5, x6"); // * since x4 is already 4 the tb won't detect any change
+        // // mem_instr[184] = 32'h0062F233;  // and x4, x5, x6  // x4 = x5 & x6 = 4 & 6 = 4
+        // #(CLK_PERIOD) $display("Sending and x7, x8, x9");
+        // mem_instr[188] = 32'h009473B3;  // and x7, x8, x9  // x7 = x8 & x9 = 8 & 9 = 8
 
-    //     // # S-Type Instructions
+        // # S-Type Instructions
 
-    //     // # sb
-    //     #(CLK_PERIOD) $display("Sending sb x1, 0(x1)");
-    //     mem_instr[192] = 32'h00108023;  // sb x1, 0(x1)  // Store byte from x1 to memory at address x1 + 0: mem[1] = 1
-    //     #(CLK_PERIOD) $display("Sending sb x2, 1(x1)");
-    //     mem_instr[196] = 32'h002080A3;  // sb x2, 1(x1)  // Store byte from x2 to memory at address x1 + 1: mem[2] = 2
-    //     #(CLK_PERIOD) $display("Sending sb x3, 2(x1)");
-    //     mem_instr[200] = 32'h00308123;  // sb x3, 2(x1)  // Store byte from x3 to memory at address x1 + 2: mem[3] = 3
-    //     #(CLK_PERIOD) $display("Sending sb x3, -2(x1)");
-    //     mem_instr[204] = 32'hfe308f23;  // sb x3, -2(x1)  // Store byte from x3 to memory at address x1 + 2: mem[-1] = 3
-    //     // NOP instruction
-    //     #(CLK_PERIOD);
-    //     for (inst = 0; inst < 50; inst=inst+1) begin
-    //         $display("Sending add x0, x0, x0");
-    //         mem_instr[inst*4 + 208] = 32'h00000033;  // NOP add x0, x0, x0
-    //     end
+        // # sb
+        #(CLK_PERIOD) $display("Sending sb x1, 1(x1)");
+        mem_instr[192] = 32'h001080a3;  // sb x1, 1(x1)  // Store byte from x1 to memory at address x1 + 1: mem[2] = 1
+        // #(CLK_PERIOD) $display("Sending sb x2, 2(x1)");
+        // mem_instr[208] = 32'h00208123;  // sb x2, 2(x1)  // Store byte from x2 to memory at address x1 + 2: mem[3] = 2
+        // #(CLK_PERIOD) $display("Sending sb x3, 3(x1)");
+        // mem_instr[200] = 32'h003081a3;  // sb x3, 3(x1)  // Store byte from x3 to memory at address x1 + 3: mem[4] = 3
+        #(CLK_PERIOD) $display("Sending sb x3, -2(x1)");
+        mem_instr[204] = 32'hfe308f23;  // sb x3, -2(x1)  // Store byte from x3 to memory at address x1 + 2: mem[-1] = 3
+        // // NOP instruction
+        // #(CLK_PERIOD);
+        // for (inst = 0; inst < 50; inst=inst+1) begin
+        //     $display("Sending add x0, x0, x0");
+        //     mem_instr[inst*4 + 208] = 32'h00000033;  // NOP add x0, x0, x0
+        // end
 
     //     // # sh
     //     #(CLK_PERIOD) $display("Sending sh x1, 0(x1)");
