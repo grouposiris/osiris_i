@@ -75,6 +75,6 @@ module mem_byte #(
         end
     end
     // Read operation
-    assign wb_dat_o = (wb_cyc_i && wb_stb_i && !wb_we_i) ? mem[wb_adr_i] : {DATA_WIDTH{1'b0}};
+    assign wb_dat_o = (wb_cyc_i && wb_stb_i && !wb_we_i) ? mem[word_addr] : {DATA_WIDTH{1'b0}};
 
 endmodule
