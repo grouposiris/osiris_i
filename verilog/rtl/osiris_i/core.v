@@ -39,7 +39,7 @@ module core #(
     input wire rst;
     input wire [DATA_WIDTH-1:0] i_instr_ID;  // Input instruction from instruction memory
     input wire [DATA_WIDTH-1:0] i_read_data_M;  // Input data from memory
-    input wire [DATA_WIDTH-1:0] loaded_data;  // load data
+    // input wire [DATA_WIDTH-1:0] loaded_data;  // load data
 
     output wire [DATA_WIDTH-1:0] o_pc_IF;  // Output program counter (IF stage)
     output wire o_mem_write_M;  // Output memory write enable (M stage)

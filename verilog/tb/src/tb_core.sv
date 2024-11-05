@@ -165,7 +165,9 @@ module tb_core ();
                 $display("Initializing memories with instructions...");
                 $display("---------------------------------------");
                 
-                upload_instructions();
+                test_all_instructions();
+
+                test_hazards();
 
                 #(1000*CLK_PERIOD);
 
@@ -182,7 +184,7 @@ module tb_core ();
                 //display_registers();
 
                 // End of simulation
-                #2000;
+                #2700;
                 $display("---------------------------------------");
                 $display("Simulation complete.");
                 $display("---------------------------------------");
@@ -394,7 +396,7 @@ module tb_core ();
         end
         endfunction
 
-    task upload_instructions;
+    task test_all_instructions;
         integer inst;
     begin
 
@@ -534,7 +536,6 @@ module tb_core ();
         // mem_instr[100] = 32'h00629233;  // sll x4, x5, x6  // x4 = x5 << x6 = 5 << 6 = 320
         // #(CLK_PERIOD) $display("Sending sll x7, x8, x9");
         // mem_instr[104] = 32'h009413B3;  // sll x7, x8, x9  // x7 = x8 << x9 = 8 << 9 = 4096
-
     //    // # slt
     //     // #(CLK_PERIOD) $display("Sending slt x1, x2, x3"); // * since x1 is already 1 the tb won't detect any change
     //     // mem_instr[108] = 32'h003120B3;  // slt x1, x2, x3  // x1 = (x2 < x3) ? 1 : 0 = (2 < 3) ? 1 = 1
@@ -673,69 +674,102 @@ module tb_core ();
         // #(CLK_PERIOD) $display("Sending blt x5, x6, 12");
         // mem_instr[260] = 32'h0062C663;  // blt x5, x6, 12  // Branch if x5 < x6 to PC + 12: true
 
-        // # bge
-        mem_instr[264] = 32'h003181b3;  // add x3, x3, x3 // x3 = 6
-        mem_instr[268] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
-        mem_instr[272] = 32'h001080b3;  // add x1, x1, x1 // x1 = 2
-        #(CLK_PERIOD) $display("Sending bge x1, x2, 8");
-        mem_instr[276] = 32'h0020D463;  // bge x1, x2, 8  // Branch if x1 >= x2 to PC + 8: false
-        #(CLK_PERIOD) $display("Sending bge x5, x4, -4");
-        mem_instr[280] = 32'hFE42DEE3;  // bge x5, x4, -4  // Branch if x5 >= x4 to PC - 4: true
-        #(CLK_PERIOD) $display("Sending bge add x5, x5, x5"); 
-        mem_instr[284] = 32'h005282b3;  // add x5, x5, x5 // x5 = 10 // shouldn't execute completely due to previous branch
-        #(CLK_PERIOD) $display("Sending bge x6, x6, 40");
-        mem_instr[288] = 32'h02635463;  // bge x6, x6, 40  // Branch if x6 >= x6 to PC + 12: true
+        // // # bge
+        // #(CLK_PERIOD) $display("Sending bge x1, x2, 8");
+        // mem_instr[264] = 32'h0020D463;  // bge x1, x2, 8  // Branch if x1 >= x2 to PC + 8: false
+        // // #(CLK_PERIOD) $display("Sending bge x5, x4, -4");
+        // // mem_instr[268] = 32'hFE42DEE3;  // bge x5, x4, -4  // Branch if x5 >= x4 to PC - 4: true
+        // // mem_instr[272] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
+        // // #(CLK_PERIOD) $display("Sending bge add x5, x5, x5"); 
+        // // mem_instr[280] = 32'h005282b3;  // add x5, x5, x5 // x5 = 10 // shouldn't execute completely due to previous branch
+        // #(CLK_PERIOD) $display("Sending bge x6, x6, 40");
+        // mem_instr[276] = 32'h02635463;  // bge x6, x6, 40  // Branch if x6 >= x6 to PC + 12: true
+        // mem_instr[280] = 32'h001080b3;  // add x1, x1, x1 // x1 = 2
 
-    //     // # bltu
-    //     #(CLK_PERIOD) $display("Sending addi x1, x1, -2048");
-    //     mem_instr[288] = 32'h80008093; // x1 = -2047 (11111111111111111111100000000001)
-    //     #(CLK_PERIOD) $display("Sending bltu x1, x2, 8");
-    //     mem_instr[292] = 32'h0020E463;  // bltu x1, x2, 8  // Branch if x1 < x2 (unsigned) to PC + 8 // -2047 -> 4294965249 < 2 = false
-    //     #(CLK_PERIOD) $display("Sending bltu x3, x4, -4");
-    //     mem_instr[296] = 32'hFE41EEE3;  // bltu x3, x4, -4  // Branch if x3 < x4 (unsigned) to PC - 4 = true
-    //     #(CLK_PERIOD) $display("Sending bltu x5, x6, 12");
-    //     mem_instr[300] = 32'h0062E663;  // bltu x5, x6, 12  // Branch if x5 < x6 (unsigned) to PC + 12
+        // // # bltu
+        // #(CLK_PERIOD) $display("Sending addi x1, x1, -2048");
+        // mem_instr[288] = 32'h80008093; // x1 = -2047 (11111111111111111111100000000001) = FFFFF801₁₆
+        // #(CLK_PERIOD) $display("Sending bltu x1, x2, 8");
+        // mem_instr[292] = 32'h0020E463;  // bltu x1, x2, 8  // Branch if x1 < x2 (unsigned) to PC + 8 // -2047 -> 4294965249 < 2 = false
+        // #(CLK_PERIOD) $display("Sending bltu x3, x4, -4");
+        // mem_instr[296] = 32'hFE41EEE3;  // bltu x3, x4, -4  // Branch if x3 < x4 (unsigned) to PC - 4 = true
+        // #(CLK_PERIOD) $display("Sending bltu x5, x6, 12");
+        // mem_instr[300] = 32'h0062E663;  // bltu x5, x6, 12  // Branch if x5 < x6 (unsigned) to PC + 12
 
-    //     # bgeu
-    //     #(CLK_PERIOD) $display("Sending bgeu x1, x2, 16");
-    //     mem_instr[304] = 32'h0020f863;  // bgeu x1, x2, 16  // Branch if x1 >= x2 (unsigned) to PC + 16: false
-    //     #(CLK_PERIOD) $display("Sending bgeu x1, x6, 12");
-    //     mem_instr[308] = 32'h0060f663;  // bgeu x1, x6, 12  // Branch if x1 >= x6 (unsigned) to PC + 12: false
-    //     mem_instr[312] = 32'h80008093; // addi x1, x1, -2048 // x1 = -2047 (11111111111111111111100000000001)
-    //     #(CLK_PERIOD) $display("Sending bgeu x4, x4, -4");
-    //     mem_instr[316] = 32'hFE427EE3;  // bgeu x3, x4, -4  // Branch if x3 >= x4 (unsigned) to PC - 4: true
-    //     mem_instr[320] = 32'h00210133;  // add x2, x2, x2 // x2 = 4 // testing if hazard is flushing this instruction
+        // // # bgeu
+        // #(CLK_PERIOD) $display("Sending bgeu x1, x2, 16");
+        // mem_instr[304] = 32'h0020f863;  // bgeu x1, x2, 16  // Branch if x1 >= x2 (unsigned) to PC + 16: false
+        // #(CLK_PERIOD) $display("Sending bgeu x1, x6, 12");
+        // mem_instr[308] = 32'h0060f663;  // bgeu x1, x6, 12  // Branch if x1 >= x6 (unsigned) to PC + 12: false
+        // mem_instr[312] = 32'h80008093; // addi x1, x1, -2048 // x1 = -2047 (11111111111111111111100000000001)
+        // #(CLK_PERIOD) $display("Sending bgeu x4, x4, -4");
+        // mem_instr[316] = 32'hFE427EE3;  // bgeu x3, x4, -4  // Branch if x3 >= x4 (unsigned) to PC - 4: true
+        // mem_instr[320] = 32'h00210133;  // add x2, x2, x2 // x2 = 4 // testing if hazard is flushing this instruction
         
 
-    //     // # U-Type Instructions
+        // # U-Type Instructions
 
-    //     // # lui
-    //     #(CLK_PERIOD) $display("Sending lui x1, 0x12345");
-    //     mem_instr[324] = 32'h123450B7;  // lui x1, 0x12345  // x1 = 0x12345000 (305418240₁₀)
-    //     #(CLK_PERIOD) $display("Sending lui x2, 0x23456");
-    //     mem_instr[328] = 32'h23456137;  // lui x2, 0x23456  // x2 = 0x23456000 (591749120₁₀)
-    //     #(CLK_PERIOD) $display("Sending lui x3, 0x34567");
-    //     mem_instr[332] = 32'h345671B7;  // lui x3, 0x34567  // x3 = 0x34567000 (878080000₁₀)
+        // // # lui
+        // #(CLK_PERIOD) $display("Sending lui x1, 0x12345");
+        // mem_instr[324] = 32'h123450B7;  // lui x1, 0x12345  // x1 = 0x12345000 (305418240₁₀)
+        // #(CLK_PERIOD) $display("Sending lui x2, 0x23456");
+        // mem_instr[328] = 32'h23456137;  // lui x2, 0x23456  // x2 = 0x23456000 (591749120₁₀)
+        // #(CLK_PERIOD) $display("Sending lui x3, 0x34567");
+        // mem_instr[332] = 32'h345671B7;  // lui x3, 0x34567  // x3 = 0x34567000 (878080000₁₀)
 
-    //     // # auipc
-    //     #(CLK_PERIOD) $display("Sending auipc x4, 0x45678"); // PC = 336 = 0x150
-    //     mem_instr[336] = 32'h45678217;  // auipc x4, 0x45678  // x4 = PC + 0x45678000: x4 = 0x45678150
-    //     #(CLK_PERIOD) $display("Sending auipc x5, 0x56789"); // PC = 336 = 0x154
-    //     mem_instr[340] = 32'h56789297;  // auipc x5, 0x56789  // x5 = PC + 0x56789000: x5 = 0x56789154
-    //     #(CLK_PERIOD) $display("Sending auipc x6, 0x67890"); // PC = 336 = 0x158
-    //     mem_instr[344] = 32'h67890317;  // auipc x6, 0x67890  // x6 = PC + 0x67890000: x6 = 0x67890158
+        // // # auipc
+        // #(CLK_PERIOD) $display("Sending auipc x4, 0x45678"); // PC = 336 = 0x150
+        // mem_instr[336] = 32'h45678217;  // auipc x4, 0x45678  // x4 = PC + 0x45678000: x4 = 0x45678150
+        // #(CLK_PERIOD) $display("Sending auipc x5, 0x56789"); // PC = 336 = 0x154
+        // mem_instr[340] = 32'h56789297;  // auipc x5, 0x56789  // x5 = PC + 0x56789000: x5 = 0x56789154
+        // #(CLK_PERIOD) $display("Sending auipc x6, 0x67890"); // PC = 336 = 0x158
+        // mem_instr[344] = 32'h67890317;  // auipc x6, 0x67890  // x6 = PC + 0x67890000: x6 = 0x67890158
 
-    //     // # J-Type Instructions
-    //     // # jal
-    //     #(CLK_PERIOD) $display("Sending jal x1, 32");
-    //     mem_instr[348] = 32'h020000EF;  // jal x1, 32  // Jump to PC + 32, x1 = return address
-    //     #(CLK_PERIOD) $display("Sending jal x2, -16");
-    //     mem_instr[352] = 32'hFF1FF16F;  // jal x2, -16  // Jump to PC - 16, x2 = return address
-    //     #(CLK_PERIOD) $display("Sending jal x3, 64");
-    //     mem_instr[356] = 32'h040001EF;  // jal x3, 64  // Jump to PC + 64, x3 = return address
+        // // # J-Type Instructions
+        // // # jal
+        // #(CLK_PERIOD) $display("Sending jal x1, 32");
+        // mem_instr[348] = 32'h020000EF;  // jal x1, 32  // Jump to PC + 32, x1 = return address (PC + 4) = 352
+        // #(CLK_PERIOD) $display("Sending jal x2, -16");
+        // mem_instr[352] = 32'hFF1FF16F;  // jal x2, -16  // Jump to PC - 16, x2 = return address (PC + 4) = 356
+        // #(CLK_PERIOD) $display("Sending jal x3, 64");
+        // mem_instr[356] = 32'h040001EF;  // jal x3, 64  // Jump to PC + 64, x3 = return address (PC + 4) = 360
 
         // # exit
     end
     endtask //automatic
-        
+
+    task test_hazards;
+        integer inst;
+    begin
+        // // Data Hazard Test Sequence
+        // #(CLK_PERIOD) $display("Sending add x1, x2, x3");
+        // mem_instr[460] = 32'h003100b3;  // add x1, x2, x3  // x1 = x2 + x3 = 2 + 3 = 5
+
+        // #(CLK_PERIOD) $display("Sending sub x4, x1, x5");
+        // mem_instr[464] = 32'h40508233;  // sub x4, x1, x5  // x4 = x1 - x5 = 5 - 5 = 0 (depends on x1)
+
+        // #(CLK_PERIOD) $display("Sending and x6, x4, x7");
+        // mem_instr[468] = 32'h00727333;  // and x6, x4, x7  // x6 = x4 & x7 = 0 & 7 = 0 (depends on x4)
+
+        // #(CLK_PERIOD) $display("Sending or x8, x6, x9");
+        // mem_instr[472] = 32'h00936433;  // or x8, x6, x9  // x8 = (x6 | x9) = (0 | 9) = 9 (depends on x6)
+
+
+        // Structural Hazard Test Sequence
+        #(CLK_PERIOD) $display("Sending sw x3, 0(x2)");
+        mem_instr[480] = 32'h00312023;  // sw x3, 0(x2)  // Store word from x3 into memory address x2 + 0: mem[2] = 3
+
+        #(CLK_PERIOD) $display("Sending lw x1, 0(x2)"); // same memory from previos instruction
+        mem_instr[476] = 32'h00012083;  // lw x1, 0(x2)  // Load word from memory address x2 + 0 into x1: reg[1] = 3
+
+        #(CLK_PERIOD) $display("Sending lw x4, 4(x2)");
+        mem_instr[484] = 32'h00412203;  // lw x4, 4(x2)  // Load word from memory address x2 + 4 into x4: reg[4] = 6
+
+        #(CLK_PERIOD) $display("Sending sw x5, 4(x4)");
+        mem_instr[488] = 32'h00512223;  // sw x5, 4(x2)  // Store word from x5 into memory address x2 + 4 (same memory address as the previous lw):  mem[4(x4)] = mem[4(6)] -> mem[10] = 5
+
+    end
+    endtask
+
+
 endmodule
