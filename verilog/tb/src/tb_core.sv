@@ -593,15 +593,18 @@ module tb_core ();
 
         // # S-Type Instructions
 
-        // # sb
-        #(CLK_PERIOD) $display("Sending sb x1, 1(x1)");
-        mem_instr[192] = 32'h001080a3;  // sb x1, 1(x1)  // Store byte from x1 to memory at address x1 + 1: mem[2] = 1
-        // #(CLK_PERIOD) $display("Sending sb x2, 2(x1)");
-        // mem_instr[208] = 32'h00208123;  // sb x2, 2(x1)  // Store byte from x2 to memory at address x1 + 2: mem[3] = 2
+        // // # sb
+        // #(CLK_PERIOD) $display("Sending sb x1, 1(x1)");
+        // mem_instr[192] = 32'h001080a3;  // sb x1, 1(x1)  // Store byte from x1 to memory at address x1 + 1: mem[2] = 1
         // #(CLK_PERIOD) $display("Sending sb x3, 3(x1)");
-        // mem_instr[200] = 32'h003081a3;  // sb x3, 3(x1)  // Store byte from x3 to memory at address x1 + 3: mem[4] = 3
-        #(CLK_PERIOD) $display("Sending sb x3, -2(x1)");
-        mem_instr[204] = 32'hfe308f23;  // sb x3, -2(x1)  // Store byte from x3 to memory at address x1 + 2: mem[-1] = 3
+        // mem_instr[204] = 32'h003081a3;  // sb x3, 3(x1)  // Store byte from x3 to memory at address x1 + 3: mem[4] = 3
+        // #(CLK_PERIOD) $display("Sending sb x3, -2(x1)");
+        // mem_instr[208] = 32'hfe308f23;  // sb x3, -2(x1)  // Store byte from x3 to memory at address x1 + 2: mem[-1] = 3
+
+        // #(CLK_PERIOD) $display("Sending sb x1, 1(x1)");
+        // mem_instr[212] = 32'h001080a3;  // sb x1, 1(x1)  // Store byte from x1 to memory at address x1 + 1: mem[2] = 1
+        // #(CLK_PERIOD) $display("Sending sb x2, 2(x1)");
+        // mem_instr[216] = 32'h00208123;  // sb x2, 2(x1)  // Store byte from x2 to memory at address x1 + 2: mem[3] = 2
         // // NOP instruction
         // #(CLK_PERIOD);
         // for (inst = 0; inst < 50; inst=inst+1) begin
@@ -609,78 +612,79 @@ module tb_core ();
         //     mem_instr[inst*4 + 208] = 32'h00000033;  // NOP add x0, x0, x0
         // end
 
-    //     // # sh
-    //     #(CLK_PERIOD) $display("Sending sh x1, 0(x1)");
-    //     mem_instr[208] = 32'h00109023;  // sh x1, 0(x1)  // Store halfword from x1 to memory at address x1 + 0: mem[1] = 1
-    //     #(CLK_PERIOD) $display("Sending sh x2, 2(x1)");
-    //     mem_instr[212] = 32'h00209123;  // sh x2, 2(x1)  // Store halfword from x2 to memory at address x1 + 2: mem[3] = 2
-    //     #(CLK_PERIOD) $display("Sending sh x3, 4(x1)");
-    //     mem_instr[216] = 32'h00309223;  // sh x3, 4(x1)  // Store halfword from x3 to memory at address x1 + 4: mem[5] = 3
-    //     // NOP instruction
-    //     #(CLK_PERIOD);
-    //     for (inst = 0; inst < 50; inst=inst+1) begin
-    //         $display("Sending add x0, x0, x0");
-    //         mem_instr[inst*4 + 220] = 32'h00000033;  // NOP add x0, x0, x0
-    //     end
+        // // # sh
+        // #(CLK_PERIOD) $display("Sending sh x1, 0(x1)"); // * since mem[1] is already 1 the tb won't detect any change
+        // mem_instr[208] = 32'h00109023;  // sh x1, 0(x1)  // Store halfword from x1 to memory at address x1 + 0: mem[1] = 1
+        // #(CLK_PERIOD) $display("Sending sh x2, 2(x1)");
+        // mem_instr[212] = 32'h00209123;  // sh x2, 2(x1)  // Store halfword from x2 to memory at address x1 + 2: mem[3] = 2
+        // #(CLK_PERIOD) $display("Sending sh x3, 4(x1)");
+        // mem_instr[216] = 32'h00309223;  // sh x3, 4(x1)  // Store halfword from x3 to memory at address x1 + 4: mem[5] = 3
+        // // // NOP instruction
+        // // #(CLK_PERIOD);
+        // // for (inst = 0; inst < 50; inst=inst+1) begin
+        // //     $display("Sending add x0, x0, x0");
+        // //     mem_instr[inst*4 + 220] = 32'h00000033;  // NOP add x0, x0, x0
+        // // end
 
-    //     // # sw
-    //     #(CLK_PERIOD) $display("Sending sw x1, 0(x1)");
-    //     mem_instr[220] = 32'h0010A023;  // sw x1, 0(x1)  // Store word from x1 to memory at address x1 + 0: mem[1] = 1
-    //     #(CLK_PERIOD) $display("Sending sw x2, 2(x1)");
-    //     mem_instr[224] = 32'h0020A123;  // sw x2, 4(x1)  // Store word from x2 to memory at address x1 + 4: mem[3] = 2
-    //     #(CLK_PERIOD) $display("Sending sw x3, 8(x1)");
-    //     mem_instr[228] = 32'h0030A423;  // sw x3, 8(x1)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
-    //     // NOP instruction
-    //     #(CLK_PERIOD);
-    //     for (inst = 3; inst < 50; inst=inst+1) begin
-    //         $display("Sending add x0, x0, x0");
-    //         mem_instr[inst*4 + 232] = 32'h00000033;  // NOP add x0, x0, x0
-    //     end
+        // // # sw
+        // #(CLK_PERIOD) $display("Sending sw x1, 0(x1)"); // * since mem[1] is already 1 the tb won't detect any change
+        // mem_instr[220] = 32'h0010A023;  // sw x1, 0(x1)  // Store word from x1 to memory at address x1 + 0: mem[1] = 1
+        // #(CLK_PERIOD) $display("Sending sw x2, 2(x1)");
+        // mem_instr[224] = 32'h0020A123;  // sw x2, 4(x1)  // Store word from x2 to memory at address x1 + 4: mem[3] = 2
+        // #(CLK_PERIOD) $display("Sending sw x3, 8(x1)");
+        // mem_instr[228] = 32'h0030A423;  // sw x3, 8(x1)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
+        // // // NOP instruction
+        // // #(CLK_PERIOD);
+        // // for (inst = 3; inst < 50; inst=inst+1) begin
+        // //     $display("Sending add x0, x0, x0");
+        // //     mem_instr[inst*4 + 232] = 32'h00000033;  // NOP add x0, x0, x0
+        // // end
 
 
-    //     // # B-Type Instructions
+        // # B-Type Instructions
 
-    //     // # beq
-    //     mem_instr[232] = 32'h00000033;  // NOP add x0, x0, x0
-    //     // mem_instr[0] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
-    //     #(CLK_PERIOD) $display("Sending beq x3, x4, -4");
-    //     mem_instr[236] = 32'hFE418EE3;  // Branch if x3 == x4 to PC - 4: false
-    //     #(CLK_PERIOD) $display("Sending beq x5, x6, 12");
-    //     mem_instr[240] = 32'h00628663;  // beq x5, x6, 12  // Branch if x5 == x6 to PC + 12: false
-    //     #(CLK_PERIOD) $display("Sending beq x2, x2, 35");
-    //     mem_instr[244] = 32'h02210163;  // Branch if x2 == x2 to PC + 35  = 12 + 35(100011) -> 34(100010) imm_ext -> 33(10000) next_pc = 244+ 33 = 276 (100010100): true
-    //     mem_instr[276] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
+        // // # beq
+        // mem_instr[232] = 32'h00000033;  // NOP add x0, x0, x0
+        // // mem_instr[0] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
+        // #(CLK_PERIOD) $display("Sending beq x3, x4, -4");
+        // mem_instr[236] = 32'hFE418EE3;  // Branch if x3 == x4 to PC - 4: false
+        // #(CLK_PERIOD) $display("Sending beq x5, x6, 12");
+        // mem_instr[240] = 32'h00628663;  // beq x5, x6, 12  // Branch if x5 == x6 to PC + 12: false
+        // #(CLK_PERIOD) $display("Sending beq x2, x2, 35");
+        // mem_instr[244] = 32'h02210163;  // Branch if x2 == x2 to PC + 35  = 12 + 35(100011) -> 34(100010) imm_ext -> 33(10000) next_pc = 244+ 33 = 276 (100010100): true
+        // mem_instr[276] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
 
-    //     // # bne
-    //     #(CLK_PERIOD) $display("Sending bne x2, x2, 40");
-    //     mem_instr[280] = 32'h02211463;  // bne x1, x2, 40  // Branch if x1 != x2 to PC + 40: false
-    //     #(CLK_PERIOD) $display("Sending bne x3, x4, -4");
-    //     mem_instr[284] = 32'hFE419EE3;  // bne x3, x4, -4  // Branch if x3 != x4 to PC - 4: true
-    //     #(CLK_PERIOD) $display("Sending bne x5, x6, 12");
-    //     mem_instr[288] = 32'h00629663;  // bne x5, x6, 12  // Branch if x5 != x6 to PC + 12: true (but it won't execute completely if you execute the previous instruction before, it will execute partially then will receive aflush from hazard unit because this is a control hazard)
-    //     mem_instr[320   ] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
+        // # bne
+        // // #(CLK_PERIOD) $display("Sending bne x2, x2, 40");
+        // // mem_instr[280] = 32'h02211463;  // bne x1, x2, 40  // Branch if x1 != x2 to PC + 40: false
+        // // #(CLK_PERIOD) $display("Sending bne x3, x4, -4");
+        // // mem_instr[284] = 32'hFE419EE3;  // bne x3, x4, -4  // Branch if x3 != x4 to PC - 4: true
+        // #(CLK_PERIOD) $display("Sending bne x5, x6, 12");
+        // mem_instr[288] = 32'h00629663;  // bne x5, x6, 12  // Branch if x5 != x6 to PC + 12: true (but it won't execute completely if you execute the previous instruction before, it will execute partially then will receive aflush from hazard unit because this is a control hazard)
+        // mem_instr[292] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
 
-    //     // # blt 
-    //     #(CLK_PERIOD) $display("Sending blt x1, x2, 40");
-    //     mem_instr[252] = 32'h0220c463;  // blt x1, x2, 8  // Branch if x1 < x2 to PC + 8: true
-    //     #(CLK_PERIOD) $display("Sending blt x3, x4, -4");
-    //     mem_instr[256] = 32'hFE41CEE3;  // blt x3, x4, -4  // Branch if x3 < x4 to PC - 4: true
-    //     #(CLK_PERIOD) $display("Sending blt x5, x6, 12");
-    //     mem_instr[260] = 32'h0062C663;  // blt x5, x6, 12  // Branch if x5 < x6 to PC + 12: true
-    //     mem_instr[292] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
+        // // # blt 
+        // #(CLK_PERIOD) $display("Sending blt x1, x2, 40");
+        // mem_instr[252] = 32'h0220c463;  // blt x1, x2, 8  // Branch if x1 < x2 to PC + 8: true
+        // mem_instr[256] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
+        // mem_instr[292] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
+        // #(CLK_PERIOD) $display("Sending blt x3, x4, -4");
+        // mem_instr[296] = 32'hFE41CEE3;  // blt x3, x4, -4  // Branch if x3 < x4 to PC - 4: true
+        // #(CLK_PERIOD) $display("Sending blt x5, x6, 12");
+        // mem_instr[260] = 32'h0062C663;  // blt x5, x6, 12  // Branch if x5 < x6 to PC + 12: true
 
-    //     // # bge
-    //     mem_instr[264] = 32'h003181b3;  // add x3, x3, x3 // x3 = 6
-    //     mem_instr[268] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
-    //     mem_instr[272] = 32'h001080b3;  // add x1, x1, x1 // x1 = 2
-    //     // #(CLK_PERIOD) $display("Sending bge x1, x2, 8");
-    //     // mem_instr[0] = 32'h0020D463;  // bge x1, x2, 8  // Branch if x1 >= x2 to PC + 8: false
-    //     #(CLK_PERIOD) $display("Sending bge x5, x4, -4");
-    //     mem_instr[276] = 32'hFE42DEE3;  // bge x5, x4, -4  // Branch if x5 >= x4 to PC - 4: true
-    //     #(CLK_PERIOD) $display("Sending bge add x5, x5, x5"); 
-    //     mem_instr[280] = 32'h005282b3;  // add x5, x5, x5 // x5 = 10 // shouldn't execute completely due to previous branch
-    //     #(CLK_PERIOD) $display("Sending bge x6, x6, 40");
-    //     mem_instr[284] = 32'h02635463;  // bge x6, x6, 40  // Branch if x6 >= x6 to PC + 12: true
+        // # bge
+        mem_instr[264] = 32'h003181b3;  // add x3, x3, x3 // x3 = 6
+        mem_instr[268] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
+        mem_instr[272] = 32'h001080b3;  // add x1, x1, x1 // x1 = 2
+        #(CLK_PERIOD) $display("Sending bge x1, x2, 8");
+        mem_instr[276] = 32'h0020D463;  // bge x1, x2, 8  // Branch if x1 >= x2 to PC + 8: false
+        #(CLK_PERIOD) $display("Sending bge x5, x4, -4");
+        mem_instr[280] = 32'hFE42DEE3;  // bge x5, x4, -4  // Branch if x5 >= x4 to PC - 4: true
+        #(CLK_PERIOD) $display("Sending bge add x5, x5, x5"); 
+        mem_instr[284] = 32'h005282b3;  // add x5, x5, x5 // x5 = 10 // shouldn't execute completely due to previous branch
+        #(CLK_PERIOD) $display("Sending bge x6, x6, 40");
+        mem_instr[288] = 32'h02635463;  // bge x6, x6, 40  // Branch if x6 >= x6 to PC + 12: true
 
     //     // # bltu
     //     #(CLK_PERIOD) $display("Sending addi x1, x1, -2048");

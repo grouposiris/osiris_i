@@ -125,7 +125,7 @@ module op_decoder (
         (i_op == OP_J_TYPE_JAL) ? 2'b01 :  // PC + 4
         (i_op == OP_U_TYPE_LUI) ? 2'b00 :  // ALU result: add: 0 + imm ({upimm, 12'b0})
         (i_op == OP_U_TYPE_AUIPC) ? 2'b11 :  // next_pc result: add: PC + imm ({upimm, 12'b0})
-        2'bzz;  // bx
+        2'b00;  // bx
 
     assign o_mem_write_ID = (i_op == OP_S_TYPE) ? 1'b1 : 1'b0;  // ok
 
