@@ -17,6 +17,15 @@ module osiris_i #(
     input wire i_start_rx,  // Control signal to start UART reception
     output wire o_uart_tx  // UART transmit signal to external device
 );
+    // ------------------------------------------
+    // Localparam Declarations
+    // ------------------------------------------
+    // Calculating the Address Width of the Instruction Memory
+    localparam INST_MEM_DEPTH = (INST_MEM_SIZE * 1024) / (DATA_WIDTH / 8);
+    localparam INST_MEM_ADDR_WIDTH = $clog2(INST_MEM_DEPTH);
+    // Calculating the Address Width of the Data Memory
+    localparam DATA_MEM_DEPTH = (DATA_MEM_SIZE * 1024) / (DATA_WIDTH / 8);
+    localparam DATA_MEM_ADDR_WIDTH = $clog2(DATA_MEM_DEPTH);
 
     // ------------------------------------------
     // Internal Signals for UART Wishbone Bridge
@@ -83,7 +92,7 @@ module osiris_i #(
     // ------------------------------------------
     // Instruction Memory Interface
     // ------------------------------------------
-    wire [9:0] inst_mem_adr_i;
+    wire [INST_MEM_ADDR_WIDTH-1:0] inst_mem_adr_i;
     wire [DATA_WIDTH-1:0] inst_mem_dat_i;
     wire inst_mem_we_i;
     wire inst_mem_stb_i;
@@ -92,8 +101,8 @@ module osiris_i #(
     wire inst_mem_ack_o;
 
     // Mux between core and UART bridge for Instruction Memory access
-    assign inst_mem_adr_i = (i_select_mem == 1'b0 && uart_wb_stb_o) ? uart_wb_adr_o[9:0] :
-        core_pc_IF[9:0];
+    assign inst_mem_adr_i = (i_select_mem == 1'b0 && uart_wb_stb_o) ? uart_wb_adr_o[INST_MEM_ADDR_WIDTH-1:0] :
+        core_pc_IF[INST_MEM_ADDR_WIDTH-1:0];
     assign inst_mem_dat_i = uart_wb_dat_o;  // Only UART bridge writes to Instruction Memory
     assign inst_mem_we_i = (i_select_mem == 1'b0 && uart_wb_stb_o) ? uart_wb_we_o :
         1'b0;  // Core does not write to Instruction Memory
@@ -111,7 +120,7 @@ module osiris_i #(
     // ------------------------------------------
     // Data Memory Interface
     // ------------------------------------------
-    wire [9:0] data_mem_adr_i;
+    wire [DATA_MEM_ADDR_WIDTH-1:0] data_mem_adr_i;
     wire [DATA_WIDTH-1:0] data_mem_dat_i;
     wire data_mem_we_i;
     wire data_mem_stb_i;
@@ -120,7 +129,7 @@ module osiris_i #(
     wire data_mem_ack_o;
 
     // Mux between core and UART bridge for Data Memory access
-    assign data_mem_adr_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_adr_o[9:0] : core_data_addr_M[9:0];
+    assign data_mem_adr_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_adr_o[DATA_MEM_ADDR_WIDTH-1:0] : core_data_addr_M[DATA_MEM_ADDR_WIDTH-1:0];
     // assign data_mem_adr_i = 32'b0;
     
     assign data_mem_dat_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_dat_o : core_write_data_M;
@@ -142,10 +151,9 @@ module osiris_i #(
     // ------------------------------------------
     // Instantiate Instruction Memory
     // ------------------------------------------
-    mem #(
-        .DATA_WIDTH(32),
-        // .ADDR_WIDTH(10)
-        .MEM_SIZE(INST_MEM_SIZE)  // 4KB Instruction Memory
+    mem_byte #(
+        .DATA_WIDTH(DATA_WIDTH),
+        .MEM_SIZE_KB(INST_MEM_SIZE)  // 4KB Instruction Memory
     ) U_INST_MEM (
         .clk     (clk),
         .rst     (rst_mem_uart),
@@ -161,10 +169,9 @@ module osiris_i #(
     // ------------------------------------------
     // Instantiate Data Memory
     // ------------------------------------------
-    mem #(
+    mem_byte #(
         .DATA_WIDTH(DATA_WIDTH),
-        // .ADDR_WIDTH(10)
-        .MEM_SIZE(DATA_MEM_SIZE)  // 4KB Data Memory
+        .MEM_SIZE_KB(DATA_MEM_SIZE)  // 4KB Data Memory
     ) U_DATA_MEM (
         .clk     (clk),
         .rst     (rst_mem_uart),
