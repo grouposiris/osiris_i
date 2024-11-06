@@ -1,6 +1,6 @@
 ###############################################################################
 # Created by write_sdc
-# Tue Nov  5 00:32:05 2024
+# Wed Nov  6 00:25:22 2024
 ###############################################################################
 current_design uart_wbs_bridge
 ###############################################################################
@@ -91,6 +91,22 @@ set_load -pin_load 0.1900 [get_ports {o_uart_tx}]
 set_load -pin_load 0.1900 [get_ports {wb_cyc_o}]
 set_load -pin_load 0.1900 [get_ports {wb_stb_o}]
 set_load -pin_load 0.1900 [get_ports {wb_we_o}]
+set_load -pin_load 0.1900 [get_ports {wb_adr_o[31]}]
+set_load -pin_load 0.1900 [get_ports {wb_adr_o[30]}]
+set_load -pin_load 0.1900 [get_ports {wb_adr_o[29]}]
+set_load -pin_load 0.1900 [get_ports {wb_adr_o[28]}]
+set_load -pin_load 0.1900 [get_ports {wb_adr_o[27]}]
+set_load -pin_load 0.1900 [get_ports {wb_adr_o[26]}]
+set_load -pin_load 0.1900 [get_ports {wb_adr_o[25]}]
+set_load -pin_load 0.1900 [get_ports {wb_adr_o[24]}]
+set_load -pin_load 0.1900 [get_ports {wb_adr_o[23]}]
+set_load -pin_load 0.1900 [get_ports {wb_adr_o[22]}]
+set_load -pin_load 0.1900 [get_ports {wb_adr_o[21]}]
+set_load -pin_load 0.1900 [get_ports {wb_adr_o[20]}]
+set_load -pin_load 0.1900 [get_ports {wb_adr_o[19]}]
+set_load -pin_load 0.1900 [get_ports {wb_adr_o[18]}]
+set_load -pin_load 0.1900 [get_ports {wb_adr_o[17]}]
+set_load -pin_load 0.1900 [get_ports {wb_adr_o[16]}]
 set_load -pin_load 0.1900 [get_ports {wb_adr_o[15]}]
 set_load -pin_load 0.1900 [get_ports {wb_adr_o[14]}]
 set_load -pin_load 0.1900 [get_ports {wb_adr_o[13]}]

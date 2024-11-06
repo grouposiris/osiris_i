@@ -13,7 +13,7 @@
     "FP_PDN_MULTILAYER": true,
     "FP_PDN_CORE_RING": false,
     "FP_SIZING": "absolute",
-    "DIE_AREA": "0 0 500 500",
+    "DIE_AREA": "0 0 650 650",
     "LEFT_MARGIN_MULT": 30,
     "RIGHT_MARGIN_MULT": 30,
     "BOTTOM_MARGIN_MULT": 5,

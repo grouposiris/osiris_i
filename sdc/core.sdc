@@ -1,6 +1,6 @@
 ###############################################################################
 # Created by write_sdc
-# Tue Nov  5 02:44:15 2024
+# Wed Nov  6 01:02:33 2024
 ###############################################################################
 current_design core
 ###############################################################################
@@ -178,6 +178,9 @@ set_load -pin_load 0.1900 [get_ports {o_data_addr_M[3]}]
 set_load -pin_load 0.1900 [get_ports {o_data_addr_M[2]}]
 set_load -pin_load 0.1900 [get_ports {o_data_addr_M[1]}]
 set_load -pin_load 0.1900 [get_ports {o_data_addr_M[0]}]
+set_load -pin_load 0.1900 [get_ports {o_funct3_MEM[2]}]
+set_load -pin_load 0.1900 [get_ports {o_funct3_MEM[1]}]
+set_load -pin_load 0.1900 [get_ports {o_funct3_MEM[0]}]
 set_load -pin_load 0.1900 [get_ports {o_pc_IF[31]}]
 set_load -pin_load 0.1900 [get_ports {o_pc_IF[30]}]
 set_load -pin_load 0.1900 [get_ports {o_pc_IF[29]}]
