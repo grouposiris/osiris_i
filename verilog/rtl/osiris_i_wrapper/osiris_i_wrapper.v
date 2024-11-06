@@ -72,17 +72,33 @@ module osiris_i_wrapper #(
 );
 
 
-    assign io_out[15:1] = {15'h0};
+    wire clk;
+    wire rst_core;
+    wire rst_mem_uart;
+    wire i_uart_rx;  // UART receive signal from external device
+    wire i_select_mem;  // Select memory for UART communication: 0 = Instruction Mem, 1 = Data Mem
+    wire i_start_rx;  // Control signal to start UART reception
+    wire o_uart_tx;  // UART transmit signal to external device
 
+    assign io_out[15:2] = {15'h0};
 
-    // ------------------------------------------
+    assign clk = wb_clk_i;
+    assign rst_core = io_in[5];
+    assign rst_mem_uart = io_in[6];
+    assign i_uart_rx = io_in[7];  // UART receive signal from external device
+    assign i_select_mem = io_in[8];  // Select memory for UART communication: 0 = Instruction Mem, 1 = Data Mem
+    assign i_start_rx = io_in[9];  // Control signal to start UART reception
+    assign io_out[0] = o_uart_tx;  // UART transmit signal to external device
+    assign io_out[1] = o_uart_tx;  // UART transmit signal to external device
+
+     // ------------------------------------------
     // Localparam Declarations
     // ------------------------------------------
     // Calculating the Address Width of the Instruction Memory
-    localparam INST_MEM_DEPTH = (INST_MEM_SIZE * 128) / (DATA_WIDTH / 8);
+    localparam INST_MEM_DEPTH = (INST_MEM_SIZE * 1024) / (DATA_WIDTH / 8);
     localparam INST_MEM_ADDR_WIDTH = $clog2(INST_MEM_DEPTH);
     // Calculating the Address Width of the Data Memory
-    localparam DATA_MEM_DEPTH = (DATA_MEM_SIZE * 128) / (DATA_WIDTH / 8);
+    localparam DATA_MEM_DEPTH = (DATA_MEM_SIZE * 1024) / (DATA_WIDTH / 8);
     localparam DATA_MEM_ADDR_WIDTH = $clog2(DATA_MEM_DEPTH);
 
     // ------------------------------------------
@@ -117,10 +133,10 @@ module osiris_i_wrapper #(
         .CMD_READ(CMD_READ),
         .CMD_WRITE(CMD_WRITE)
     ) U_UART_WB_BRIDGE (
-        .clk     (wb_clk_i),
-        .rst     (io_in[6]),
-        .i_uart_rx (io_in[7]),        // UART receive signal
-        .o_uart_tx (io_out[0]),        // UART transmit signal
+        .clk     (clk),
+        .rst     (rst_mem_uart),
+        .i_uart_rx (i_uart_rx),        // UART receive signal
+        .o_uart_tx (o_uart_tx),        // UART transmit signal
         .i_start_rx(i_start_rx),       // Start UART reception
         .wb_cyc_o(uart_wb_cyc_o),  // Cycle output to memory
         .wb_stb_o(uart_wb_stb_o),  // Strobe output to memory
@@ -137,8 +153,8 @@ module osiris_i_wrapper #(
     core #(
         .DATA_WIDTH(DATA_WIDTH)
     ) U_CORE (
-        .clk           (wb_clk_i),
-        .rst           (io_in[5]),
+        .clk           (clk),
+        .rst           (rst_core),
         .i_instr_ID    (core_instr_ID),     // Instruction input to core
         .i_read_data_M (core_read_data_M),  // Data read input to core
         .o_funct3_MEM(mux_funct3),
@@ -217,8 +233,8 @@ module osiris_i_wrapper #(
         .DATA_WIDTH(DATA_WIDTH),
         .MEM_SIZE_KB(INST_MEM_SIZE)  // 4KB Instruction Memory
     ) U_INST_MEM (
-        .clk     (wb_clk_i),
-        .rst     (io_in[6]),
+        .clk     (clk),
+        .rst     (rst_mem_uart),
         .wb_adr_i(inst_mem_adr_i),  // Address input
         .wb_dat_i(inst_mem_dat_i),  // Data input
         .wb_we_i (inst_mem_we_i),   // Write enable input
@@ -240,8 +256,8 @@ module osiris_i_wrapper #(
         .DATA_WIDTH(DATA_WIDTH),
         .MEM_SIZE_KB(DATA_MEM_SIZE)  // 4KB Data Memory
     ) U_DATA_MEM (
-        .clk     (wb_clk_i),
-        .rst     (io_in[6]),
+        .clk     (clk),
+        .rst     (rst_mem_uart),
         .wb_adr_i(data_mem_adr_i),  // Address input
         .wb_dat_i(data_mem_dat_i),  // Data input
         .wb_we_i (data_mem_we_i),   // Write enable input
@@ -299,8 +315,6 @@ module osiris_i_wrapper #(
     // 8. **Ensuring No Bus Conflicts:**
     //    - For this design, it's assumed that the UART bridge access to the memories is infrequent or managed externally to prevent conflicts.
     //    - Alternatively, you could introduce a signal that pauses the core when the UART bridge is accessing the memories.
-
-
 endmodule
 
 `default_nettype wire

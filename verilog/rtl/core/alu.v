@@ -54,11 +54,11 @@ module alu #(
     BLTU = 5'b01101,  // 13 check
     BGE = 5'b01110,  // 14 check
     BGEU = 5'b01111,  // 15 check
-    LUI = 5'b10000,  // 16 ok
-    AUIPC = 5'b10001,  // 17 check
-    FENCE = 5'b10010,  // 18 dummy (check if it is necessary)
-    ECALL = 5'b10011,  // 19 dummy (check if it is necessary)
-    EBREAK = 5'b10100;  // 20 dummy (check if it is necessary)
+    LUI = 5'b10000;  // 16 ok
+    // AUIPC = 5'b10001,  // 17 check
+    // FENCE = 5'b10010,  // 18 dummy (check if it is necessary)
+    // ECALL = 5'b10011,  // 19 dummy (check if it is necessary)
+    // EBREAK = 5'b10100;  // 20 dummy (check if it is necessary)
 
     // ------------------------------------------
     // Signals deinitions
@@ -68,8 +68,8 @@ module alu #(
     reg  [WIDTH-1:0] rd2_operand;
     reg  [WIDTH-1:0] adder_result;
     reg              cin;
-    reg              change_signal;
-    reg              last_bit_equal;
+    // reg              change_signal;
+    // reg              last_bit_equal;
 
     assign not_i_rd2_EX = ~i_rd2_EX;
 

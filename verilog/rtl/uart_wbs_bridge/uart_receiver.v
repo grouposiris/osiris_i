@@ -77,7 +77,7 @@ module uart_receiver #(
             end else if (receiving) begin
                 // $display("[uart_receiver 2]: receiving, i_start_rx=%b", i_start_rx);
                 // We are currently receiving data
-                if (clock_count == BIT_TIME - 1) begin
+                if ({16'b0, clock_count} == BIT_TIME - 1) begin
                     // $display("[uart_receiver 2.A]: clock_count == BIT_TIME - 1");
                     // If the counter reaches the duration of one bit
                     clock_count <= 0;  // Reset the counter for the next bit

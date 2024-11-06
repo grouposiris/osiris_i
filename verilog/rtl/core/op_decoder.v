@@ -58,27 +58,27 @@ module op_decoder (
     OP_BRANCH = 3'b011,  // 3 branch
     OP_ADD = 3'b100;  // only JAL
 
-    localparam logic [4:0] AND = 5'b00000,  // 0 ok
-    OR = 5'b00001,  // 1 ok
-    XOR = 5'b00010,  // 2 ok
-    ADD = 5'b00011,  // 3 ok
-    SUB = 5'b00100,  // 4 check
-    SLL = 5'b00101,  // 5 ok
-    SRL = 5'b00110,  // 6 ok
-    SLT = 5'b00111,  // 7 check if it is signed comparison
-    SLTU = 5'b01000,  // 8 check unsigned
-    SRA = 5'b01001,  // 9 ok
-    BEQ = 5'b01010,  // 10 check -> // ' the ALU computes A − B and looks at the flags. If Z is asserted, the result is 0, so A = B. Otherwise, A is not equal to B.
-    BNE = 5'b01011,  // 11 check
-    BLT = 5'b01100,  // 12 check
-    BLTU = 5'b01101,  // 13 check
-    BGE = 5'b01110,  // 14 check
-    BGEU = 5'b01111,  // 15 check
-    LUI = 5'b10000,  // 16 ok
-    AUIPC = 5'b10001,  // 17 check
-    FENCE = 5'b10010,  // 18 dummy (check if it is necessary)
-    ECALL = 5'b10011,  // 19 dummy (check if it is necessary)
-    EBREAK = 5'b10100;  // 20 dummy (check if it is necessary)
+    //localparam logic [4:0] AND = 5'b00000,  // 0 ok
+    // OR = 5'b00001,  // 1 ok
+    // XOR = 5'b00010,  // 2 ok
+    // ADD = 5'b00011,  // 3 ok
+    // SUB = 5'b00100,  // 4 check
+    // SLL = 5'b00101,  // 5 ok
+    // SRL = 5'b00110,  // 6 ok
+    // SLT = 5'b00111,  // 7 check if it is signed comparison
+    // SLTU = 5'b01000,  // 8 check unsigned
+    // SRA = 5'b01001,  // 9 ok
+    // BEQ = 5'b01010,  // 10 check -> // ' the ALU computes A − B and looks at the flags. If Z is asserted, the result is 0, so A = B. Otherwise, A is not equal to B.
+    // BNE = 5'b01011,  // 11 check
+    // BLT = 5'b01100,  // 12 check
+    // BLTU = 5'b01101,  // 13 check
+    // BGE = 5'b01110,  // 14 check
+    // BGEU = 5'b01111,  // 15 check
+    // LUI = 5'b10000,  // 16 ok
+    // AUIPC = 5'b10001,  // 17 check
+    // FENCE = 5'b10010,  // 18 dummy (check if it is necessary)
+    // ECALL = 5'b10011,  // 19 dummy (check if it is necessary)
+    // EBREAK = 5'b10100;  // 20 dummy (check if it is necessary)
 
     localparam logic [4:0] OP_R_TYPE = 5'b01100,  //
     OP_I_TYPE_LOAD = 5'b00000,  //

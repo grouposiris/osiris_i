@@ -1,8 +1,8 @@
 module uart_wbs_bridge #(
     parameter DATA_WIDTH = 32,
-    parameter ADDR_WIDTH = 16,
+    parameter ADDR_WIDTH = 32,
     parameter BAUD_RATE = 9600,
-    parameter CLOCK_FREQ = 50000000,  // 50 MHz,
+    parameter CLOCK_FREQ = 40000000,  // 40 MHz,
     parameter CMD_READ = 8'h77,  // Command to read from memory and send data via UART
     parameter CMD_WRITE =
         8'hAA  // Command to write data received via UART to memory (changed value for distinction)
@@ -155,7 +155,7 @@ module uart_wbs_bridge #(
 
 
                         // * after 2 bytes byte_count = 1 (adress read is complete)
-                        if (byte_count == ((ADDR_WIDTH / 8) - 1)) begin
+                        if ({2'b0, byte_count} == ((ADDR_WIDTH / 8) - 1)) begin
                             byte_count <= 0;
                             if (cmd_reg == CMD_WRITE) begin
                                 // Write command, proceed to read data bytes from external UART
@@ -192,7 +192,7 @@ module uart_wbs_bridge #(
                     if (uart_rx_valid) begin
                         data_reg   <= data_reg | (uart_rx_data << (8 * byte_count));
                         byte_count <= byte_count + 1;
-                        if (byte_count == (DATA_WIDTH / 8 - 1)) begin
+                        if ({2'b0, byte_count} == (DATA_WIDTH / 8 - 1)) begin
                             // All data bytes received, initiate Wishbone write
                             wb_adr_o <= addr_reg;
                             wb_dat_o <= {uart_rx_data,data_reg[DATA_WIDTH-8 -1: 0]};
@@ -239,7 +239,7 @@ module uart_wbs_bridge #(
                         // uart_tx_data  <= wb_dat_i[8*(byte_count+1): 8*byte_count];
                         uart_tx_valid <= 1;
                         byte_count <= byte_count + 1;
-                        if (byte_count == (DATA_WIDTH / 8)) begin
+                        if ({2'b0, byte_count} == (DATA_WIDTH / 8)) begin
                             // All data bytes sent
                             wb_stb_o <= 0;
                             wb_cyc_o <= 0;

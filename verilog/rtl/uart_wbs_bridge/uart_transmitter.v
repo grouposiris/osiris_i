@@ -30,7 +30,7 @@ module uart_transmitter #(
             shift_reg    <= 0;
         end else begin
             if (transmitting) begin
-                if (clock_count == BIT_TIME - 1) begin
+                if ({16'b0, clock_count} == BIT_TIME - 1) begin
                     clock_count <= 0;
                     bit_index   <= bit_index + 1;
                     if (bit_index < 8 + 2) begin
