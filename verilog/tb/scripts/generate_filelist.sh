@@ -21,9 +21,10 @@ OUTPUT_FILE="filelist.txt"
 # Create or overwrite the filelist.txt file
 > $OUTPUT_FILE
 
-# Find all .v and .sv files in the target directory, excluding 'copy' and 'unused' files
-# find $TARGET_DIR -type f -name "*.v" ! -name "*copy*.v" ! -path "*/unused/*" | sort >> $OUTPUT_FILE
-find $TARGET_DIR -type f \( -name "*.v" -o -name "*.sv" \) ! -name "*copy*.v" ! -path "*/unused/*" | sort >> $OUTPUT_FILE
+# # Find all .v and .sv files in the target directory, excluding 'copy' and 'unused' files
+# # find $TARGET_DIR -type f -name "*.v" ! -name "*copy*.v" ! -path "*/unused/*" | sort >> $OUTPUT_FILE
+# find $TARGET_DIR -type f \( -name "*.v" -o -name "*.sv" \) ! -name "*copy*.v" ! -path "*/unused/*" | sort >> $OUTPUT_FILE
+find $TARGET_DIR  \( -name "*.v" -o -name "*.sv" \) ! -name "*copy*.v" ! -path "*/unused/*" | sort >> $OUTPUT_FILE
 
 # Add the specific testbench based on the target name unless the compiler is 'verilator'
 if [ "$COMPILER" != "verilator" ]; then

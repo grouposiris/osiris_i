@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Wed Nov  6 22:27:30 2024
+[*] Tue Nov  5 08:25:44 2024
 [*]
 [dumpfile] "/home/lspadersimon/repos/osiris_i/verilog/tb/work/osiris_i.vcd"
-[dumpfile_mtime] "Wed Nov  6 22:11:49 2024"
-[dumpfile_size] 4457226
+[dumpfile_mtime] "Tue Nov  5 08:11:53 2024"
+[dumpfile_size] 19133778
 [savefile] "/home/lspadersimon/repos/osiris_i/verilog/tb/waveform/osiris_i_waveform.gtkw"
-[timestart] 849450
+[timestart] 44523347
 [size] 1870 1016
 [pos] -1 -1
-*-8.000000 44524500 209750 279850 339850 359750 419750 539850 600100 669950 4320950 4450950 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-9.000000 44524500 209750 279850 339850 359750 419750 539850 600100 669950 4320950 4450950 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [markername] Asent Write Command complete
 [markername] Bsent Write Address byte 1:0
 [markername] Csent Write Address bytes 7:6
@@ -353,15 +353,8 @@ osiris_i_tb.dut.inst_mem_cyc_i
 osiris_i_tb.dut.inst_mem_stb_i
 [color] 3
 osiris_i_tb.dut.inst_mem_we_i
-osiris_i_tb.dut.write_sram
-osiris_i_tb.U_INST_MEM.clk0
-@25
-osiris_i_tb.dut.inst_mem_adr_i[8:0]
-@24
-osiris_i_tb.U_INST_MEM.addr0_reg[8:0]
-@28
-osiris_i_tb.U_INST_MEM.csb0_reg
 @22
+osiris_i_tb.dut.inst_mem_adr_i[8:0]
 [color] 2
 osiris_i_tb.dut.inst_mem_dat_i[31:0]
 [color] 2
@@ -387,7 +380,7 @@ osiris_i_tb.dut.data_mem_adr_i[8:0]
 osiris_i_tb.dut.data_mem_dat_i[31:0]
 @22
 osiris_i_tb.U_DATA_MEM.data_reg[31:0]
-@28
+@29
 osiris_i_tb.U_DATA_MEM.funct3[2:0]
 @24
 osiris_i_tb.dut.data_mem_dat_o[31:0]

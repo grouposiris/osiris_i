@@ -21,6 +21,10 @@
 ../../rtl/osiris_i/osiris_i.v
 ../../rtl/osiris_i/pc_target.v
 ../../rtl/osiris_i/register_file.v
+../../rtl/osiris_i/sky130_sram_1kbyte_1rw1r_32x256_8.v
+../../rtl/osiris_i/sky130_sram_1kbyte_1rw1r_8x1024_8.v
+../../rtl/osiris_i/sky130_sram_2kbyte_1rw1r_32x512_8.v
+../../rtl/osiris_i/sram_1rw1r_32_256_8_sky130.v
 ../../rtl/osiris_i/stage_decode.v
 ../../rtl/osiris_i/stage_execute.v
 ../../rtl/osiris_i/stage_fetch.v

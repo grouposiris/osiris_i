@@ -245,8 +245,8 @@ module osiris_i_tb;
         #200;  // Wait for reset to deassert
 
         test_memory(i_select_mem, 32'h00000000, 32'hBEE00000);
-        // i_select_mem = 1;
-        // test_memory(i_select_mem, 32'hF0000007, 32'hBAA00000);
+        i_select_mem = 1;
+        test_memory(i_select_mem, 32'hF0000007, 32'hBAA00000);
         $display("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
         rst_mem_uart = 1;
@@ -957,7 +957,7 @@ module osiris_i_tb;
 
             // Send multiple instructions to Memory
             $display("\n Test 1: Writing Data to Memory recursively");
-            for (it = 0; it < 10; it = it + 1) begin
+            for (it = 0; it < 30; it = it + 1) begin
                 $display("\n Test 1: [%1d] Sending to addr: %h the data: %h", it, test_address + it, expected_data + it);
                 step = step + 1;
                 // test_write_to_memory(test_address + it, expected_data + it);
@@ -975,7 +975,7 @@ module osiris_i_tb;
                 $display(" Test 2: Reading Data from Data Memory via UART...");
             end
             $display(" --------------------------------------------");
-            for (it = 0; it < 10; it = it + 1) begin
+            for (it = 0; it < 30; it = it + 1) begin
                 // test_read_from_memory(test_address + it, read_data);
                 test_read_from_memory(test_address + (it*4), read_data);
                 $display("\nTest 2: [%1d] Read from addr: %h the data: %h", it, test_address + it, read_data);

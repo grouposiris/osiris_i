@@ -54,7 +54,7 @@ compile: gen_filelist
 		iverilog -g2012 -o $(TESTBENCH_DIR)/$(SIM_EXE) -f filelist.txt; \
 	elif [ "$(COMPILER)" = "verilator" ]; then \
 		#verilator --cc -f filelist.txt --exe $(TESTBENCH) --trace --build --top-module $(TOP_MODULE) -Wno-UNOPTFLAT --timing; \
-		verilator --cc -f filelist.txt --exe $(TESTBENCH) --main --trace --build --top-module $(TOP_MODULE) -Wno-UNOPTFLAT --timing; \
+		verilator --cc -f filelist.txt --exe $(TESTBENCH) --main --trace --build --top-module $(DUT) -Wno-UNOPTFLAT --timing; \
 	else \
 		echo "Unsupported compiler: $(COMPILER). Use 'iverilog' or 'verilator'."; \
 		exit 1; \

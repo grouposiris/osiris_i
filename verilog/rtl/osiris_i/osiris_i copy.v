@@ -1,17 +1,13 @@
 module osiris_i #(
     parameter DATA_WIDTH = 32,
     parameter ADDR_WIDTH = 32,
-    parameter INST_MEM_SIZE = 2, // in KB
-    parameter DATA_MEM_SIZE = 2, // in KB
+    parameter INST_MEM_SIZE = 4, // in KB
+    parameter DATA_MEM_SIZE = 4, // in KB
     parameter BAUD_RATE  = 9600,
     parameter CLOCK_FREQ = 50000000,  // 50 MHz
     parameter CMD_READ = 8'h01,  // Command to read from memory and send data via UART
     parameter CMD_WRITE=8'hAA  // Command to write data received via UART to memory (changed value for distinction)
 ) (
-`ifdef USE_POWER_PINS
-    vccd1,  // Positive power supply
-    vssd1,  // Ground
-`endif
     input wire clk,
     input wire rst_core,
     input wire rst_mem_uart,
@@ -30,12 +26,6 @@ module osiris_i #(
     // Calculating the Address Width of the Data Memory
     localparam DATA_MEM_DEPTH = (DATA_MEM_SIZE * 1024) / (DATA_WIDTH / 8);
     localparam DATA_MEM_ADDR_WIDTH = $clog2(DATA_MEM_DEPTH);
-    
-`ifdef USE_POWER_PINS
-    // Power pins (used in physical design)
-    inout vccd1;  // Power supply
-    inout vssd1;  // Ground
-`endif
 
     // ------------------------------------------
     // Internal Signals for UART Wishbone Bridge
@@ -164,58 +154,22 @@ module osiris_i #(
     // ------------------------------------------
     // Instantiate Instruction Memory
     // ------------------------------------------
-    // mem_byte #(
-    // // mem #(
-    //     .DATA_WIDTH(DATA_WIDTH),
-    //     .MEM_SIZE_KB(INST_MEM_SIZE)  // 4KB Instruction Memory
-    // ) U_INST_MEM (
-    //     .clk     (clk),
-    //     .rst     (rst_mem_uart),
-    //     .wb_adr_i(inst_mem_adr_i),  // Address input
-    //     .wb_dat_i(inst_mem_dat_i),  // Data input
-    //     .wb_we_i (inst_mem_we_i),   // Write enable input
-    //     .wb_stb_i(inst_mem_stb_i),  // Strobe input
-    //     .wb_cyc_i(inst_mem_cyc_i),  // Cycle input
-    //     .funct3(3'b010), // always word
-    //     .wb_dat_o(inst_mem_dat_o),  // Data output
-    //     .wb_ack_o(inst_mem_ack_o)   // Acknowledge output
-    // );
-
-
-    wire write_sram;
-    reg write_sram_previous, write_sram_long;
-    wire [31:0] dummy_data;
-    assign write_sram = inst_mem_stb_i & inst_mem_cyc_i & inst_mem_we_i;
-    assign inst_mem_ack_o = 1'b1;
-    always @(posedge clk ) begin
-        write_sram_previous <= write_sram;
-    end
-    assign write_sram_long = ~(write_sram_previous | write_sram);
-
-
-    sky130_sram_2kbyte_1rw1r_32x512_8 #(
+    mem_byte #(
+    // mem #(
         .DATA_WIDTH(DATA_WIDTH),
-        .ADDR_WIDTH(INST_MEM_ADDR_WIDTH)
+        .MEM_SIZE_KB(INST_MEM_SIZE)  // 4KB Instruction Memory
     ) U_INST_MEM (
-    `ifdef USE_POWER_PINS
-        .vccd1(vccd1),  // Positive power supply
-        .vssd1(vssd1),  // Ground
-    `endif
-        // Port 0: Read/Write Port
-        .clk0(clk),  // Clock input for Port 0
-        .csb0(1'b0),  // Chip Select (active low) for Port 0: 1'b0 (always active)
-        .web0(write_sram),  // Write Enable (active low) for Port 0
-        .wmask0(4'b1111),  // [3:0] Write Mask for byte-wise write enable": 4'b111 (always entire word)
-        .addr0(inst_mem_adr_i),  // [9:0] Address input for Port 0
-        .din0(inst_mem_dat_i),  // [31:0] Data input for Port 0
-        .dout0(inst_mem_dat_o),  // [31:0] Data output for Port 0
-        // Port 1: Read-Only Port // *don't using this port
-        .clk1(1'b0),  // Clock input for Port 1 // * unused
-        .csb1(1'b1),  // Chip Select (active low) for Port 1 // * 1'b1 (always inactive)
-        .addr1({INST_MEM_ADDR_WIDTH{1'b0}}),  // Address input for Port 1 // * unused
-        .dout1(dummy_data)  // Data output for Port 1 // * unused
+        .clk     (clk),
+        .rst     (rst_mem_uart),
+        .wb_adr_i(inst_mem_adr_i),  // Address input
+        .wb_dat_i(inst_mem_dat_i),  // Data input
+        .wb_we_i (inst_mem_we_i),   // Write enable input
+        .wb_stb_i(inst_mem_stb_i),  // Strobe input
+        .wb_cyc_i(inst_mem_cyc_i),  // Cycle input
+        .funct3(3'b010), // always word
+        .wb_dat_o(inst_mem_dat_o),  // Data output
+        .wb_ack_o(inst_mem_ack_o)   // Acknowledge output
     );
-
 
     // ------------------------------------------
     // Instantiate Data Memory
