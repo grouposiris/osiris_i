@@ -12,16 +12,16 @@
     "MACRO_PLACEMENT_CFG": "dir::macro.cfg",
     "MAGIC_DEF_LABELS": 0,
     "VERILOG_FILES_BLACKBOX": [
-        "dir::../../verilog/gl/user_proj_example.v"
+        "dir::../../verilog/gl/osiris_i_wrapper.v"
     ],
-    "EXTRA_LEFS": "dir::../../lef/user_proj_example.lef",
-    "EXTRA_GDS_FILES": "dir::../../gds/user_proj_example.gds",
-    "EXTRA_LIBS": "dir::../../lib/user_proj_example.lib",
+    "EXTRA_LEFS": "dir::../../lef/osiris_i_wrapper.lef",
+    "EXTRA_GDS_FILES": "dir::../../gds/osiris_i_wrapper.gds",
+    "EXTRA_LIBS": "dir::../../lib/osiris_i_wrapper.lib",
     "EXTRA_SPEFS": [
-        "user_proj_example", 
-        "dir::../../spef/multicorner/user_proj_example.min.spef", 
-        "dir::../../spef/multicorner/user_proj_example.nom.spef", 
-        "dir::../../spef/multicorner/user_proj_example.max.spef"
+        "osiris_i_wrapper",
+        "dir::../../spef/multicorner/osiris_i_wrapper.min.spef",
+        "dir::../../spef/multicorner/osiris_i_wrapper.nom.spef",
+        "dir::../../spef/multicorner/osiris_i_wrapper.max.spef"
     ],
     "BASE_SDC_FILE": "dir::base_user_project_wrapper.sdc",
     "IO_SYNC": 0,
@@ -46,6 +46,7 @@
     "FP_PDN_VOFFSET": 5,
     "FP_PDN_HOFFSET": 5,
     "MAGIC_ZEROIZE_ORIGIN": 0,
+    "RUN_IRDROP_REPORT": false,
     "FP_SIZING": "absolute",
     "RUN_CVC": 0,
     "UNIT": 2.4,

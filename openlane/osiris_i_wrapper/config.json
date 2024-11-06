@@ -2,19 +2,19 @@
     "DESIGN_NAME": "osiris_i_wrapper",
     "VERILOG_FILES": "dir::../../verilog/rtl/osiris_i_wrapper/*.v",
     "CLOCK_PORT": "wb_clk_i",
-    "CLOCK_NET": ["uart_wbs_bridge.clk","mem.clk","core.clk"],
+    "CLOCK_NET": ["uart_wbs_bridge.clk","mem_byte.clk","core.clk"],
     "CLOCK_PERIOD": 25,
     "RT_MIN_LAYER": "met1",
     "RT_MAX_LAYER": "met4",
     "RT_CLOCK_MAX_LAYER": "met4",
     "FP_PDN_VERTICAL_LAYER": "met4",
-    "FP_PDN_HORIZONTAL_LAYER": "met4",
+    "FP_PDN_HORIZONTAL_LAYER": "met5",
     "FP_PDN_MULTILAYER": true,
-    "FP_PDN_CORE_RING": false,
+    "FP_PDN_CORE_RING": true,
     "FP_PDN_CHECK_NODES": false,
     "RUN_IRDROP_REPORT": true,
     "FP_SIZING": "absolute",
-    "DIE_AREA": "0 0 1200 1200",
+    "DIE_AREA": "0 0 2200 3200",
     "MACRO_PLACEMENT_CFG": "dir::macro_placement.cfg",
     "PL_TARGET_DENSITY": 0.75,
     "LEFT_MARGIN_MULT": 80,
@@ -22,15 +22,15 @@
     "BOTTOM_MARGIN_MULT": 5,
     "EXTRA_LEFS":      ["dir::../../lef/core.lef",
                         "dir::../../lef/uart_wbs_bridge.lef",
-                        "dir::../../lef/mem.lef"
+                        "dir::../../lef/mem_byte.lef"
     ],
     "EXTRA_GDS_FILES": ["dir::../../gds/core.gds",
                         "dir::../../gds/uart_wbs_bridge.gds",
-                        "dir::../..//gds/mem.gds"
+                        "dir::../..//gds/mem_byte.gds"
     ],
     "EXTRA_LIBS":      ["dir::../../lib/core.lib",
                         "dir::../../lib/uart_wbs_bridge.lib",
-                        "dir::../../lib/mem.lib"
+                        "dir::../../lib/mem_byte.lib"
     ],
     "FP_PDN_MACRO_HOOKS": "U_UART_WB_BRIDGE vccd1 vssd1 vccd1 vssd1, U_INST_MEM vccd1 vssd1 vccd1 vssd1, U_DATA_MEM vccd1 vssd1 vccd1 vssd1, U_CORE vccd1 vssd1 vccd1 vssd1",
     "VERILOG_FILES_BLACKBOX": [
