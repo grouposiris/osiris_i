@@ -18,3 +18,4 @@
 *.o
 *.a
 *obj_dir*
+*venv-cocotb*
