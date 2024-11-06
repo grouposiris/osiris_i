@@ -1,6 +1,6 @@
 module mem_byte #(
     parameter DATA_WIDTH  = 32,
-    parameter MEM_SIZE_KB = 2    // Memory size in KB
+    parameter MEM_SIZE_KB = 1    // Memory size in KB
 ) (
     clk,  // Clock
     rst,  // Reset
@@ -16,15 +16,12 @@ module mem_byte #(
 );
 
     // Calculate total memory size in bytes
-    localparam
-        MEM_SIZE_BYTES = MEM_SIZE_KB * 128;  // convert KB to Bytes --> total Bytes = 1000 Bytes
+    localparam        MEM_SIZE_BYTES = MEM_SIZE_KB * 128;  // convert KB to Bytes --> total Bytes = 1000 Bytes
     // localparam MEM_DEPTH = (MEM_SIZE_KB * 1024 * 8) / DATA_WIDTH;
 
     input wire clk;  // Clock
     input wire rst;  // Reset
-    input wire [$clog2(
-MEM_SIZE_BYTES
-)-1:0] wb_adr_i;  // Adjusted address input width // if MEM_SIZE_BYTES = 256, clog2(MEM_SIZE_BYTES) = 8 bits for addressing
+    input wire [$clog2(MEM_SIZE_BYTES)-1:0] wb_adr_i;  // Adjusted address input width // if MEM_SIZE_BYTES = 256, clog2(MEM_SIZE_BYTES) = 8 bits for addressing
     input wire [DATA_WIDTH-1:0] wb_dat_i;  // Wishbone data input
     input wire wb_we_i;  // Wishbone write enable
     input wire wb_stb_i;  // Wishbone strobe

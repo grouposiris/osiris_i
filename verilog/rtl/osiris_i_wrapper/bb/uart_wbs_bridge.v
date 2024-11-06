@@ -1,16 +1,16 @@
 /// sta-blackbox
 module uart_wbs_bridge #(
     parameter DATA_WIDTH = 32,
-    parameter ADDR_WIDTH = 16,
+    parameter ADDR_WIDTH = 32,
     parameter BAUD_RATE = 9600,
-    parameter CLOCK_FREQ = 50000000,  // 50 MHz,
+    parameter CLOCK_FREQ = 40000000,  // 40 MHz,
     parameter CMD_READ = 8'h77,  // Command to read from memory and send data via UART
     parameter CMD_WRITE =
         8'hAA  // Command to write data received via UART to memory (changed value for distinction)
 ) (
 `ifdef USE_POWER_PINS
-    inout vccd1,
-    inout vssd1,
+    inout vccd1,	// User area 1 1.8V supply
+    inout vssd1,	// User area 1 digital ground
 `endif
     input  wire clk,
     input  wire rst,

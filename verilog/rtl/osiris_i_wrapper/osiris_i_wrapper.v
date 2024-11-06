@@ -38,9 +38,9 @@
 module osiris_i_wrapper #(
     parameter BITS = 16,
     parameter DATA_WIDTH = 32,
-    parameter ADDR_WIDTH = 16,
-    parameter INST_MEM_SIZE = 2, // in KB
-    parameter DATA_MEM_SIZE = 2, // in KB
+    parameter ADDR_WIDTH = 32,
+    parameter INST_MEM_SIZE = 1, // in KB
+    parameter DATA_MEM_SIZE = 1, // in KB
     parameter BAUD_RATE  = 9600,
     parameter CLOCK_FREQ = 50000000,  // 50 MHz
     parameter CMD_READ = 8'h01,  // Command to read from memory and send data via UART
@@ -66,7 +66,7 @@ module osiris_i_wrapper #(
 
     // IOs
     input  [BITS-1:0] io_in,
-    output [BITS-1:0] io_out,
+    output [BITS-1:0] io_out
 
     // IRQ
 );
@@ -95,10 +95,10 @@ module osiris_i_wrapper #(
     // Localparam Declarations
     // ------------------------------------------
     // Calculating the Address Width of the Instruction Memory
-    localparam INST_MEM_DEPTH = (INST_MEM_SIZE * 1024) / (DATA_WIDTH / 8);
+    localparam INST_MEM_DEPTH = (INST_MEM_SIZE * 128) / (DATA_WIDTH / 8);
     localparam INST_MEM_ADDR_WIDTH = $clog2(INST_MEM_DEPTH);
     // Calculating the Address Width of the Data Memory
-    localparam DATA_MEM_DEPTH = (DATA_MEM_SIZE * 1024) / (DATA_WIDTH / 8);
+    localparam DATA_MEM_DEPTH = (DATA_MEM_SIZE * 128) / (DATA_WIDTH / 8);
     localparam DATA_MEM_ADDR_WIDTH = $clog2(DATA_MEM_DEPTH);
 
     // ------------------------------------------
@@ -133,6 +133,10 @@ module osiris_i_wrapper #(
         .CMD_READ(CMD_READ),
         .CMD_WRITE(CMD_WRITE)
     ) U_UART_WB_BRIDGE (
+        `ifdef USE_POWER_PINS
+            .vccd1(vccd1),	// User area 1 1.8V supply
+            .vssd1(vssd1),	// User area 1 digital ground
+        `endif
         .clk     (clk),
         .rst     (rst_mem_uart),
         .i_uart_rx (i_uart_rx),        // UART receive signal
@@ -153,11 +157,15 @@ module osiris_i_wrapper #(
     core #(
         .DATA_WIDTH(DATA_WIDTH)
     ) U_CORE (
+        `ifdef USE_POWER_PINS
+            .vccd1(vccd1),	// User area 1 1.8V supply
+            .vssd1(vssd1),	// User area 1 digital ground
+        `endif
         .clk           (clk),
         .rst           (rst_core),
         .i_instr_ID    (core_instr_ID),     // Instruction input to core
         .i_read_data_M (core_read_data_M),  // Data read input to core
-        .o_funct3_MEM(mux_funct3),
+        .o_funct3_MEM(funct3),
         .o_pc_IF       (core_pc_IF),        // Program Counter output from core
         .o_mem_write_M (core_mem_write_M),  // Memory write enable output from core
         .o_data_addr_M (core_data_addr_M),  // Data address output from core
@@ -228,14 +236,10 @@ module osiris_i_wrapper #(
     // ------------------------------------------
     // Instantiate Instruction Memory
     // ------------------------------------------
-    mem_byte #(
-    // mem #(
-        .DATA_WIDTH(DATA_WIDTH),
-        .MEM_SIZE_KB(INST_MEM_SIZE)  // 4KB Instruction Memory
-    ) U_INST_MEM (
+    mem_byte U_INST_MEM (
         .clk     (clk),
         .rst     (rst_mem_uart),
-        .wb_adr_i(inst_mem_adr_i),  // Address input
+        .wb_adr_i({2'b0, inst_mem_adr_i}),  // Address input
         .wb_dat_i(inst_mem_dat_i),  // Data input
         .wb_we_i (inst_mem_we_i),   // Write enable input
         .wb_stb_i(inst_mem_stb_i),  // Strobe input
@@ -251,14 +255,10 @@ module osiris_i_wrapper #(
 
     assign mux_funct3 = (i_select_mem == 1'b1 && uart_wb_cyc_o) ? 3'b010 : funct3; // when UART is selecting, communicate by word (3'b010), when i_select_mem == 0 (connect to core), so core decides with funct3
 
-    mem_byte #(
-    // mem #(
-        .DATA_WIDTH(DATA_WIDTH),
-        .MEM_SIZE_KB(DATA_MEM_SIZE)  // 4KB Data Memory
-    ) U_DATA_MEM (
+    mem_byte U_DATA_MEM (
         .clk     (clk),
         .rst     (rst_mem_uart),
-        .wb_adr_i(data_mem_adr_i),  // Address input
+        .wb_adr_i({2'b0, data_mem_adr_i}),  // Address input
         .wb_dat_i(data_mem_dat_i),  // Data input
         .wb_we_i (data_mem_we_i),   // Write enable input
         .wb_stb_i(data_mem_stb_i),  // Strobe input
