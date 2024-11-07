@@ -244,7 +244,7 @@ module osiris_i_tb;
 
         // test_memory(i_select_mem, 32'h00000000, 32'hBEE00000, 10, 0); // testing inst mem
         // test_memory(1, 32'hF0000007, 32'hBAA00000, 10, 1); // (i_select_mem, first_addr, first_value) testing data mem
-        test_memory(1, 32'hF0000007, 32'h00000000, 30, 1); // (i_select_mem, first_addr, first_value) testing data mem
+        test_memory(1, 32'hF0000000, 32'h00000000, 30, 1); // (i_select_mem, first_addr, first_value) testing data mem
 
         #100;
         step = 0;
@@ -666,9 +666,9 @@ module osiris_i_tb;
             // write_instruction_mem(16,32'h0010a083); // lw x1, 1(x1)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
             // write_instruction_mem(24,32'h0080a103); // lw x2, 8(x1)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
             // write_instruction_mem(32,32'h00802183); // lw x3, 8(x0)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
-            write_instruction_mem(8,32'h0010a183); // lw x3, 1(x1)  // reg[3] = 2
-            write_instruction_mem(16,32'h0040a203); // lw x4, 4(x1)  // reg[4] = 5
-            write_instruction_mem(24,32'h0080a283); // lw x5, 8(x1)  // reg[5] = 9
+            write_instruction_mem(8, 32'h00002183); // lw x3, 0(x0)  // reg[3] = 0
+            write_instruction_mem(16,32'h00022203); // lw x4, 0(x4)  // reg[4] = 4
+            write_instruction_mem(24,32'h00422283); // lw x5, 4(x4)  // reg[5] = 8
 
             // // NOP instruction
             // #(CLK_PERIOD);
