@@ -160,6 +160,7 @@ module osiris_i_tb;
             for (k = 0; k < (DATA_MEM_WORDS*4); k = k +4) begin
                 always @(dut.U_DATA_MEM.mem[k] or dut.U_DATA_MEM.mem[k+1] or dut.U_DATA_MEM.mem[k+2] or dut.U_DATA_MEM.mem[k+3]) begin
                     aux_data = {dut.U_DATA_MEM.mem[k+3], dut.U_DATA_MEM.mem[k+2], dut.U_DATA_MEM.mem[k+1], dut.U_DATA_MEM.mem[k]};
+                    $display("k:%d aux_data: %d", k, aux_data);
                     $display("      Time %0t ps: Data Memory [%0d]= [%b] changed to %d<<<--- =%b =%h\n\n", $time, (k/4), (k/4), aux_data, aux_data,aux_data);
                 end
             end
@@ -241,8 +242,9 @@ module osiris_i_tb;
         $display("Starting osiris_i Testbench...");
         #200;  // Wait for reset to deassert
 
-        // test_memory(i_select_mem, 32'h00000000, 32'hBEE00000, 0); // testing inst mem
-        // test_memory(1, 32'hF0000007, 32'hBAA00000, 0); // (i_select_mem, first_addr, first_value) testing data mem
+        // test_memory(i_select_mem, 32'h00000000, 32'hBEE00000, 10, 0); // testing inst mem
+        // test_memory(1, 32'hF0000007, 32'hBAA00000, 10, 1); // (i_select_mem, first_addr, first_value) testing data mem
+        test_memory(1, 32'hF0000007, 32'h00000000, 30, 1); // (i_select_mem, first_addr, first_value) testing data mem
 
         #100;
         step = 0;
@@ -260,14 +262,23 @@ module osiris_i_tb;
             dut.U_INST_MEM.mem[(i*4)+3] = 8'h00; // Most significant byte
         end
 
+        // for (i = 0; i < DATA_MEM_WORDS; i = i + 1) begin
+        //     // dut.U_DATA_MEM.mem[(i*4)]   = 8'h33; // Least significant byte
+        //     dut.U_DATA_MEM.mem[(i*4)]   = 8'h00 + i; // Least significant byte
+        //     dut.U_DATA_MEM.mem[(i*4)+1] = 8'h00;
+        //     dut.U_DATA_MEM.mem[(i*4)+2] = 8'h00;
+        //     dut.U_DATA_MEM.mem[(i*4)+3] = 8'h00; // Most significant byte
+        // end
+
+
         rst_mem_uart = 1;
         #(CLK_PERIOD);
         rst_mem_uart = 0;
         #(10* CLK_PERIOD);
         step = 1;
         write_on_inst_mem_with_UART_and_compare(0);
-        // #1 test_memory(1, 32'h00000000, 32'hDEADBEEF, 0); // (i_select_mem, first_addr, first_value) testing Data memory
-        #1 test_memory(1, 32'h00000000, 32'h00000000, 0); // (i_select_mem, first_addr, first_value) testing Data memory
+        // #1 test_memory(1, 32'h00000000, 32'hDEADBEEF, 10, 0); // (i_select_mem, first_addr, first_value) testing Data memory
+        // #1 test_memory(1, 32'h00000000, 32'h00000000, 30, 0); // (i_select_mem, first_addr, first_value) testing Data memory
         
         i_select_mem = 0;
         // update_instructions_on_instr_mem();
@@ -296,7 +307,7 @@ module osiris_i_tb;
         #(50* CLK_PERIOD);
         step = 3;
         rst_core = 0; // Activate core
-        #(50 * CLK_PERIOD);  // Wait for core to execute instructions
+        #(100 * CLK_PERIOD);  // Wait for core to execute instructions
 
         step = 4;
         i_start_rx = 1;  // Enable UART reception
@@ -650,7 +661,15 @@ module osiris_i_tb;
             
             // write_instruction_mem(236,32'h0020A123);// sw x2, 4(x1)  // Store word from x2 to memory at address x1 + 4: mem[3] = 2
 
-            write_instruction_mem(12,32'h0030A423); // sw x3, 8(x1)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
+            // write_instruction_mem(12,32'h0030A423); // sw x3, 8(x1)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
+
+            // write_instruction_mem(16,32'h0010a083); // lw x1, 1(x1)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
+            // write_instruction_mem(24,32'h0080a103); // lw x2, 8(x1)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
+            // write_instruction_mem(32,32'h00802183); // lw x3, 8(x0)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
+            write_instruction_mem(8,32'h0010a183); // lw x3, 1(x1)  // reg[3] = 2
+            write_instruction_mem(16,32'h0040a203); // lw x4, 4(x1)  // reg[4] = 5
+            write_instruction_mem(24,32'h0080a283); // lw x5, 8(x1)  // reg[5] = 9
+
             // // NOP instruction
             // #(CLK_PERIOD);
             // for (inst = 3; inst < 50; inst=inst+1) begin
@@ -927,6 +946,7 @@ module osiris_i_tb;
         input logic select_mem,  // Input parameter to select the memory
         input [ADDR_WIDTH-1:0] first_address = 32'hA0000002,
         input [ADDR_WIDTH-1:0] first_data_value = 32'hF0000093,
+        input [10:0] iterations,
         input logic debug
     );
         integer it;
@@ -978,7 +998,7 @@ module osiris_i_tb;
 
             // Send multiple instructions to Memory
             $display("\n Test 1: Writing Data to Memory recursively");
-            for (it = 0; it < 10; it = it + 1) begin
+            for (it = 0; it < iterations; it = it + 1) begin
                 if (debug) begin
                     $display("\n Test 1: [%1d] Sending to addr: %h the data: %h", it, test_address + (it*4), expected_data + it);
                     $display("\n  data: %h", expected_data + it);
@@ -1003,7 +1023,7 @@ module osiris_i_tb;
                 $display(" Test 2: Reading Data from Data Memory via UART...");
             end
             $display(" --------------------------------------------");
-            for (it = 0; it < 10; it = it + 1) begin
+            for (it = 0; it < iterations; it = it + 1) begin
                 // test_read_from_memory(test_address + it, read_data);
                 test_read_from_memory(test_address + (it*4), read_data, debug);
                 if (debug) begin

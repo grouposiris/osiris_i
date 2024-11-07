@@ -155,6 +155,9 @@ module sky130_sram_2kbyte_1rw1r_32x512_8 (
         if (!csb0_reg && web0_reg) begin
             // dout0 <= #(DELAY) mem[addr0_reg];  // Read data with simulated delay
             dout0 <= mem[addr0_reg];  // Read data with simulated delay
+            // $display($time, " SKY130 RAM Reading from Port 1: addr1=%h dout1=%h", addr0_reg,
+            //  mem[addr0_reg]);
+
         end
     end
 

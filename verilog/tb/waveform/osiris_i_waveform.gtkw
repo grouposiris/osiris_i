@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Wed Nov  6 23:59:26 2024
+[*] Thu Nov  7 22:54:53 2024
 [*]
 [dumpfile] "/home/lspadersimon/repos/osiris_i/verilog/tb/work/osiris_i.vcd"
-[dumpfile_mtime] "Wed Nov  6 23:58:47 2024"
-[dumpfile_size] 41559645
+[dumpfile_mtime] "Thu Nov  7 22:53:52 2024"
+[dumpfile_size] 2895317
 [savefile] "/home/lspadersimon/repos/osiris_i/verilog/tb/waveform/osiris_i_waveform.gtkw"
-[timestart] 419183
+[timestart] 7630320
 [size] 1870 1016
 [pos] -1 -1
-*-8.000000 420000 209750 279850 339850 359750 419750 539850 600100 669950 4320950 4450950 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-8.000000 7631005 209750 279850 339850 359750 419750 539850 600100 669950 4320950 4450950 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [markername] Asent Write Command complete
 [markername] Bsent Write Address byte 1:0
 [markername] Csent Write Address bytes 7:6
@@ -354,8 +354,6 @@ osiris_i_tb.dut.inst_mem_cyc_i
 osiris_i_tb.dut.inst_mem_stb_i
 [color] 3
 osiris_i_tb.dut.inst_mem_we_i
-osiris_i_tb.dut.write_sram
-osiris_i_tb.dut.write_sram_long
 osiris_i_tb.U_INST_MEM.web0
 osiris_i_tb.U_INST_MEM.web0_reg
 @24
@@ -369,6 +367,7 @@ osiris_i_tb.U_INST_MEM.addr0_reg[8:0]
 @22
 osiris_i_tb.U_INST_MEM.din0[31:0]
 osiris_i_tb.U_INST_MEM.din0_reg[31:0]
+osiris_i_tb.U_INST_MEM.dout0[31:0]
 @200
 -
 @24
@@ -384,24 +383,18 @@ osiris_i_tb.dut.inst_mem_ack_o
 -
 -------- DATA MEM -------
 @28
-osiris_i_tb.U_DATA_MEM.clk
-osiris_i_tb.U_DATA_MEM.rst
+osiris_i_tb.U_DATA_MEM.clk0
+osiris_i_tb.dut.data_mem_ack_o
 [color] 3
 osiris_i_tb.dut.data_mem_cyc_i
 [color] 3
 osiris_i_tb.dut.data_mem_stb_i
 [color] 3
 osiris_i_tb.dut.data_mem_we_i
-osiris_i_tb.dut.data_mem_ack_o
 @22
 osiris_i_tb.dut.data_mem_adr_i[8:0]
 @24
 osiris_i_tb.dut.data_mem_dat_i[31:0]
-@22
-osiris_i_tb.U_DATA_MEM.data_reg[31:0]
-@28
-osiris_i_tb.U_DATA_MEM.funct3[2:0]
-@24
 osiris_i_tb.dut.data_mem_dat_o[31:0]
 @200
 -
@@ -487,6 +480,7 @@ osiris_i_tb.dut.rst_core
 @22
 osiris_i_tb.dut.U_CORE.i_instr_ID[31:0]
 osiris_i_tb.dut.U_CORE.i_read_data_M[31:0]
+@25
 osiris_i_tb.dut.U_CORE.o_pc_IF[31:0]
 @28
 osiris_i_tb.dut.U_CORE.o_mem_write_M
