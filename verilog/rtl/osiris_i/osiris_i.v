@@ -183,15 +183,9 @@ module osiris_i #(
 
 
     wire write_sram;
-    reg write_sram_previous, write_sram_long;
     wire [31:0] dummy_data;
     assign write_sram = ~(inst_mem_stb_i & inst_mem_cyc_i & inst_mem_we_i);
     assign inst_mem_ack_o = 1'b1;
-    always @(posedge clk ) begin
-        write_sram_previous <= write_sram;
-    end
-    assign write_sram_long = ~(write_sram_previous | write_sram);
-
 
     sky130_sram_2kbyte_1rw1r_32x512_8 #(
         .DATA_WIDTH(DATA_WIDTH),
