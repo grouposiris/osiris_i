@@ -92,15 +92,15 @@ module sky130_sram_2kbyte_1rw1r_32x512_8 (
     // ------------------------------
     // Capture the inputs on the positive edge of clk0
     always @(posedge clk0) begin
-        csb0_reg <= csb0;  // Register Chip Select
-        web0_reg <= web0;  // Register Write Enable
+        csb0_reg   <= csb0;  // Register Chip Select
+        web0_reg   <= web0;  // Register Write Enable
         wmask0_reg <= wmask0;  // Register Write Mask
-        addr0_reg <= addr0;  // Register Address
-        din0_reg <= din0;  // Register Data Input
+        addr0_reg  <= addr0;  // Register Address
+        din0_reg   <= din0;  // Register Data Input
 
         // After T_HOLD time units, set dout0 to unknown if csb0 is inactive
         // #(T_HOLD)
-        dout0 <= (csb0_reg) ? {DATA_WIDTH{1'bx}} : dout0;
+        // dout0 <= (csb0_reg) ? {DATA_WIDTH{1'bx}} : dout0;
 
         // Optional verbosity for simulation
         if (!csb0_reg && web0_reg && VERBOSE)
@@ -123,8 +123,8 @@ module sky130_sram_2kbyte_1rw1r_32x512_8 (
         csb1_reg  <= csb1;  // Register Chip Select
         addr1_reg <= addr1;  // Register Address
 
-        // After T_HOLD time units, set dout1 to unknown if csb1 is inactive
-        #(T_HOLD) dout1 <= (csb1_reg) ? {DATA_WIDTH{1'bx}} : dout1;
+        // // After T_HOLD time units, set dout1 to unknown if csb1 is inactive
+        // #(T_HOLD) dout1 <= (csb1_reg) ? {DATA_WIDTH{1'bx}} : dout1;
 
         // Optional verbosity for simulation
         if (!csb1_reg && VERBOSE)
@@ -165,7 +165,8 @@ module sky130_sram_2kbyte_1rw1r_32x512_8 (
     always @(negedge clk1) begin
         // Check if Port 1 is active
         if (!csb1_reg) begin
-            dout1 <= #(DELAY) mem[addr1_reg];  // Read data with simulated delay
+            // dout1 <= #(DELAY) mem[addr1_reg];  // Read data with simulated delay
+            dout1 <= mem[addr1_reg];  // Read data with simulated delay
         end
     end
 
