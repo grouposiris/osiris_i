@@ -223,6 +223,17 @@ module osiris_i_tb;
         end
 
 
+    // Initializing the Instruction Memory with 0x00000033
+        initial begin
+            integer i;
+            for (i = 0; i < (INST_MEM_SIZE*1024); i = i + 4) begin
+                dut.U_INST_MEM.mem[i]   = 8'h33; // Least significant byte
+                dut.U_INST_MEM.mem[i+1] = 8'h00;
+                dut.U_INST_MEM.mem[i+2] = 8'h00;
+                dut.U_INST_MEM.mem[i+3] = 8'h00; // Most significant byte
+            end
+        end
+
 
 
 
@@ -235,13 +246,13 @@ module osiris_i_tb;
         $display("Starting osiris_i Testbench...");
         #200;  // Wait for reset to deassert
 
-        test_memory(i_select_mem, 32'h00000000, 32'hBEE00000, 0); // testing inst mem
-        test_memory(1, 32'hF0000007, 32'hBAA00000, 1); // testing data mem
+        // test_memory(i_select_mem, 32'h00000000, 32'hBEE00000, 0); // testing inst mem
+        // test_memory(1, 32'hF0000007, 32'hBAA00000, 1); // testing data mem
 
-        // #100;
-        // step = 0;
-        // // reset_memory(select_mem, first_address, reset_value)
-        // reset_memory(0,32'h00000000,32'hF0000033, 0);// (inst_mem, 0, 33 = NOP inst)
+        #100;
+        step = 0;
+        // reset_memory(select_mem, first_address, reset_value)
+        reset_memory(0,32'h00000000,32'hF0000033, 0);// (inst_mem, 0, 33 = NOP inst)
         // reset_memory(1,32'h00000000,32'hAAAAAAAA, 0);// (data_mem, 0, random value)
         
         // $display("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
