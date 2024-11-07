@@ -157,7 +157,7 @@ module osiris_i_tb;
 
     // Monitor data memory
         generate
-            for (k = 0; k < DATA_MEM_WORDS; k = k +4) begin
+            for (k = 0; k < (DATA_MEM_WORDS*4); k = k +4) begin
                 always @(dut.U_DATA_MEM.mem[k] or dut.U_DATA_MEM.mem[k+1] or dut.U_DATA_MEM.mem[k+2] or dut.U_DATA_MEM.mem[k+3]) begin
                     aux_data = {dut.U_DATA_MEM.mem[k+3], dut.U_DATA_MEM.mem[k+2], dut.U_DATA_MEM.mem[k+1], dut.U_DATA_MEM.mem[k]};
                     $display("      Time %0t ps: Data Memory [%0d]= [%b] changed to %d<<<--- =%b =%h\n\n", $time, (k/4), (k/4), aux_data, aux_data,aux_data);
@@ -170,9 +170,9 @@ module osiris_i_tb;
             for (k = 0; k < INST_MEM_WORDS; k = k +1) begin
                 always @(dut.U_INST_MEM.mem[k*4] or dut.U_INST_MEM.mem[(k*4)+1] or dut.U_INST_MEM.mem[(k*4)+2] or dut.U_INST_MEM.mem[(k*4)+3]) begin
                     aux_inst = {dut.U_INST_MEM.mem[(k*4)+3], dut.U_INST_MEM.mem[(k*4)+2], dut.U_INST_MEM.mem[(k*4)+1], dut.U_INST_MEM.mem[k*4]};
-                    $display("aux_inst: %h", aux_inst);
+                    // $display("aux_inst: %h", aux_inst);
                     // Convert aux_inst to a hexadecimal string format
-                    $display("          ->Time %0t ps: Instruction Memory [%0d]= [%b] changed to %h<<<--- = %s\n\n", $time, ((k*4)/4), ((k*4)/4), aux_inst, aux_inst, decode_instruction(aux_inst));
+                    $display("          ->Time %0t ps: Instruction Memory [%0d]= [%b] changed to %h<<<--- = %s\n\n", $time, ((k*4)/4), ((k*4)/4), aux_inst, decode_instruction(aux_inst));
                     
                 end
             end
@@ -223,22 +223,17 @@ module osiris_i_tb;
         end
 
 
-    // Initializing the Instruction Memory with 0x00000033
-        initial begin
-            integer i;
-            for (i = 0; i < (INST_MEM_SIZE*1024); i = i + 4) begin
-                dut.U_INST_MEM.mem[i]   = 8'h33; // Least significant byte
-                dut.U_INST_MEM.mem[i+1] = 8'h00;
-                dut.U_INST_MEM.mem[i+2] = 8'h00;
-                dut.U_INST_MEM.mem[i+3] = 8'h00; // Most significant byte
-            end
-        end
+    // // Initializing the Instruction Memory with 0x00000033
+    //     initial begin
+    //     end
 
 
 
 
     // Main Test Sequence
     initial begin
+        integer i;
+
         test_passed = 1;
         rst_core = 1;
         step = 0;
@@ -247,94 +242,102 @@ module osiris_i_tb;
         #200;  // Wait for reset to deassert
 
         // test_memory(i_select_mem, 32'h00000000, 32'hBEE00000, 0); // testing inst mem
-        // test_memory(1, 32'hF0000007, 32'hBAA00000, 1); // testing data mem
+        // test_memory(1, 32'hF0000007, 32'hBAA00000, 0); // (i_select_mem, first_addr, first_value) testing data mem
 
         #100;
         step = 0;
         // reset_memory(select_mem, first_address, reset_value)
-        reset_memory(0,32'h00000000,32'hF0000033, 0);// (inst_mem, 0, 33 = NOP inst)
+        // reset_memory(0,32'h00000000,32'hF0000033, 0);// (inst_mem, 0, 33 = NOP inst)
         // reset_memory(1,32'h00000000,32'hAAAAAAAA, 0);// (data_mem, 0, random value)
         
-        // $display("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        $display("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
-        // rst_mem_uart = 1;
-        // #(CLK_PERIOD);
-        // rst_mem_uart = 0;
-        // #(10* CLK_PERIOD);
-        // step = 1;
-        // write_on_inst_mem_with_UART_and_compare(0);
-        // // i_select_mem = 1;  // Select Data Memory
-        // // #1 test_memory(i_select_mem, 32'h00000000, 32'hDEADBEEF, 0);
+        for (i = 0; i < INST_MEM_WORDS; i = i + 1) begin
+            dut.U_INST_MEM.mem[(i*4)]   = 8'h33; // Least significant byte
+            // dut.U_INST_MEM.mem[(i*4)]   = 8'h00 + (i )*4; // Least significant byte
+            dut.U_INST_MEM.mem[(i*4)+1] = 8'h00;
+            dut.U_INST_MEM.mem[(i*4)+2] = 8'h00;
+            dut.U_INST_MEM.mem[(i*4)+3] = 8'h00; // Most significant byte
+        end
+
+        rst_mem_uart = 1;
+        #(CLK_PERIOD);
+        rst_mem_uart = 0;
+        #(10* CLK_PERIOD);
+        step = 1;
+        write_on_inst_mem_with_UART_and_compare(0);
+        // #1 test_memory(1, 32'h00000000, 32'hDEADBEEF, 0); // (i_select_mem, first_addr, first_value) testing Data memory
+        #1 test_memory(1, 32'h00000000, 32'h00000000, 0); // (i_select_mem, first_addr, first_value) testing Data memory
         
-        // i_select_mem = 0;
-        // // update_instructions_on_instr_mem();
-        // $display("############################################################################");
-        // #(WAIT_BETWEEN_STEPS);
-        // $display("\n\n --------------------------------------------");
-        // $display(" Test 5: Run Program on Core and Verify Result in Data Memory ");
-        // $display(" --------------------------------------------");
-        // step = 2;
+        i_select_mem = 0;
+        // update_instructions_on_instr_mem();
+        $display("############################################################################");
+        #(WAIT_BETWEEN_STEPS);
+        $display("\n\n --------------------------------------------");
+        $display(" Test 5: Run Program on Core and Verify Result in Data Memory ");
+        $display(" --------------------------------------------");
+        step = 2;
 
 
-        // // OK todo: separate reset signal to memories
-        // // todo: core clock-gating when UART accesses memories
-        // // todo: add PDK memories
+        // OK todo: separate reset signal to memories
+        // todo: core clock-gating when UART accesses memories
+        // todo: add PDK memories
         
-        // // todo: check if addressing would be by bytes or not
+        // todo: check if addressing would be by bytes or not
 
-        // // todo: confimacao da UART em que estado estah 
-        // //      jgoar bits estado para fora ou bit
-        // // todo: x- confirmacao da memoria que foi escrito
+        // todo: confimacao da UART em que estado estah 
+        //      jgoar bits estado para fora ou bit
+        // todo: x- confirmacao da memoria que foi escrito
 
 
-        // // Release Core Reset and Start Execution
-        // #(WAIT_BETWEEN_STEPS);
-        // i_start_rx = 0;  // Disable UART reception
-        // #(50* CLK_PERIOD);
-        // step = 3;
-        // rst_core = 0; // Activate core
-        // #(5000 * CLK_PERIOD);  // Wait for core to execute instructions
+        // Release Core Reset and Start Execution
+        #(WAIT_BETWEEN_STEPS);
+        i_start_rx = 0;  // Disable UART reception
+        #(50* CLK_PERIOD);
+        step = 3;
+        rst_core = 0; // Activate core
+        #(50 * CLK_PERIOD);  // Wait for core to execute instructions
 
-        // step = 4;
-        // i_start_rx = 1;  // Enable UART reception
-        // rst_core = 1; // disable core
-        // #(10* CLK_PERIOD);
+        step = 4;
+        i_start_rx = 1;  // Enable UART reception
+        rst_core = 1; // disable core
+        #(10* CLK_PERIOD);
 
-        // // Reading Expected Results from File
-        // expected_result_count = 0;
-        // // $display("Reading expected results from store_expected.txt...");
-        // // read_expected_results_from_file("../src/store_expected.txt");
-        // // $display("Reading expected results from all_expected_results.txt...");
-        // // read_expected_results_from_file("../src/all_expected_results.txt");
+        // Reading Expected Results from File
+        expected_result_count = 0;
+        // $display("Reading expected results from store_expected.txt...");
+        // read_expected_results_from_file("../src/store_expected.txt");
+        // $display("Reading expected results from all_expected_results.txt...");
+        // read_expected_results_from_file("../src/all_expected_results.txt");
 
-        // // Open File to Write Outputs
-        // output_file = $fopen("../src/risc_outputs.txt", "w");
-        // if (output_file == 0) begin
-        //     $display("Error: Cannot open risc_outputs.txt for writing");
-        //     $finish;
+        // Open File to Write Outputs
+        output_file = $fopen("../src/risc_outputs.txt", "w");
+        if (output_file == 0) begin
+            $display("Error: Cannot open risc_outputs.txt for writing");
+            $finish;
+        end
+
+        $display("\n\n-------------------------------------------------------------");
+        // Verify Results and Write Outputs to File
+        // $display(" Test 5: Verifying results and writing outputs to risc_outputs.txt...");
+        // i_select_mem = 1;  // Select Data Memory
+        // for (it = 0; it < expected_result_count; it = it + 1) begin
+        //     test_read_from_memory(expected_addresses[it], read_data);
+        //     // Write output to file
+        //     // $fwrite(output_file, "@%08X %08X\n", expected_addresses[it], read_data);
+
+        //     if (read_data !== expected_data_array[it]) begin
+        //         $display("ERROR: Data mismatch at address 0x%08X! Expected 0x%08X, Got 0x%08X \n",
+        //                  expected_addresses[it], expected_data_array[it], read_data);
+        //         test_passed = 0;
+        //     end else begin
+        //         $display("OK: Data at address 0x%08X verified: 0x%08X \n", expected_addresses[it],
+        //                  read_data);
+        //     end
         // end
 
-        // $display("\n\n-------------------------------------------------------------");
-        // // Verify Results and Write Outputs to File
-        // // $display(" Test 5: Verifying results and writing outputs to risc_outputs.txt...");
-        // // i_select_mem = 1;  // Select Data Memory
-        // // for (it = 0; it < expected_result_count; it = it + 1) begin
-        // //     test_read_from_memory(expected_addresses[it], read_data);
-        // //     // Write output to file
-        // //     // $fwrite(output_file, "@%08X %08X\n", expected_addresses[it], read_data);
-
-        // //     if (read_data !== expected_data_array[it]) begin
-        // //         $display("ERROR: Data mismatch at address 0x%08X! Expected 0x%08X, Got 0x%08X \n",
-        // //                  expected_addresses[it], expected_data_array[it], read_data);
-        // //         test_passed = 0;
-        // //     end else begin
-        // //         $display("OK: Data at address 0x%08X verified: 0x%08X \n", expected_addresses[it],
-        // //                  read_data);
-        // //     end
-        // // end
-
-        // // Close the output file
-        // $fclose(output_file);
+        // Close the output file
+        $fclose(output_file);
         // #100000 
 
         // Final Test Result
@@ -347,8 +350,7 @@ module osiris_i_tb;
         $finish;
     end
 
-    task write_on_inst_mem_with_UART_and_compare(input logic debug);
-        
+    task write_on_inst_mem_with_UART_and_compare(input logic debug);   
     begin
         // Reading Instructions from File
         $display("Reading instructions from .txt...");
@@ -543,7 +545,7 @@ module osiris_i_tb;
             // dut.U_INST_MEM.mem[100] = 32'h00629233;  // sll x4, x5, x6  // x4 = x5 << x6 = 5 << 6 = 320
             // #(CLK_PERIOD) $display("Sending sll x7, x8, x9");
             // dut.U_INST_MEM.mem[104] = 32'h009413B3;  // sll x7, x8, x9  // x7 = x8 << x9 = 8 << 9 = 4096
-        //    // # slt
+            //    // # slt
             // // #(CLK_PERIOD) $display("Sending slt x1, x2, x3"); // * since x1 is already 1 the tb won't detect any change
             // // dut.U_INST_MEM.mem[108] = 32'h003120B3;  // slt x1, x2, x3  // x1 = (x2 < x3) ? 1 : 0 = (2 < 3) ? 1 = 1
             // #(CLK_PERIOD) $display("Sending slt x4, x5, x6");
@@ -644,15 +646,11 @@ module osiris_i_tb;
             // end
 
             // # sw
-            x = 232;
-            #(CLK_PERIOD) $display("Sending sw x1, 0(x1)"); // * since mem[1] is already 1 the tb won't detect any change
-            {dut.U_INST_MEM.mem[x+3],dut.U_INST_MEM.mem[x+2],dut.U_INST_MEM.mem[x+1],dut.U_INST_MEM.mem[x]}= 32'h0010A023;  // sw x1, 0(x1)  // Store word from x1 to memory at address x1 + 0: mem[1] = 1
-            x = 236;
-            #(CLK_PERIOD) $display("Sending sw x2, 2(x1)");
-            {dut.U_INST_MEM.mem[x+3],dut.U_INST_MEM.mem[x+2],dut.U_INST_MEM.mem[x+1],dut.U_INST_MEM.mem[x]} = 32'h0020A123;  // sw x2, 4(x1)  // Store word from x2 to memory at address x1 + 4: mem[3] = 2
-            x = 240;
-            #(CLK_PERIOD) $display("Sending sw x3, 8(x1)");
-            {dut.U_INST_MEM.mem[x+3],dut.U_INST_MEM.mem[x+2],dut.U_INST_MEM.mem[x+1],dut.U_INST_MEM.mem[x]}= 32'h0030A423;  // sw x3, 8(x1)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
+            // write_instruction_mem(4,32'h0010A023); // sw x1, 0(x1)  // Store word from x1 to memory at address x1 + 0: mem[1] = 1
+            
+            // write_instruction_mem(236,32'h0020A123);// sw x2, 4(x1)  // Store word from x2 to memory at address x1 + 4: mem[3] = 2
+
+            write_instruction_mem(12,32'h0030A423); // sw x3, 8(x1)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
             // // NOP instruction
             // #(CLK_PERIOD);
             // for (inst = 3; inst < 50; inst=inst+1) begin
@@ -757,6 +755,14 @@ module osiris_i_tb;
         end
     endtask //automatic
 
+    task write_instruction_mem(input [INST_MEM_ADDR_BITS-1:0] word_addr, input [DATA_WIDTH-1:0]hex_value);
+        begin
+            // word_addr = word_addr*4;
+            #(CLK_PERIOD) $display("Sending %s", decode_instruction(hex_value));
+            {dut.U_INST_MEM.mem[word_addr+3],dut.U_INST_MEM.mem[word_addr+2],dut.U_INST_MEM.mem[word_addr+1],dut.U_INST_MEM.mem[word_addr]}= hex_value; 
+
+        end
+    endtask
 
     // Task to read instructions from a file specified by 'filename'
     task read_instructions_from_file(input string filename);
@@ -975,6 +981,7 @@ module osiris_i_tb;
             for (it = 0; it < 10; it = it + 1) begin
                 if (debug) begin
                     $display("\n Test 1: [%1d] Sending to addr: %h the data: %h", it, test_address + (it*4), expected_data + it);
+                    $display("\n  data: %h", expected_data + it);
                 end
                     
                 step = step + 1;
