@@ -245,8 +245,8 @@ module osiris_i_tb;
         #200;  // Wait for reset to deassert
 
         test_memory(i_select_mem, 32'h00000000, 32'hBEE00000);
-        // i_select_mem = 1;
-        // test_memory(i_select_mem, 32'hF0000007, 32'hBAA00000);
+        i_select_mem = 1;
+        test_memory(i_select_mem, 32'hF0000007, 32'hBAA00000);
         $display("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
         rst_mem_uart = 1;
@@ -353,15 +353,17 @@ module osiris_i_tb;
 
         #(WAIT_BETWEEN_STEPS) step = 1;
         i_select_mem = 0;  // Select Instruction Memory
-        $display("\n\n----------------- Loading instructions into Instruction Memory... ----------------------------");
+        $display("\n\n----------------- Test 3: Loading instructions into Instruction Memory... ----------------------------");
         $display("i_select_mem: %b",i_select_mem) ;
         // Loading Instructions into Instruction Memory
         for (it = 0; it < num_instructions; it = it + 1) begin
-            $display("\n Test 5: [%1d] Sending to addr: %h the data: %h = %s", it, instruction_addresses[it]*4, instruction_mem[it], decode_instruction(instruction_mem[it]));
+            $display("\n Test 3: [%1d] Sending to addr: %h the data: %h = %s", it, instruction_addresses[it]*4, instruction_mem[it], decode_instruction(instruction_mem[it]));
             step = step + 1;
             // test_write_to_memory(instruction_addresses[it], instruction_mem[it]);
             test_write_to_memory(instruction_addresses[it]*4, instruction_mem[it]);
         end
+        $display("num_instructions: %d",num_instructions) ;
+
 
 
         #(5 * WAIT_BETWEEN_STEPS);
@@ -369,15 +371,15 @@ module osiris_i_tb;
 
         $display("\n\n --------------------------------------------");
         if (i_select_mem == 0) begin
-            $display(" Test 5: Reading Data from Instruction Memory via UART...");
+            $display(" Test 4: Reading Data from Instruction Memory via UART...");
         end else begin
-            $display(" Test 5: Reading Data from Data Memory via UART...");
+            $display(" Test 4: Reading Data from Data Memory via UART...");
         end
         $display(" --------------------------------------------");
         for (it = 0; it < num_instructions; it = it + 1) begin
             // test_read_from_memory(instruction_addresses[it], read_data);
             test_read_from_memory(instruction_addresses[it]*4, read_data);
-            $display("\nTest 5: [%1d] Read from addr: %h the data: %h", it, instruction_addresses[it]*4, read_data);
+            $display("\nTest 4: [%1d] Read from addr: %h the data: %h", it, instruction_addresses[it]*4, read_data);
             // compare_memory_data(instruction_addresses[it], read_data); // Compare with expected data
             compare_memory_data(instruction_addresses[it]*4, read_data); // Compare with expected data
         end

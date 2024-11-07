@@ -182,9 +182,9 @@ module osiris_i #(
     // );
 
 
-    wire write_sram;
+    wire write_sram_inst_mem;
     wire [31:0] dummy_data;
-    assign write_sram = ~(inst_mem_stb_i & inst_mem_cyc_i & inst_mem_we_i);
+    assign write_sram_inst_mem = ~(inst_mem_stb_i & inst_mem_cyc_i & inst_mem_we_i);
     assign inst_mem_ack_o = 1'b1;
 
     sky130_sram_2kbyte_1rw1r_32x512_8 #(
@@ -198,7 +198,7 @@ module osiris_i #(
         // Port 0: Read/Write Port
         .clk0(clk),  // Clock input for Port 0
         .csb0(1'b0),  // Chip Select (active low) for Port 0: 1'b0 (always active)
-        .web0(write_sram),  // Write Enable (active low) for Port 0
+        .web0(write_sram_inst_mem),  // Write Enable (active low) for Port 0
         .wmask0(4'b1111),  // [3:0] Write Mask for byte-wise write enable": 4'b111 (always entire word)
         .addr0(inst_mem_adr_i),  // [9:0] Address input for Port 0
         .din0(inst_mem_dat_i),  // [31:0] Data input for Port 0
@@ -217,21 +217,49 @@ module osiris_i #(
     
     assign mux_funct3 = (i_select_mem == 1'b1 && uart_wb_cyc_o) ? 3'b010 : funct3; // when UART is selecting, communicate by word (3'b010), when i_select_mem == 0 (connect to core), so core decides with funct3
 
-    mem_byte #(
-    // mem #(
+    // mem_byte #(
+    // // mem #(
+    //     .DATA_WIDTH(DATA_WIDTH),
+    //     .MEM_SIZE_KB(DATA_MEM_SIZE)  // 4KB Data Memory
+    // ) U_DATA_MEM (
+    //     .clk     (clk),
+    //     .rst     (rst_mem_uart),
+    //     .wb_adr_i(data_mem_adr_i),  // Address input
+    //     .wb_dat_i(data_mem_dat_i),  // Data input
+    //     .wb_we_i (data_mem_we_i),   // Write enable input
+    //     .wb_stb_i(data_mem_stb_i),  // Strobe input
+    //     .wb_cyc_i(data_mem_cyc_i),  // Cycle 
+    //     .funct3(mux_funct3),
+    //     .wb_dat_o(data_mem_dat_o),  // Data output
+    //     .wb_ack_o(data_mem_ack_o)   // Acknowledge output
+    // );
+
+    wire write_sram_data_mem;
+    wire [31:0] dummy_data2;
+    assign write_sram_data_mem = ~(data_mem_stb_i & data_mem_cyc_i & data_mem_we_i);
+    assign data_mem_ack_o = 1'b1;
+
+    sky130_sram_2kbyte_1rw1r_32x512_8 #(
         .DATA_WIDTH(DATA_WIDTH),
-        .MEM_SIZE_KB(DATA_MEM_SIZE)  // 4KB Data Memory
+        .ADDR_WIDTH(DATA_MEM_ADDR_WIDTH)
     ) U_DATA_MEM (
-        .clk     (clk),
-        .rst     (rst_mem_uart),
-        .wb_adr_i(data_mem_adr_i),  // Address input
-        .wb_dat_i(data_mem_dat_i),  // Data input
-        .wb_we_i (data_mem_we_i),   // Write enable input
-        .wb_stb_i(data_mem_stb_i),  // Strobe input
-        .wb_cyc_i(data_mem_cyc_i),  // Cycle 
-        .funct3(mux_funct3),
-        .wb_dat_o(data_mem_dat_o),  // Data output
-        .wb_ack_o(data_mem_ack_o)   // Acknowledge output
+    `ifdef USE_POWER_PINS
+        .vccd1(vccd1),  // Positive power supply
+        .vssd1(vssd1),  // Ground
+    `endif
+        // Port 0: Read/Write Port
+        .clk0(clk),  // Clock input for Port 0
+        .csb0(1'b0),  // Chip Select (active low) for Port 0: 1'b0 (always active)
+        .web0(write_sram_data_mem),  // Write Enable (active low) for Port 0
+        .wmask0(4'b1111),  // [3:0] Write Mask for byte-wise write enable": 4'b111 (always entire word)
+        .addr0(data_mem_adr_i),  // [9:0] Address input for Port 0
+        .din0(data_mem_dat_i),  // [31:0] Data input for Port 0
+        .dout0(data_mem_dat_o),  // [31:0] Data output for Port 0
+        // Port 1: Read-Only Port // *don't using this port
+        .clk1(1'b0),  // Clock input for Port 1 // * unused
+        .csb1(1'b1),  // Chip Select (active low) for Port 1 // * 1'b1 (always inactive)
+        .addr1({DATA_MEM_ADDR_WIDTH{1'b0}}),  // Address input for Port 1 // * unused
+        .dout1(dummy_data2)  // Data output for Port 1 // * unused
     );
 
     // ------------------------------------------
