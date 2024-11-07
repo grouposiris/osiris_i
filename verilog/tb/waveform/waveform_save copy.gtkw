@@ -1,0 +1,161 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Tue Oct 15 22:44:19 2024
+[*]
+[dumpfile] "/home/lspadersimon/repos/osiris_i/verilog/tb/uart_wbs_bridge.vcd"
+[dumpfile_mtime] "Tue Oct 15 22:43:32 2024"
+[dumpfile_size] 177454
+[savefile] "/home/lspadersimon/repos/osiris_i/verilog/tb/waveform_save.gtkw"
+[timestart] 310500
+[size] 1870 1016
+[pos] -1 -1
+*-16.000000 630850 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_uart_wbs_bridge.
+[treeopen] tb_uart_wbs_bridge.uut.
+[treeopen] tb_uart_wbs_bridge.uut.uart_rx_inst.
+[treeopen] tb_uart_wbs_bridge.uut.uart_tx_inst.
+[sst_width] 233
+[signals_width] 276
+[sst_expanded] 1
+[sst_vpaned_height] 289
+@22
+tb_uart_wbs_bridge.uut.addr_reg[15:0]
+tb_uart_wbs_bridge.uut.byte_count[3:0]
+@28
+tb_uart_wbs_bridge.uut.clk
+@22
+tb_uart_wbs_bridge.uut.cmd_reg[7:0]
+@28
+tb_uart_wbs_bridge.uut.rst
+tb_uart_wbs_bridge.uut.start_rx
+tb_uart_wbs_bridge.uut.state[2:0]
+tb_uart_wbs_bridge.uut.uart_rx
+@c00022
+[color] 3
+tb_uart_wbs_bridge.uut.uart_rx_data[7:0]
+@28
+(0)tb_uart_wbs_bridge.uut.uart_rx_data[7:0]
+(1)tb_uart_wbs_bridge.uut.uart_rx_data[7:0]
+(2)tb_uart_wbs_bridge.uut.uart_rx_data[7:0]
+(3)tb_uart_wbs_bridge.uut.uart_rx_data[7:0]
+(4)tb_uart_wbs_bridge.uut.uart_rx_data[7:0]
+(5)tb_uart_wbs_bridge.uut.uart_rx_data[7:0]
+(6)tb_uart_wbs_bridge.uut.uart_rx_data[7:0]
+(7)tb_uart_wbs_bridge.uut.uart_rx_data[7:0]
+@1401200
+-group_end
+@22
+tb_uart_wbs_bridge.uut.uart_tx_data[7:0]
+tb_uart_wbs_bridge.uut.byte_count[3:0]
+@28
+tb_uart_wbs_bridge.uut.clk
+@22
+tb_uart_wbs_bridge.uut.cmd_reg[7:0]
+@28
+tb_uart_wbs_bridge.uut.rst
+tb_uart_wbs_bridge.uut.start_rx
+@c00024
+[color] 2
++{tb_uart_wbs_bridge.uut.state[2:0]} tb_uart_wbs_bridge.uut.state[2:0]
+@28
+[color] 2
+(0)tb_uart_wbs_bridge.uut.state[2:0]
+[color] 2
+(1)tb_uart_wbs_bridge.uut.state[2:0]
+[color] 2
+(2)tb_uart_wbs_bridge.uut.state[2:0]
+@1401200
+-group_end
+@28
+tb_uart_wbs_bridge.uut.uart_rx_inst.clk
+@22
+[color] 5
+tb_uart_wbs_bridge.uart_send_byte.data[7:0]
+@28
+tb_uart_wbs_bridge.uut.uart_rx
+tb_uart_wbs_bridge.uut.uart_rx_inst.rx
+tb_uart_wbs_bridge.uut.uart_rx_inst.rx_sync_1
+tb_uart_wbs_bridge.uut.uart_rx_inst.rx_sync_2
+[color] 5
+tb_uart_wbs_bridge.uut.uart_rx_inst.receiving
+@22
+[color] 3
+tb_uart_wbs_bridge.uut.uart_rx_inst.bit_index[3:0]
+tb_uart_wbs_bridge.uut.uart_rx_inst.shift_reg[7:0]
+@28
+[color] 1
+tb_uart_wbs_bridge.uut.uart_rx_valid
+@22
+[color] 2
+tb_uart_wbs_bridge.uut.uart_rx_data[7:0]
+[color] 2
+tb_uart_wbs_bridge.uut.addr_reg[15:0]
+[color] 2
+tb_uart_wbs_bridge.uut.data_reg[31:0]
+@28
+tb_uart_wbs_bridge.uut.uart_tx_ready
+tb_uart_wbs_bridge.uut.uart_tx_valid
+@22
+tb_uart_wbs_bridge.uut.wb_adr_o[15:0]
+tb_uart_wbs_bridge.uut.wb_dat_i[31:0]
+tb_uart_wbs_bridge.uut.wb_dat_o[31:0]
+@28
+[color] 1
+tb_uart_wbs_bridge.uut.wb_ack_i
+tb_uart_wbs_bridge.uut.wb_cyc_o
+tb_uart_wbs_bridge.uut.wb_stb_o
+tb_uart_wbs_bridge.uut.wb_we_o
+@23
+[color] 7
+tb_uart_wbs_bridge.uut.uart_tx_data[7:0]
+@28
+[color] 7
+tb_uart_wbs_bridge.uut.uart_tx
+[color] 7
+tb_uart_wbs_bridge.uut.uart_tx
+@420
+[color] 7
+tb_uart_wbs_bridge.uart_send_byte.bit_idx
+@22
+tb_uart_wbs_bridge.uut.uart_rx_inst.clock_count[15:0]
+tb_uart_wbs_bridge.uut.uart_rx_inst.data_out[7:0]
+@28
+tb_uart_wbs_bridge.uut.uart_rx_inst.rst
+tb_uart_wbs_bridge.uut.uart_rx_inst.start_rx
+tb_uart_wbs_bridge.uut.uart_rx_valid
+@22
+[color] 3
+tb_uart_wbs_bridge.test_read_from_memory.address[15:0]
+[color] 3
+tb_uart_wbs_bridge.test_read_from_memory.received_data[31:0]
+@420
+[color] 3
+tb_uart_wbs_bridge.uart_capture_byte.bit_idx
+@28
+[color] 3
+tb_uart_wbs_bridge.uart_capture_byte.data[7:0]
+@22
+tb_uart_wbs_bridge.uut.uart_tx_inst.clock_count[15:0]
+tb_uart_wbs_bridge.uut.uart_tx_inst.data_in[7:0]
+@28
+tb_uart_wbs_bridge.uut.uart_tx_inst.data_valid
+tb_uart_wbs_bridge.uut.uart_tx_inst.ready
+tb_uart_wbs_bridge.uut.uart_tx_inst.rst
+tb_uart_wbs_bridge.uut.uart_tx_inst.shift_reg[9:0]
+tb_uart_wbs_bridge.uut.uart_tx_inst.transmitting
+tb_uart_wbs_bridge.uut.uart_tx_inst.tx
+tb_uart_wbs_bridge.uut.uart_tx_ready
+tb_uart_wbs_bridge.uut.uart_tx_valid
+tb_uart_wbs_bridge.uut.wb_ack_i
+@22
+tb_uart_wbs_bridge.uut.wb_adr_o[15:0]
+@28
+tb_uart_wbs_bridge.uut.wb_cyc_o
+@22
+tb_uart_wbs_bridge.uut.wb_dat_i[31:0]
+tb_uart_wbs_bridge.uut.wb_dat_o[31:0]
+@28
+tb_uart_wbs_bridge.uut.wb_stb_o
+tb_uart_wbs_bridge.uut.wb_we_o
+[pattern_trace] 1
+[pattern_trace] 0

@@ -1,0 +1,281 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Mon Nov  4 01:37:07 2024
+[*]
+[dumpfile] "/home/lspadersimon/repos/osiris_i/verilog/tb/work/core.vcd"
+[dumpfile_mtime] "Mon Nov  4 01:36:09 2024"
+[dumpfile_size] 142508
+[savefile] "/home/lspadersimon/repos/osiris_i/verilog/tb/waveform/core_waveform.gtkw"
+[timestart] 2541
+[size] 1870 1016
+[pos] -1 -1
+*-6.000000 2630 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_core.
+[treeopen] tb_core.dut.
+[treeopen] tb_core.dut.U_CONTROL_UNIT.
+[treeopen] tb_core.dut.U_DATAPATH.
+[treeopen] tb_core.dut.U_STAGE_EXECUTE.
+[treeopen] tb_core.dut.U_STAGE_FETCH.
+[sst_width] 303
+[signals_width] 370
+[sst_expanded] 1
+[sst_vpaned_height] 289
+@28
+tb_core.clk
+@c00024
+tb_core.cycle_counter[15:0]
+@28
+(0)tb_core.cycle_counter[15:0]
+(1)tb_core.cycle_counter[15:0]
+(2)tb_core.cycle_counter[15:0]
+(3)tb_core.cycle_counter[15:0]
+(4)tb_core.cycle_counter[15:0]
+(5)tb_core.cycle_counter[15:0]
+(6)tb_core.cycle_counter[15:0]
+(7)tb_core.cycle_counter[15:0]
+(8)tb_core.cycle_counter[15:0]
+(9)tb_core.cycle_counter[15:0]
+(10)tb_core.cycle_counter[15:0]
+(11)tb_core.cycle_counter[15:0]
+(12)tb_core.cycle_counter[15:0]
+(13)tb_core.cycle_counter[15:0]
+(14)tb_core.cycle_counter[15:0]
+(15)tb_core.cycle_counter[15:0]
+@1401200
+-group_end
+@24
+tb_core.core_pc_IF[31:0]
+@22
+tb_core.core_instr_ID[31:0]
+tb_core.core_read_data_M[31:0]
+@28
+tb_core.core_mem_write_M
+@22
+tb_core.core_data_addr_M[31:0]
+tb_core.core_write_data_M[31:0]
+@28
+tb_core.f_osiris_core_state_dump
+@200
+-
+--------- control --------
+@28
+tb_core.dut.U_CONTROL_UNIT.i_op[4:0]
+@200
+-alu related
+@28
+[color] 2
+tb_core.dut.U_CONTROL_UNIT.i_funct_3[2:0]
+tb_core.dut.U_CONTROL_UNIT.i_funct_7_5
+[color] 2
+tb_core.dut.U_CONTROL_UNIT.alu_op[2:0]
+[color] 2
+tb_core.dut.U_CONTROL_UNIT.o_alu_ctrl_ID[4:0]
+@200
+-
+@28
+tb_core.dut.U_CONTROL_UNIT.i_branch_EX
+tb_core.dut.U_CONTROL_UNIT.i_jump_EX
+tb_core.dut.U_CONTROL_UNIT.i_zero
+tb_core.dut.U_CONTROL_UNIT.o_addr_src_ID
+tb_core.dut.U_CONTROL_UNIT.o_alu_src_ID
+tb_core.dut.U_CONTROL_UNIT.o_branch_ID
+tb_core.dut.U_CONTROL_UNIT.o_fence_ID
+tb_core.dut.U_CONTROL_UNIT.o_imm_src_ID[2:0]
+tb_core.dut.U_CONTROL_UNIT.o_jump_ID
+tb_core.dut.U_CONTROL_UNIT.o_mem_write_ID
+tb_core.dut.U_CONTROL_UNIT.o_reg_write_ID
+tb_core.dut.U_CONTROL_UNIT.o_result_src_ID[1:0]
+@200
+-
+--------- stage_fetch --------
+@28
+tb_core.dut.U_STAGE_FETCH.i_rst_IF
+tb_core.dut.U_STAGE_FETCH.i_en_IF
+tb_core.dut.U_STAGE_FETCH.i_pc_src_EX
+@24
+tb_core.dut.U_STAGE_FETCH.o_pcplus4_IF[31:0]
+tb_core.dut.U_STAGE_FETCH.i_pc_target_EX[31:0]
+tb_core.dut.U_STAGE_FETCH.U_NEXT_PC.muxed_input[31:0]
+tb_core.dut.U_STAGE_FETCH.o_pc_IF[31:0]
+@200
+--------- if_id --------
+@28
+tb_core.dut.U_DATAPATH.U_IF_ID.i_stall_ID
+tb_core.dut.U_DATAPATH.U_IF_ID.i_flush_ID
+@22
+tb_core.dut.U_DATAPATH.U_IF_ID.i_instr_IF[31:0]
+tb_core.dut.U_DATAPATH.U_IF_ID.i_pc_IF[31:0]
+tb_core.dut.U_DATAPATH.U_IF_ID.i_pcplus4_IF[31:0]
+tb_core.dut.U_DATAPATH.U_IF_ID.o_instr_ID[31:0]
+tb_core.dut.U_DATAPATH.U_IF_ID.o_pc_ID[31:0]
+tb_core.dut.U_DATAPATH.U_IF_ID.o_pcplus4_ID[31:0]
+@200
+--------- stage_decode --------
+@28
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.clk
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_rst_ID
+@22
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID[31:0]
+@200
+-
+-comes/goes to control
+@28
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_imm_src_ID[2:0]
+@22
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_op[4:0]
+@28
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_funct3[2:0]
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_funct_7_5
+@200
+-
+-decode: writeback
+@28
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_write_en_WB
+@22
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_rd_WB[3:0]
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_data_WB[31:0]
+@200
+-
+-output
+@22
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_rd_ID[3:0]
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_rs1_ID[31:0]
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_rs2_ID[31:0]
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_imm_ex_ID[31:0]
+@200
+-
+-goes to hazard/ id_ex
+@22
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_rs1Addr_ID[3:0]
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_rs2Addr_ID[3:0]
+@200
+--------- id_ex --------
+@28
+tb_core.dut.U_DATAPATH.U_ID_EX.i_result_src_ID[1:0]
+tb_core.dut.U_DATAPATH.U_ID_EX.o_result_src_EX[1:0]
+@200
+-
+--------- stage_execute --------
+-comes from control
+@28
+[color] 2
+tb_core.dut.U_STAGE_EXECUTE.i_alu_ctrl_EX[4:0]
+@200
+-
+-comes from hazard
+@22
+tb_core.dut.U_STAGE_EXECUTE.i_alu_result_M[31:0]
+@28
+tb_core.dut.U_STAGE_EXECUTE.i_alu_src_EX
+tb_core.dut.U_STAGE_EXECUTE.i_forward_rs1_EX[1:0]
+tb_core.dut.U_STAGE_EXECUTE.i_forward_rs2_EX[1:0]
+@200
+-
+-operation
+@22
+tb_core.dut.U_STAGE_EXECUTE.i_imm_ext_EX[31:0]
+tb_core.dut.U_STAGE_EXECUTE.i_rd1_EX[31:0]
+@c00022
+tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+@28
+(0)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(1)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(2)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(3)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(4)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(5)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(6)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(7)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(8)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(9)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(10)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(11)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(12)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(13)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(14)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(15)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(16)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(17)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(18)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(19)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(20)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(21)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(22)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(23)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(24)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(25)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(26)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(27)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(28)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(29)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(30)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+(31)tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+@1401200
+-group_end
+@22
+tb_core.dut.U_STAGE_EXECUTE.o_alu_result_EX[31:0]
+@28
+tb_core.dut.U_STAGE_EXECUTE.o_equal_EX
+@200
+-
+@24
+tb_core.dut.U_STAGE_EXECUTE.i_pc_EX[31:0]
+tb_core.dut.U_STAGE_EXECUTE.o_pc_target_EX[31:0]
+@200
+-
+--------- alu --------
+@22
+tb_core.dut.U_STAGE_EXECUTE.U_ALU.i_rd1_EX[31:0]
+tb_core.dut.U_STAGE_EXECUTE.U_ALU.i_rd2_EX[31:0]
+tb_core.dut.U_STAGE_EXECUTE.U_ALU.o_alu_result_EX[31:0]
+@200
+-
+--------- next_pc --------
+@22
+tb_core.dut.U_STAGE_EXECUTE.U_PC_TARGET.i_imm_ext_EX[31:0]
+tb_core.dut.U_STAGE_EXECUTE.U_PC_TARGET.i_pc_EX[31:0]
+tb_core.dut.U_STAGE_EXECUTE.U_PC_TARGET.o_pc_target_EX[31:0]
+@200
+-
+--------- EX_EM --------
+@28
+tb_core.dut.U_DATAPATH.U_EX_MEM.clk
+tb_core.dut.U_DATAPATH.U_EX_MEM.i_mem_write_EX
+tb_core.dut.U_DATAPATH.U_EX_MEM.o_mem_write_M
+@22
+tb_core.dut.U_DATAPATH.U_EX_MEM.o_write_data_M[31:0]
+tb_core.dut.U_DATAPATH.U_EX_MEM.i_pc_target_EX[31:0]
+@23
+tb_core.dut.U_DATAPATH.U_EX_MEM.o_pc_target_M[31:0]
+@200
+-
+--------- mem_wb --------
+@22
+tb_core.dut.U_DATAPATH.U_MEM_WB.i_pc_target_M[31:0]
+tb_core.dut.U_DATAPATH.U_MEM_WB.o_pc_target_WB[31:0]
+@200
+-
+--------- stage_writeback --------
+@28
+tb_core.dut.U_STAGE_WRITE_BACK.i_result_src_WB[1:0]
+@22
+tb_core.dut.U_STAGE_WRITE_BACK.i_alu_result_WB[31:0]
+tb_core.dut.U_STAGE_WRITE_BACK.i_result_data_WB[31:0]
+tb_core.dut.U_STAGE_WRITE_BACK.i_pcplus4_WB[31:0]
+tb_core.dut.U_STAGE_WRITE_BACK.i_pc_target_WB[31:0]
+tb_core.dut.U_STAGE_WRITE_BACK.o_result_WB[31:0]
+@200
+-
+--------- hazard_unit --------
+@28
+tb_core.dut.U_DATAPATH.U_HAZARD_UNIT.o_stall_IF
+tb_core.dut.U_DATAPATH.U_HAZARD_UNIT.o_stall_ID
+tb_core.dut.U_DATAPATH.U_HAZARD_UNIT.o_flush_ID
+tb_core.dut.U_DATAPATH.U_HAZARD_UNIT.o_flush_EX
+tb_core.dut.U_DATAPATH.U_HAZARD_UNIT.o_forward_rs1_EX[1:0]
+tb_core.dut.U_DATAPATH.U_HAZARD_UNIT.o_forward_rs2_EX[1:0]
+@200
+-
+-
+[pattern_trace] 1
+[pattern_trace] 0

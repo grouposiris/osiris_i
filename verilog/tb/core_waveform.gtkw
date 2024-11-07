@@ -1,0 +1,163 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Sat Nov  2 16:33:35 2024
+[*]
+[dumpfile] "(null)"
+[savefile] "/home/lspadersimon/repos/osiris_i/verilog/tb/core_waveform.gtkw"
+[timestart] 0
+[size] 1870 1016
+[pos] -1 -1
+*-16.000000 100000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_core.
+[treeopen] tb_core.dut.
+[sst_width] 303
+[signals_width] 350
+[sst_expanded] 1
+[sst_vpaned_height] 289
+@28
+tb_core.clk
+@c00024
+tb_core.cycle_counter[15:0]
+@28
+(0)tb_core.cycle_counter[15:0]
+(1)tb_core.cycle_counter[15:0]
+(2)tb_core.cycle_counter[15:0]
+(3)tb_core.cycle_counter[15:0]
+(4)tb_core.cycle_counter[15:0]
+(5)tb_core.cycle_counter[15:0]
+(6)tb_core.cycle_counter[15:0]
+(7)tb_core.cycle_counter[15:0]
+(8)tb_core.cycle_counter[15:0]
+(9)tb_core.cycle_counter[15:0]
+(10)tb_core.cycle_counter[15:0]
+(11)tb_core.cycle_counter[15:0]
+(12)tb_core.cycle_counter[15:0]
+(13)tb_core.cycle_counter[15:0]
+(14)tb_core.cycle_counter[15:0]
+(15)tb_core.cycle_counter[15:0]
+@1401200
+-group_end
+@24
+tb_core.core_pc_IF[31:0]
+@22
+tb_core.core_instr_ID[31:0]
+tb_core.core_data_addr_M[31:0]
+@28
+tb_core.core_mem_write_M
+@22
+tb_core.core_read_data_M[31:0]
+tb_core.core_write_data_M[31:0]
+@28
+tb_core.f_osiris_core_state_dump
+@200
+-
+--------- control --------
+@28
+tb_core.dut.U_CONTROL_UNIT.alu_op[1:0]
+tb_core.dut.U_CONTROL_UNIT.i_branch_EX
+tb_core.dut.U_CONTROL_UNIT.i_funct_3[2:0]
+tb_core.dut.U_CONTROL_UNIT.i_funct_7_5
+tb_core.dut.U_CONTROL_UNIT.i_jump_EX
+@22
+tb_core.dut.U_CONTROL_UNIT.i_op[4:0]
+@28
+tb_core.dut.U_CONTROL_UNIT.i_zero
+tb_core.dut.U_CONTROL_UNIT.i_pc_src_EX
+tb_core.dut.U_CONTROL_UNIT.o_addr_src_ID
+@22
+tb_core.dut.U_CONTROL_UNIT.o_alu_ctrl_ID[4:0]
+@28
+tb_core.dut.U_CONTROL_UNIT.o_alu_src_ID
+tb_core.dut.U_CONTROL_UNIT.o_branch_ID
+tb_core.dut.U_CONTROL_UNIT.o_fence_ID
+tb_core.dut.U_CONTROL_UNIT.o_imm_src_ID[2:0]
+tb_core.dut.U_CONTROL_UNIT.o_jump_ID
+tb_core.dut.U_CONTROL_UNIT.o_mem_write_ID
+tb_core.dut.U_CONTROL_UNIT.o_reg_write_ID
+tb_core.dut.U_CONTROL_UNIT.o_result_src_ID[1:0]
+@200
+-
+--------- stage_fetch --------
+@28
+tb_core.dut.U_STAGE_FETCH.i_rst_IF
+tb_core.dut.U_STAGE_FETCH.i_en_IF
+tb_core.dut.U_STAGE_FETCH.i_pc_src_EX
+@22
+tb_core.dut.U_STAGE_FETCH.i_pc_target_EX[31:0]
+tb_core.dut.U_STAGE_FETCH.o_pc_IF[31:0]
+tb_core.dut.U_STAGE_FETCH.o_pcplus4_IF[31:0]
+@200
+--------- if_id --------
+@28
+tb_core.dut.U_DATAPATH.U_IF_ID.i_stall_ID
+tb_core.dut.U_DATAPATH.U_IF_ID.i_flush_ID
+@22
+tb_core.dut.U_DATAPATH.U_IF_ID.i_instr_IF[31:0]
+tb_core.dut.U_DATAPATH.U_IF_ID.i_pc_IF[31:0]
+tb_core.dut.U_DATAPATH.U_IF_ID.i_pcplus4_IF[31:0]
+tb_core.dut.U_DATAPATH.U_IF_ID.o_instr_ID[31:0]
+tb_core.dut.U_DATAPATH.U_IF_ID.o_pc_ID[31:0]
+tb_core.dut.U_DATAPATH.U_IF_ID.o_pcplus4_ID[31:0]
+@200
+--------- stage_decode --------
+@28
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.clk
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_rst_ID
+@22
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_instr_ID[31:0]
+@200
+-
+-write on reg_file
+@28
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_write_en_WB
+@c00022
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_rd_WB[3:0]
+@28
+(0)tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_rd_WB[3:0]
+(1)tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_rd_WB[3:0]
+(2)tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_rd_WB[3:0]
+(3)tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_rd_WB[3:0]
+@1401200
+-group_end
+@22
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_data_WB[31:0]
+@200
+-
+-comes/goes to control
+@28
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.i_imm_src_ID[2:0]
+@22
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_op[4:0]
+@28
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_funct3[2:0]
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_funct_7_5
+@200
+-
+@22
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_rd_ID[3:0]
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_rs1_ID[31:0]
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_rs2_ID[31:0]
+@23
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_imm_ex_ID[31:0]
+@200
+-goes to hazard unit
+@22
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_rs1Addr_ID[3:0]
+tb_core.dut.U_DATAPATH.U_STAGE_DECODE.o_rs2Addr_ID[3:0]
+@200
+-
+--------- stage_execute --------
+-comes from control
+@22
+tb_core.dut.U_STAGE_EXECUTE.i_alu_ctrl_EX[4:0]
+@28
+tb_core.dut.U_STAGE_EXECUTE.i_alu_src_EX
+@200
+-
+@22
+tb_core.dut.U_STAGE_EXECUTE.i_rd1_EX[31:0]
+tb_core.dut.U_STAGE_EXECUTE.i_rd2_EX[31:0]
+tb_core.dut.U_STAGE_EXECUTE.i_pc_EX[31:0]
+tb_core.dut.U_STAGE_EXECUTE.i_imm_ext_EX[31:0]
+[pattern_trace] 1
+[pattern_trace] 0
