@@ -56,19 +56,6 @@ module osiris_i_tb;
         end
     end
 
-    // todo: remove below 18 lines
-    // // Monitor changes in the first 16 elements 
-    // always @(dut.U_INST_MEM.mem[0] or dut.U_INST_MEM.mem[1] or dut.U_INST_MEM.mem[2] or dut.U_INST_MEM.mem[3] or dut.U_INST_MEM.mem[4] or dut.U_INST_MEM.mem[5] or dut.U_INST_MEM.mem[6] or dut.U_INST_MEM.mem[7] or dut.U_INST_MEM.mem[8] or dut.U_INST_MEM.mem[9] or dut.U_INST_MEM.mem[10] or dut.U_INST_MEM.mem[11] or dut.U_INST_MEM.mem[12] or dut.U_INST_MEM.mem[12] or dut.U_INST_MEM.mem[14] or dut.U_INST_MEM.mem[15]) begin
-    //     for (j = 0; j < 16; j = j + 1) begin
-    //         if (dut.U_INST_MEM.mem[j] !== mem_prev[j]) begin
-    //             $display("At time %t: Inst mem[%0d] changed from %h to %h", $time, j, tb_mem[j], dut.U_INST_MEM.mem[j]);
-    //             // $display("At time %t: mem[%0d] changed to %h", $time, j, dut.U_INST_MEM.mem[j]);
-    //             mem_prev[j] = dut.U_INST_MEM.mem[j];  // Update previous value to the new one
-    //         end
-    //     end
-    // end
-    // ------------------------
-
     // Testbench signals declaration
         // Clock and Reset
         reg  clk;
@@ -154,6 +141,7 @@ module osiris_i_tb;
     // File for Writing Outputs
     integer output_file;
     integer it;
+    integer print = 0;
 
 
     // Monitor register changes
@@ -177,12 +165,15 @@ module osiris_i_tb;
             end
         endgenerate
 
-    // Monitor data memory
+    // Monitor inst memory
         generate
-            for (k = 0; k < INST_MEM_WORDS; k = k +4) begin
-                always @(dut.U_INST_MEM.mem[k] or dut.U_INST_MEM.mem[k+1] or dut.U_INST_MEM.mem[k+2] or dut.U_INST_MEM.mem[k+3]) begin
-                    aux_inst = {dut.U_INST_MEM.mem[k+3], dut.U_INST_MEM.mem[k+2], dut.U_INST_MEM.mem[k+1], dut.U_INST_MEM.mem[k]};
-                    $display("          ->Time %0t ps: Instruction Memory [%0d]= [%b] changed to %h<<<--- = %s\n\n", $time, (k/4), (k/4), aux_inst, aux_inst,decode_instruction(aux_inst));
+            for (k = 0; k < INST_MEM_WORDS; k = k +1) begin
+                always @(dut.U_INST_MEM.mem[k*4] or dut.U_INST_MEM.mem[(k*4)+1] or dut.U_INST_MEM.mem[(k*4)+2] or dut.U_INST_MEM.mem[(k*4)+3]) begin
+                    aux_inst = {dut.U_INST_MEM.mem[(k*4)+3], dut.U_INST_MEM.mem[(k*4)+2], dut.U_INST_MEM.mem[(k*4)+1], dut.U_INST_MEM.mem[k*4]};
+                    $display("aux_inst: %h", aux_inst);
+                    // Convert aux_inst to a hexadecimal string format
+                    $display("          ->Time %0t ps: Instruction Memory [%0d]= [%b] changed to %h<<<--- = %s\n\n", $time, ((k*4)/4), ((k*4)/4), aux_inst, aux_inst, decode_instruction(aux_inst));
+                    
                 end
             end
         endgenerate
@@ -244,89 +235,96 @@ module osiris_i_tb;
         $display("Starting osiris_i Testbench...");
         #200;  // Wait for reset to deassert
 
-        test_memory(i_select_mem, 32'h00000000, 32'hBEE00000);
-        i_select_mem = 1;
-        test_memory(i_select_mem, 32'hF0000007, 32'hBAA00000);
-        $display("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        test_memory(i_select_mem, 32'h00000000, 32'hBEE00000, 0); // testing inst mem
+        test_memory(1, 32'hF0000007, 32'hBAA00000, 1); // testing data mem
 
-        rst_mem_uart = 1;
-        #(CLK_PERIOD);
-        rst_mem_uart = 0;
-        #(10* CLK_PERIOD);
-        step = 1;
-        write_on_inst_mem_with_UART_and_compare();
-        i_select_mem = 1;  // Select Data Memory
-        #1;
-        test_memory(i_select_mem, 32'h00000000, 32'hDEADBEEF);
-        i_select_mem = 0;
-        // update_instructions_on_instr_mem();
-        $display("############################################################################");
-        #(WAIT_BETWEEN_STEPS);
-        $display("\n\n --------------------------------------------");
-        $display(" Test 5: Run Program on Core and Verify Result in Data Memory ");
-        $display(" --------------------------------------------");
-        step = 2;
-
-
-        // OK todo: separate reset signal to memories
-        // todo: core clock-gating when UART accesses memories
-        // todo: add PDK memories
+        // #100;
+        // step = 0;
+        // // reset_memory(select_mem, first_address, reset_value)
+        // reset_memory(0,32'h00000000,32'hF0000033, 0);// (inst_mem, 0, 33 = NOP inst)
+        // reset_memory(1,32'h00000000,32'hAAAAAAAA, 0);// (data_mem, 0, random value)
         
-        // todo: check if addressing would be by bytes or not
+        // $display("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
-        // todo: confimacao da UART em que estado estah 
-        //      jgoar bits estado para fora ou bit
-        // todo: x- confirmacao da memoria que foi escrito
+        // rst_mem_uart = 1;
+        // #(CLK_PERIOD);
+        // rst_mem_uart = 0;
+        // #(10* CLK_PERIOD);
+        // step = 1;
+        // write_on_inst_mem_with_UART_and_compare(0);
+        // // i_select_mem = 1;  // Select Data Memory
+        // // #1 test_memory(i_select_mem, 32'h00000000, 32'hDEADBEEF, 0);
+        
+        // i_select_mem = 0;
+        // // update_instructions_on_instr_mem();
+        // $display("############################################################################");
+        // #(WAIT_BETWEEN_STEPS);
+        // $display("\n\n --------------------------------------------");
+        // $display(" Test 5: Run Program on Core and Verify Result in Data Memory ");
+        // $display(" --------------------------------------------");
+        // step = 2;
 
 
-        // Release Core Reset and Start Execution
-        #(WAIT_BETWEEN_STEPS);
-        i_start_rx = 0;  // Disable UART reception
-        #(50* CLK_PERIOD);
-        step = 3;
-        rst_core = 0; // Activate core
-        #(5000 * CLK_PERIOD);  // Wait for core to execute instructions
+        // // OK todo: separate reset signal to memories
+        // // todo: core clock-gating when UART accesses memories
+        // // todo: add PDK memories
+        
+        // // todo: check if addressing would be by bytes or not
 
-        step = 4;
-        i_start_rx = 1;  // Enable UART reception
-        rst_core = 1; // disable core
-        #(10* CLK_PERIOD);
+        // // todo: confimacao da UART em que estado estah 
+        // //      jgoar bits estado para fora ou bit
+        // // todo: x- confirmacao da memoria que foi escrito
 
-        // Reading Expected Results from File
-        expected_result_count = 0;
-        // $display("Reading expected results from store_expected.txt...");
-        // read_expected_results_from_file("../src/store_expected.txt");
-        // $display("Reading expected results from all_expected_results.txt...");
-        // read_expected_results_from_file("../src/all_expected_results.txt");
 
-        // Open File to Write Outputs
-        output_file = $fopen("../src/risc_outputs.txt", "w");
-        if (output_file == 0) begin
-            $display("Error: Cannot open risc_outputs.txt for writing");
-            $finish;
-        end
+        // // Release Core Reset and Start Execution
+        // #(WAIT_BETWEEN_STEPS);
+        // i_start_rx = 0;  // Disable UART reception
+        // #(50* CLK_PERIOD);
+        // step = 3;
+        // rst_core = 0; // Activate core
+        // #(5000 * CLK_PERIOD);  // Wait for core to execute instructions
 
-        $display("\n\n-------------------------------------------------------------");
-        // Verify Results and Write Outputs to File
-        // $display(" Test 5: Verifying results and writing outputs to risc_outputs.txt...");
-        // i_select_mem = 1;  // Select Data Memory
-        // for (it = 0; it < expected_result_count; it = it + 1) begin
-        //     test_read_from_memory(expected_addresses[it], read_data);
-        //     // Write output to file
-        //     // $fwrite(output_file, "@%08X %08X\n", expected_addresses[it], read_data);
+        // step = 4;
+        // i_start_rx = 1;  // Enable UART reception
+        // rst_core = 1; // disable core
+        // #(10* CLK_PERIOD);
 
-        //     if (read_data !== expected_data_array[it]) begin
-        //         $display("ERROR: Data mismatch at address 0x%08X! Expected 0x%08X, Got 0x%08X \n",
-        //                  expected_addresses[it], expected_data_array[it], read_data);
-        //         test_passed = 0;
-        //     end else begin
-        //         $display("OK: Data at address 0x%08X verified: 0x%08X \n", expected_addresses[it],
-        //                  read_data);
-        //     end
+        // // Reading Expected Results from File
+        // expected_result_count = 0;
+        // // $display("Reading expected results from store_expected.txt...");
+        // // read_expected_results_from_file("../src/store_expected.txt");
+        // // $display("Reading expected results from all_expected_results.txt...");
+        // // read_expected_results_from_file("../src/all_expected_results.txt");
+
+        // // Open File to Write Outputs
+        // output_file = $fopen("../src/risc_outputs.txt", "w");
+        // if (output_file == 0) begin
+        //     $display("Error: Cannot open risc_outputs.txt for writing");
+        //     $finish;
         // end
 
-        // Close the output file
-        $fclose(output_file);
+        // $display("\n\n-------------------------------------------------------------");
+        // // Verify Results and Write Outputs to File
+        // // $display(" Test 5: Verifying results and writing outputs to risc_outputs.txt...");
+        // // i_select_mem = 1;  // Select Data Memory
+        // // for (it = 0; it < expected_result_count; it = it + 1) begin
+        // //     test_read_from_memory(expected_addresses[it], read_data);
+        // //     // Write output to file
+        // //     // $fwrite(output_file, "@%08X %08X\n", expected_addresses[it], read_data);
+
+        // //     if (read_data !== expected_data_array[it]) begin
+        // //         $display("ERROR: Data mismatch at address 0x%08X! Expected 0x%08X, Got 0x%08X \n",
+        // //                  expected_addresses[it], expected_data_array[it], read_data);
+        // //         test_passed = 0;
+        // //     end else begin
+        // //         $display("OK: Data at address 0x%08X verified: 0x%08X \n", expected_addresses[it],
+        // //                  read_data);
+        // //     end
+        // // end
+
+        // // Close the output file
+        // $fclose(output_file);
+        // #100000 
 
         // Final Test Result
         if (test_passed) begin
@@ -335,10 +333,12 @@ module osiris_i_tb;
             $display("\nError: Some tests FAILED.");
         end
 
-        #100000 $finish;
+        $finish;
     end
 
-    task write_on_inst_mem_with_UART_and_compare;
+    task write_on_inst_mem_with_UART_and_compare(input logic debug);
+        
+    begin
         // Reading Instructions from File
         $display("Reading instructions from .txt...");
         num_instructions = 0;
@@ -360,7 +360,7 @@ module osiris_i_tb;
             $display("\n Test 3: [%1d] Sending to addr: %h the data: %h = %s", it, instruction_addresses[it]*4, instruction_mem[it], decode_instruction(instruction_mem[it]));
             step = step + 1;
             // test_write_to_memory(instruction_addresses[it], instruction_mem[it]);
-            test_write_to_memory(instruction_addresses[it]*4, instruction_mem[it]);
+            test_write_to_memory(instruction_addresses[it]*4, instruction_mem[it], debug);
         end
         $display("num_instructions: %d",num_instructions) ;
 
@@ -378,11 +378,12 @@ module osiris_i_tb;
         $display(" --------------------------------------------");
         for (it = 0; it < num_instructions; it = it + 1) begin
             // test_read_from_memory(instruction_addresses[it], read_data);
-            test_read_from_memory(instruction_addresses[it]*4, read_data);
-            $display("\nTest 4: [%1d] Read from addr: %h the data: %h", it, instruction_addresses[it]*4, read_data);
+            test_read_from_memory(instruction_addresses[it]*4, read_data, 1);
+            // $display("\nTest 4: [%1d] Read from addr: %h the data: %h", it, instruction_addresses[it]*4, read_data);
             // compare_memory_data(instruction_addresses[it], read_data); // Compare with expected data
-            compare_memory_data(instruction_addresses[it]*4, read_data); // Compare with expected data
+            compare_memory_data(instruction_addresses[it]*4, read_data, 1); // Compare with expected data
         end
+    end
     endtask 
 
     task update_instructions_on_instr_mem;
@@ -908,7 +909,8 @@ module osiris_i_tb;
     task test_memory(
         input logic select_mem,  // Input parameter to select the memory
         input [ADDR_WIDTH-1:0] first_address = 32'hA0000002,
-        input [ADDR_WIDTH-1:0] first_data_value = 32'hF0000093
+        input [ADDR_WIDTH-1:0] first_data_value = 32'hF0000093,
+        input logic debug
     );
         integer it;
         reg [ADDR_WIDTH-1:0] test_address;
@@ -929,7 +931,7 @@ module osiris_i_tb;
             expected_data = 32'hDEADBEEF;  // Test data
 
             // Write Data to Memory via UART and Wishbone
-            test_write_to_memory(test_address, expected_data);
+            test_write_to_memory(test_address, expected_data, debug);
 
             #(WAIT_BETWEEN_STEPS);
             step = step + 1;
@@ -947,7 +949,7 @@ module osiris_i_tb;
 
             // Write Data to Memory via UART and Wishbone
             $display("\n Test 1: Writing Data to Memory...");
-            test_write_to_memory(test_address, expected_data);
+            test_write_to_memory(test_address, expected_data, debug);
             
             #(WAIT_BETWEEN_STEPS);
             step = step + 1;
@@ -960,11 +962,17 @@ module osiris_i_tb;
             // Send multiple instructions to Memory
             $display("\n Test 1: Writing Data to Memory recursively");
             for (it = 0; it < 10; it = it + 1) begin
-                $display("\n Test 1: [%1d] Sending to addr: %h the data: %h", it, test_address + it, expected_data + it);
+                if (debug) begin
+                    $display("\n Test 1: [%1d] Sending to addr: %h the data: %h", it, test_address + (it*4), expected_data + it);
+                end
+                    
                 step = step + 1;
                 // test_write_to_memory(test_address + it, expected_data + it);
-                test_write_to_memory(test_address + (it *4), expected_data + it);
-                $display(" Test 1: [%1d] Completed write iteration", it);
+                test_write_to_memory(test_address + (it *4), expected_data + it, debug);
+                if (debug) begin
+                    $display(" Test 1: [%1d] Completed write iteration", it);
+                end
+                    
             end
 
             #(5 * WAIT_BETWEEN_STEPS);
@@ -979,10 +987,13 @@ module osiris_i_tb;
             $display(" --------------------------------------------");
             for (it = 0; it < 10; it = it + 1) begin
                 // test_read_from_memory(test_address + it, read_data);
-                test_read_from_memory(test_address + (it*4), read_data);
-                $display("\nTest 2: [%1d] Read from addr: %h the data: %h", it, test_address + it, read_data);
+                test_read_from_memory(test_address + (it*4), read_data, debug);
+                if (debug) begin
+                    $display("\nTest 2: [%1d] Read from addr: %h the data: %h", it, test_address + it, read_data);
+                end
+                    
                 // compare_memory_data(test_address + it, read_data); // Compare with expected data
-                compare_memory_data(test_address + (it*4), read_data); // Compare with expected data
+                compare_memory_data(test_address + (it*4), read_data, debug); // Compare with expected data
             end
             // if (test_passed == 0) begin
             //     $finish;
@@ -990,32 +1001,119 @@ module osiris_i_tb;
         end
     endtask
 
+    // Task to Test Memory Read and Write via UART
+    task reset_memory(
+        input logic select_mem,  // Input parameter to select the memory
+        input [ADDR_WIDTH-1:0] first_address = 32'h00000000,
+        input [ADDR_WIDTH-1:0] reset_value = 32'hF0000033,
+        input logic debug
+    );
+        integer it;
+        reg [ADDR_WIDTH-1:0] test_address;
+        reg [DATA_WIDTH-1:0] expected_data;
+        reg [DATA_WIDTH-1:0] read_data;
+        integer iterations;
+
+        begin
+            // Set the memory selection signal
+            i_select_mem = select_mem;  // 0 for Instruction Memory, 1 for Data Memory
+
+            step = step + 1;
+            $display("\n\n====================================================");
+            $display("\n\n --------------------------------------------");
+            if (select_mem == 0) begin
+                $display("\n Reset task: Reseting Instruction Memory via UART...");
+                iterations = INST_MEM_WORDS;
+            end else begin
+                $display("\n Reset task: Reseting Data Memory via UART...");
+                iterations = DATA_MEM_WORDS;
+            end
+            $display(" --------------------------------------------");
+
+            test_address  = 32'hF0000088;  // Another test address
+            expected_data = 32'hD00DB00F;  // Another test data
+
+            // Write Data to Memory via UART and Wishbone
+            $display("\n Reset task: Writing Data to Memory...");
+            test_write_to_memory(test_address, expected_data, debug);
+            
+            #(WAIT_BETWEEN_STEPS);
+            step = step + 1;
+
+            // ----------------
+            test_address  = first_address;  // Starting address for recursive test
+            expected_data = reset_value;  // Example instruction (e.g., NOP in RISC-V)
+            #50;
+
+            
+            // Send multiple instructions to Memory
+            $display("\n Reset task: Writing Data to Memory recursively");
+            $display("\n Reset task: Sending to all addresses the data: %h", it, test_address, expected_data);
+            for (it = first_address; it < iterations; it = it + 1) begin
+                step = step + 1;
+                // test_write_to_memory(test_address + it, expected_data + it);
+                test_write_to_memory(test_address + (it *4), expected_data, debug);
+                // $display(" Reset task: [%1d] Completed write iteration", it);
+            end
+
+            #(5 * WAIT_BETWEEN_STEPS);
+            step = step + 1;
+
+            $display("\n\n --------------------------------------------");
+            if (select_mem == 0) begin
+                $display(" Reset task: Reading Data from Instruction Memory via UART...");
+            end else begin
+                $display(" Reset task: Reading Data from Data Memory via UART...");
+            end
+            $display(" --------------------------------------------");
+            for (it = first_address; it < iterations; it = it + 1) begin
+                // test_read_from_memory(test_address + it, read_data);
+                test_read_from_memory(test_address + (it*4), read_data, 0);
+                // $display("\nReset task: [%1d] Read from addr: %h the data: %h", it, test_address + it, read_data);
+                // compare_memory_data(test_address + it, read_data); // Compare with expected data
+                compare_memory_data(test_address + (it*4), read_data, 0); // Compare with expected data
+            end
+            // if (test_passed == 0) begin
+            //     $finish;
+            // end
+        end
+    endtask
+
+
     // Task to Test Writing Data to Memory via UART
-    task test_write_to_memory(input [ADDR_WIDTH-1:0] address, input [DATA_WIDTH-1:0] data);
+    task test_write_to_memory(input [ADDR_WIDTH-1:0] address, input [DATA_WIDTH-1:0] data, input logic debug = 1);
         begin
             // Send CMD_WRITE command
             uart_send_byte(CMD_WRITE);
-            $display("\nSent CMD_WRITE Command.");
+            if (debug) begin $display("\nSent CMD_WRITE Command."); end
             #(WAIT_BETWEEN_UART_SEND_CMD);
 
             // Send Address (LSB first)
             uart_send_word(address, ADDR_WIDTH);
-            $display("Sent Address: 0x%08X", address);
+            
+            if (debug) begin $display("Sent Address: 0x%08X", address); end
 
             // Send Data (LSB first)
             uart_send_word(data, DATA_WIDTH);
-            $display("Sent Data: 0x%08X", data);
+            if (debug) begin $display("Sent Data: 0x%08X", data); end
+            
 
             // addr = address[MEM_ADDR_BITS-1:0];
             // ignoring unused MSB bits
             if (i_select_mem) begin
                 tb_mem[address[DATA_MEM_ADDR_BITS-1:0]] = data;
-                $display("tb_mem: Writing on addr: %h, the data:%h",address,data);
-                $display("tb_mem[%h]:%h",address[DATA_MEM_ADDR_BITS-1:0], tb_mem[address[DATA_MEM_ADDR_BITS-1:0]]);
+                if (debug) begin
+                    $display("tb_mem: Writing on addr: %h, the data:%h",address,data);
+                    $display("tb_mem[%h]:%h",address[DATA_MEM_ADDR_BITS-1:0], tb_mem[address[DATA_MEM_ADDR_BITS-1:0]]);
+                end
+                    
             end else begin
                 tb_mem[address[INST_MEM_ADDR_BITS-1:0]] = data;
-                $display("tb_mem: Writing on addr: %h, the data:%h",address,data);
-                $display("tb_mem[%h]:%h",address[INST_MEM_ADDR_BITS-1:0], tb_mem[address[INST_MEM_ADDR_BITS-1:0]]);
+                if (debug) begin
+                    $display("tb_mem: Writing on addr: %h, the data:%h",address,data);
+                    $display("tb_mem[%h]:%h",address[INST_MEM_ADDR_BITS-1:0], tb_mem[address[INST_MEM_ADDR_BITS-1:0]]);
+                end
+                    
             end
 
             // Wait for UART bridge to return to IDLE state
@@ -1025,20 +1123,21 @@ module osiris_i_tb;
     endtask
 
     // Task to Test Reading Data from Memory via UART
-    task test_read_from_memory(input [ADDR_WIDTH-1:0] address, output reg [DATA_WIDTH-1:0] data);
+    task test_read_from_memory(input [ADDR_WIDTH-1:0] address, output reg [DATA_WIDTH-1:0] data, input logic debug = 1);
         begin
             // Send CMD_READ command
             uart_send_byte(CMD_READ);
-            $display("Sent CMD_READ Command.");
+            if (debug) begin $display("Sent CMD_READ Command."); end
             #(WAIT_BETWEEN_UART_SEND_CMD);
 
             // Send Address (LSB first)
             uart_send_word2(address, ADDR_WIDTH);
-            $display("Sent Address: 0x%08X", address);
-
+            if (debug) begin $display("Sent Address: 0x%08X", address); end
+            
             // Receive Data via UART
             uart_receive_word(data);
-            $display("Received Data: 0x%08X", data);
+            if (debug) begin $display("Received Data: 0x%08X", data); end
+            
         end
     endtask
 
@@ -1148,6 +1247,7 @@ module osiris_i_tb;
     task compare_memory_data;
         input [ADDR_WIDTH-1:0] address;         // Address to read from memory
         input [DATA_WIDTH-1:0] read_data;       // Variable to hold read data
+        input debug;
         reg [DATA_WIDTH-1:0] expected_value;    // Expected data to compare with (tb memory)
    
         begin
@@ -1164,12 +1264,15 @@ module osiris_i_tb;
             end
 
             if (read_data !== expected_value) begin
-                $display(
-                    "ERROR: Memory Data Mismatch at address 0x%08X! Expected 0x%08X, Got 0x%08X",
-                    address, expected_value, read_data);
+                if (debug) begin
+                    $display("ERROR: Memory Data Mismatch at address 0x%08X! Expected 0x%08X, Got 0x%08X", address, expected_value, read_data);
+                end
+                    
                 test_passed = 0;
             end else begin
-                $display("OK Data at address 0x%08X verified: 0x%08X", address, read_data);
+                if (debug) begin
+                    $display("OK Data at address 0x%08X verified: 0x%08X", address, read_data);
+                end
             end
         end
     endtask
