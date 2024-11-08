@@ -221,9 +221,6 @@ module osiris_i #(
     // Instantiate Data Memory
     // ------------------------------------------
     
-    // assign mux_funct3 = (i_select_mem == 1'b1 && uart_wb_cyc_o) ? 3'b010 : funct3; // when UART is selecting, communicate by word (3'b010), when i_select_mem == 0 (connect to core), so core decides with funct3
-    assign mux_funct3 = (i_select_mem == 1'b1 && uart_wb_cyc_o) ? 4'b1111 : wmask0; // when UART is selecting, communicate by word (3'b010), when i_select_mem == 0 (connect to core), so core decides with funct3
-
     // mem_byte #(
     // // mem #(
     //     .DATA_WIDTH(DATA_WIDTH),
@@ -240,6 +237,9 @@ module osiris_i #(
     //     .wb_dat_o(data_mem_dat_o),  // Data output
     //     .wb_ack_o(data_mem_ack_o)   // Acknowledge output
     // );
+
+    // assign mux_funct3 = (i_select_mem == 1'b1 && uart_wb_cyc_o) ? 3'b010 : funct3; // when UART is selecting, communicate by word (3'b010), when i_select_mem == 0 (connect to core), so core decides with funct3
+    assign mux_funct3 = (i_select_mem == 1'b1 && uart_wb_cyc_o) ? 4'b1111 : wmask0; // when UART is selecting, communicate by word (3'b010), when i_select_mem == 0 (connect to core), so core decides with funct3
 
     wire write_sram_data_mem;
     wire [31:0] dummy_data2;
@@ -260,8 +260,10 @@ module osiris_i #(
         .web0(write_sram_data_mem),  // Write Enable (active low) for Port 0
         // .wmask0(4'b1111),  // [3:0] Write Mask for byte-wise write enable": 4'b111 (always entire word)
         .wmask0(mux_funct3),  // [3:0] Write Mask for byte-wise write enable": 4'b111 (always entire word)
-        .addr0(data_mem_adr_i),  // [9:0] Address input for Port 0
-        .din0(data_mem_dat_i),  // [31:0] Data input for Port 0
+        // .addr0(data_mem_adr_i),  // [9:0] Address input for Port 0
+        .addr0(word_aligned_addr),       // Word-aligned address
+        // .din0(data_mem_dat_i),  // [31:0] Data input for Port 0
+        .din0(shifted_data),             // Shifted data input
         .dout0(data_mem_dat_o),  // [31:0] Data output for Port 0
         // Port 1: Read-Only Port // *don't using this port
         .clk1(1'b0),  // Clock input for Port 1 // * unused
@@ -269,24 +271,52 @@ module osiris_i #(
         .addr1({DATA_MEM_ADDR_WIDTH{1'b0}}),  // Address input for Port 1 // * unused
         .dout1(dummy_data2)  // Data output for Port 1 // * unused
     );
+// -----------------------------------
+    // Calculate byte offset within the word (2 bits for 4-byte word)
+    wire [1:0] byte_offset = data_mem_adr_i[1:0]; // Lower 2 bits of the address
 
+    // Adjust write mask based on funct3 and byte offset
+    always @(*) begin
+        case (funct3)
+            3'b000: wmask0 = 4'b0001 << byte_offset; // sb (Store Byte)
+            3'b001: wmask0 = 4'b0011 << byte_offset; // sh (Store Halfword)
+            3'b010: wmask0 = 4'b1111 << byte_offset; // sw (Store Word)
+            default: wmask0 = 4'b1111;               // Default case, optional
+        endcase
+    end
+
+    // Shift the data input based on byte offset
+    wire [31:0] shifted_data;
+    assign shifted_data = data_mem_dat_i << (byte_offset * 8);
+
+    // Adjust the address to word-aligned address
+    wire [DATA_MEM_ADDR_WIDTH-1:0] word_aligned_addr;
+    assign word_aligned_addr = {data_mem_adr_i[DATA_MEM_ADDR_WIDTH-1:2], 2'b00};
+
+
+
+// ------------------------------
     // 3'b000: begin  // sb (Store Byte)        wmask0_reg = 4'b0001
     // 3'b001: begin  // sh (Store Halfword)    wmask0_reg = 4'b0011
     // 3'b010: begin  // sw (Store Word)        wmask0_reg = 4'b1111
     // default: begin  // sw (Store Word)
-    always @(*) begin
-        case (funct3)
-            3'b000: wmask0 = 4'b0001; // sb (Store Byte)
-            3'b001: wmask0 = 4'b0011; // sh (Store Halfword)
-            3'b010: wmask0 = 4'b1111; // sw (Store Word)
-            default: wmask0 = 4'b1111; // Default case, optional
-        endcase
+    // always @(*) begin // core writes
+    //     case (funct3)
+    //         3'b000: wmask0 = 4'b0001; // sb (Store Byte)
+    //         3'b001: wmask0 = 4'b0011; // sh (Store Halfword)
+    //         3'b010: wmask0 = 4'b1111; // sw (Store Word)
+    //         default: wmask0 = 4'b1111; // Default case, optional
+    //     endcase
+    // end
+
+    reg [2:0] funct3_s2;
+    always @(posedge clk ) begin
+        funct3_s2 <= funct3;
     end
 
+    always @(*) begin // core reads this data
 
-    always @(*) begin
-
-        case (mux_funct3)
+        case (funct3_s2)
             3'b000: begin  // lb (Load Byte): rd = SignExt([wb_adr_i]7:0)
                 data_reg = {{24{data_mem_dat_o[7]}}, data_mem_dat_o[6:0]};
             end

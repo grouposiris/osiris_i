@@ -90,6 +90,7 @@ module datapath #(
     output wire o_funct_7_5;
     output wire [DATA_WIDTH-1:0] o_pc_IF;
     output wire [2:0] o_funct3_MEM;
+    wire [           2:0] funct3_MEM;
 
     // ------------------------------------------
     // Localparams
@@ -237,6 +238,8 @@ module datapath #(
         .o_addr_src_EX(o_addr_src_EX),
         .o_funct3_EX(funct3_EX)
     );
+    // assign o_funct3_MEM = funct3_EX;
+    assign o_funct3_MEM = funct3_MEM;
 
     // Execute Stage
     stage_execute U_STAGE_EXECUTE (
@@ -279,7 +282,7 @@ module datapath #(
         .o_pc_plus4_M(pcplus4_M),
         .o_rd_M(rd_M),
         .o_pc_target_M(pc_target_M),
-        .o_funct3_MEM(o_funct3_MEM)
+        .o_funct3_MEM(funct3_MEM)
     );
 
     // Memory Access Stage
@@ -290,17 +293,20 @@ module datapath #(
     // -------------------------------------
     // Memory Access Stage
     // assign o_data_addr_M  = alu_result_WB;
-    // assign o_data_addr_M  = alu_result_M;
-    assign o_data_addr_M  = alu_result_EX;
     // assign o_data_addr_M  = o_alu_result_WB_neg;
 
-    // assign o_write_data_M = write_data_M;
-    assign o_write_data_M = write_data_EX;
+    assign o_data_addr_M  = alu_result_M;
+    // assign o_data_addr_M  = alu_result_EX;
+
     // assign o_write_data_M = write_data_WB;
 
-    assign o_mem_write_M  = mem_write_EX;
-    // assign o_mem_write_M  = mem_write_M;
+    assign o_write_data_M = write_data_M;
+    // assign o_write_data_M = write_data_EX;
+
     // assign o_mem_write_M  = mem_write_WB;
+
+    assign o_mem_write_M  = mem_write_M;
+    // assign o_mem_write_M  = mem_write_EX;
 
     // MEM/WB Pipeline Register
     mem_wb U_MEM_WB (
@@ -333,7 +339,8 @@ module datapath #(
         .i_alu_result_WB(alu_result_WB),
         // .i_alu_result_WB(o_alu_result_WB_neg),  //* reg file adjustment
         .i_pc_target_WB(pc_target_WB),
-        .i_result_data_WB(read_data_WB),
+        .i_result_data_WB(i_read_data_M),
+        // .i_result_data_WB(read_data_WB),
         .i_pcplus4_WB(pc_plus4_WB),
         .o_result_WB(result_WB)
     );

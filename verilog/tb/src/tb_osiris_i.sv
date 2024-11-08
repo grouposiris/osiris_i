@@ -157,9 +157,11 @@ module osiris_i_tb;
 
     // Monitor data memory
         generate
-            for (k = 0; k < (DATA_MEM_WORDS*4); k = k +4) begin
-                always @(dut.U_DATA_MEM.mem[k] or dut.U_DATA_MEM.mem[k+1] or dut.U_DATA_MEM.mem[k+2] or dut.U_DATA_MEM.mem[k+3]) begin
-                    aux_data = {dut.U_DATA_MEM.mem[k+3], dut.U_DATA_MEM.mem[k+2], dut.U_DATA_MEM.mem[k+1], dut.U_DATA_MEM.mem[k]};
+            for (k = 0; k < (DATA_MEM_WORDS); k = k +1) begin
+                // always @(dut.U_DATA_MEM.mem[k] or dut.U_DATA_MEM.mem[k+1] or dut.U_DATA_MEM.mem[k+2] or dut.U_DATA_MEM.mem[k+3]) begin
+                always @(dut.U_DATA_MEM.mem[k]) begin
+                    // aux_data = {dut.U_DATA_MEM.mem[k+3], dut.U_DATA_MEM.mem[k+2], dut.U_DATA_MEM.mem[k+1], dut.U_DATA_MEM.mem[k]};
+                    aux_data = {dut.U_DATA_MEM.mem[k]};
                     $display("k:%d aux_data: %d", k, aux_data);
                     $display("      Time %0t ps: Data Memory [%0d]= [%b] changed to %d<<<--- =%b =%h\n\n", $time, k, k, aux_data, aux_data,aux_data);
                 end
@@ -169,11 +171,13 @@ module osiris_i_tb;
     // Monitor inst memory
         generate
             for (k = 0; k < INST_MEM_WORDS; k = k +1) begin
-                always @(dut.U_INST_MEM.mem[k*4] or dut.U_INST_MEM.mem[(k*4)+1] or dut.U_INST_MEM.mem[(k*4)+2] or dut.U_INST_MEM.mem[(k*4)+3]) begin
-                    aux_inst = {dut.U_INST_MEM.mem[(k*4)+3], dut.U_INST_MEM.mem[(k*4)+2], dut.U_INST_MEM.mem[(k*4)+1], dut.U_INST_MEM.mem[k*4]};
+                // always @(dut.U_INST_MEM.mem[k*4] or dut.U_INST_MEM.mem[(k*4)+1] or dut.U_INST_MEM.mem[(k*4)+2] or dut.U_INST_MEM.mem[(k*4)+3]) begin
+                always @(dut.U_INST_MEM.mem[k]) begin
+                    // aux_inst = {dut.U_INST_MEM.mem[(k*4)+3], dut.U_INST_MEM.mem[(k*4)+2], dut.U_INST_MEM.mem[(k*4)+1], dut.U_INST_MEM.mem[k*4]};
+                    aux_inst = {dut.U_INST_MEM.mem[k]};
                     // $display("aux_inst: %h", aux_inst);
                     // Convert aux_inst to a hexadecimal string format
-                    $display("          ->Time %0t ps: Instruction Memory [%0d]= [%b] changed to %h<<<--- = %s\n\n", $time, ((k*4)/4), ((k*4)/4), aux_inst, decode_instruction(aux_inst));
+                    $display("          ->Time %0t ps: Instruction Memory [%0d]= [%b] changed to %h<<<--- = %s\n\n", $time, k, k, aux_inst, decode_instruction(aux_inst));
                     
                 end
             end
@@ -255,28 +259,16 @@ module osiris_i_tb;
         $display("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
         for (i = 0; i < INST_MEM_WORDS; i = i + 1) begin
-            dut.U_INST_MEM.mem[(i*4)]   = 8'h33; // Least significant byte
-            // dut.U_INST_MEM.mem[(i*4)]   = 8'h00 + (i )*4; // Least significant byte
-            dut.U_INST_MEM.mem[(i*4)+1] = 8'h00;
-            dut.U_INST_MEM.mem[(i*4)+2] = 8'h00;
-            dut.U_INST_MEM.mem[(i*4)+3] = 8'h00; // Most significant byte
+            dut.U_INST_MEM.mem[i]   = 32'h00000033; // Least significant byte
+            // dut.U_INST_MEM.mem[(i*4)]   = 32'h00000033 + (i )*4; // Least significant byte
         end
 
-        // for (i = 0; i < DATA_MEM_WORDS; i = i + 1) begin
-        //     // dut.U_DATA_MEM.mem[(i*4)]   = 8'h33; // Least significant byte
-        //     dut.U_DATA_MEM.mem[(i*4)]   = 8'h00 + i; // Least significant byte
-        //     dut.U_DATA_MEM.mem[(i*4)+1] = 8'h00;
-        //     dut.U_DATA_MEM.mem[(i*4)+2] = 8'h00;
-        //     dut.U_DATA_MEM.mem[(i*4)+3] = 8'h00; // Most significant byte
-        // end
+        for (i = 0; i < DATA_MEM_WORDS; i = i + 1) begin
+            dut.U_DATA_MEM.mem[i]   = 32'h00000000 + i ;
+            // dut.U_DATA_MEM.mem[i]   = 32'hABCDEF56; 
+            // dut.U_DATA_MEM.mem[i]   = 32'hDEADBEEF; 
+        end
 
-        // for (i = 0; i < DATA_MEM_WORDS; i = i + 1) begin
-        //     // dut.U_DATA_MEM.mem[(i*4)]   = 8'h33; // Least significant byte
-        //     dut.U_DATA_MEM.mem[(i*4)]   = 8'hEF; // Least significant byte
-        //     dut.U_DATA_MEM.mem[(i*4)+1] = 8'hBE;
-        //     dut.U_DATA_MEM.mem[(i*4)+2] = 8'hAD;
-        //     dut.U_DATA_MEM.mem[(i*4)+3] = 8'hDE; // Most significant byte
-        // end
 
 
         rst_mem_uart = 1;
@@ -471,13 +463,13 @@ module osiris_i_tb;
             // dut.U_INST_MEM.mem[104] = 32'h008302e7;  // jalr x5, 8(x6)  // Jump to address x6 + 8, x5 = return address = 5 (decimal)
 
 
-            // // andi (AND immediate)
-            // #(CLK_PERIOD) $display("Sending andi x1, x2, 0xF");
-            // dut.U_INST_MEM.mem[360] = 32'h00f17093;  // andi x1, x2, 0xF  // x1 = x2 & 0xF = 2
-            // #(CLK_PERIOD) $display("Sending andi x3, x4, 0xA");
-            // dut.U_INST_MEM.mem[364] = 32'h00a27193;  // andi x3, x4, 0xA  // x3 = x4 & 0xA = 0
-            // #(CLK_PERIOD) $display("Sending andi x5, x6, 0xFF");
-            // dut.U_INST_MEM.mem[368] = 32'h0ff37293;  // andi x5, x6, 0xFF  // x5 = x6 & 0xFF = 6
+            // andi (AND immediate)
+            #(CLK_PERIOD) $display("Sending andi x1, x2, 0xF");
+            dut.U_INST_MEM.mem[0] = 32'h00f17093;  // andi x1, x2, 0xF  // x1 = x2 & 0xF = 2
+            #(CLK_PERIOD) $display("Sending andi x3, x4, 0xA");
+            dut.U_INST_MEM.mem[364] = 32'h00a27193;  // andi x3, x4, 0xA  // x3 = x4 & 0xA = 0
+            #(CLK_PERIOD) $display("Sending andi x5, x6, 0xFF");
+            dut.U_INST_MEM.mem[368] = 32'h0ff37293;  // andi x5, x6, 0xFF  // x5 = x6 & 0xFF = 6
 
             // // ori (OR immediate)
             // #(CLK_PERIOD) $display("Sending ori x1, x2, 0x1");
@@ -648,30 +640,31 @@ module osiris_i_tb;
             // // end
 
             // // # sh
-            // x = 220;
-            // #(CLK_PERIOD) $display("Sending sh x1, 0(x1)"); // * since mem[1] is already 1 the tb won't detect any change
-            // {dut.U_INST_MEM.mem[x+3],dut.U_INST_MEM.mem[x+2],dut.U_INST_MEM.mem[x+1],dut.U_INST_MEM.mem[x]} = 32'h00109023;  // sh x1, 0(x1)  // Store halfword from x1 to memory at address x1 + 0: mem[1] = 1
-            // x = 224;
-            // #(CLK_PERIOD) $display("Sending sh x2, 2(x1)");
-            // {dut.U_INST_MEM.mem[x+3],dut.U_INST_MEM.mem[x+2],dut.U_INST_MEM.mem[x+1],dut.U_INST_MEM.mem[x]} = 32'h00209123;  // sh x2, 2(x1)  // Store halfword from x2 to memory at address x1 + 2: mem[3] = 2
-            // x = 228;
-            // #(CLK_PERIOD) $display("Sending sh x3, 4(x1)");
-            // {dut.U_INST_MEM.mem[x+3],dut.U_INST_MEM.mem[x+2],dut.U_INST_MEM.mem[x+1],dut.U_INST_MEM.mem[x]} = 32'h00309223;  // sh x3, 4(x1)  // Store halfword from x3 to memory at address x1 + 4: mem[5] = 3
-            // // // NOP instruction
-            // // #(CLK_PERIOD);
-            // // for (inst = 0; inst < 50; inst=inst+1) begin
-            // //     $display("Sending add x0, x0, x0");
-            // //     dut.U_INST_MEM.mem[inst*4 + 220] = 32'h00000033;  // NOP add x0, x0, x0
-            // end
+            // // x = 220;
+            // // write_instruction_mem(4,32'h0010a023); // sw x1, 0(x1)  // Store word from x1 to memory at address x1 + 0: mem[1] = 1
+            // // write_instruction_mem(4,32'h0010a023); // sw x1, 0(x1)  // Store word from x1 to memory at address x1 + 0: mem[1] = 1
+            // // mem[0] = abcdef56
+            // write_instruction_mem(8,32'h00109023); // sh x1, 0(x1)  // mem[0] = ab(0001)56
+            // write_instruction_mem(12,32'h0000a283); // lw x5, 0(x1)  // reg[5] = ab000156
+            // // write_instruction_mem(16,32'h00422283); // lw x5, 4(x4)  //
+            // write_instruction_mem(20,32'h005090a3); // sh x5, 1(x1) // mem[0] = (0156)0156
+            // // write_instruction_mem(8,32'h00109023); // sh x2, 2(x1)  // Store halfword from x2 to memory at address x1 + 2: mem[3] = 2
+            // // write_instruction_mem(8,32'h00109023); // sh x3, 4(x1)  // Store halfword from x3 to memory at address x1 + 4: mem[5] = 3
+            // // // // NOP instruction
+            // // // #(CLK_PERIOD);
+            // // // for (inst = 0; inst < 50; inst=inst+1) begin
+            // // //     $display("Sending add x0, x0, x0");
+            // // //     dut.U_INST_MEM.mem[inst*4 + 220] = 32'h00000033;  // NOP add x0, x0, x0
+            // // end
 
             // # sw
-            // write_instruction_mem(4,32'h0010A023); // sw x1, 0(x1)  // Store word from x1 to memory at address x1 + 0: mem[1] = 1
+            // write_instruction_mem(24,32'h0010A023); // sw x1, 0(x1)  // mem[0] = (000001)56 //! bug here, the result is being 00000156 but the 2 MSBs should be stored at the next word rigth (an exception should be called)
             
-            // write_instruction_mem(236,32'h0020A123);// sw x2, 4(x1)  // Store word from x2 to memory at address x1 + 4: mem[3] = 2
+            // // write_instruction_mem(236,32'h0020A123);// sw x2, 4(x1)  // Store word from x2 to memory at address x1 + 4: mem[3] = 2
 
-            // write_instruction_mem(12,32'h0030A423); // sw x3, 8(x1)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
-            write_instruction_mem(12,32'h00322223); // sw x3, 4(x4)  // Store word from x3 to memory at address x1 + 8: mem[8] = 3
-            // write_instruction_mem(16,32'h00422283); // lw x5, 4(x4)  // reg[5] = 3
+            // // write_instruction_mem(12,32'h0030A423); // sw x3, 8(x1)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
+            // write_instruction_mem(24,32'h00322223); // sw x3, 4(x4) // mem[8] = 3
+            // // write_instruction_mem(28,32'h00422283); // lw x5, 4(x4)  // reg[5] = 3
 
 
             // write_instruction_mem(16,32'h0010a083); // lw x1, 1(x1)  
@@ -679,7 +672,8 @@ module osiris_i_tb;
             // write_instruction_mem(32,32'h00802183); // lw x4, 8(x0) 
             // write_instruction_mem(8, 32'h00002183); // lw x3, 0(x0)  // reg[3] = 0
             // write_instruction_mem(12,32'h00022203); // lw x4, 0(x4)  // reg[4] = 1
-            // write_instruction_mem(16,32'h00422283); // lw x5, 4(x4)  // reg[5] = 2
+            // write_instruction_mem(80,32'h00422283); // lw x5, 4(x4)  // reg[5] = abcdef56
+            // write_instruction_mem(84,32'h00542223); // sw x5, 4(x8) // mem[12] = abcdef56
 
             // write_instruction_mem(8, 32'h00001183); // lh x3, 0(x0)  // reg[3] = 0
             // write_instruction_mem(12,32'h00021203); // lh x4, 0(x4)  // reg[4] = 1
@@ -806,7 +800,8 @@ module osiris_i_tb;
         begin
             // word_addr = word_addr*4;
             #(CLK_PERIOD) $display("Sending %s", decode_instruction(hex_value));
-            {dut.U_INST_MEM.mem[word_addr+3],dut.U_INST_MEM.mem[word_addr+2],dut.U_INST_MEM.mem[word_addr+1],dut.U_INST_MEM.mem[word_addr]}= hex_value; 
+            // {dut.U_INST_MEM.mem[word_addr+3],dut.U_INST_MEM.mem[word_addr+2],dut.U_INST_MEM.mem[word_addr+1],dut.U_INST_MEM.mem[word_addr]}= hex_value; 
+            dut.U_INST_MEM.mem[word_addr] = hex_value; 
 
         end
     endtask
@@ -1034,7 +1029,7 @@ module osiris_i_tb;
                     
                 step = step + 1;
                 // test_write_to_memory(test_address + it, expected_data + it);
-                test_write_to_memory(test_address + (it *4), expected_data + it, debug);
+                test_write_to_memory(test_address + it, expected_data + it, debug);
                 if (debug) begin
                     $display(" Test 1: [%1d] Completed write iteration", it);
                 end
@@ -1053,13 +1048,13 @@ module osiris_i_tb;
             $display(" --------------------------------------------");
             for (it = 0; it < iterations; it = it + 1) begin
                 // test_read_from_memory(test_address + it, read_data);
-                test_read_from_memory(test_address + (it*4), read_data, debug);
+                test_read_from_memory(test_address + it, read_data, debug);
                 if (debug) begin
                     $display("\nTest 2: [%1d] Read from addr: %h the data: %h", it, test_address + it, read_data);
                 end
                     
                 // compare_memory_data(test_address + it, read_data); // Compare with expected data
-                compare_memory_data(test_address + (it*4), read_data, debug); // Compare with expected data
+                compare_memory_data(test_address + it, read_data, debug); // Compare with expected data
             end
             // if (test_passed == 0) begin
             //     $finish;

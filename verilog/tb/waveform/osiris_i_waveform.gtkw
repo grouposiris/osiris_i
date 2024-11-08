@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Thu Nov  7 22:54:53 2024
+[*] Fri Nov  8 05:07:08 2024
 [*]
 [dumpfile] "/home/lspadersimon/repos/osiris_i/verilog/tb/work/osiris_i.vcd"
-[dumpfile_mtime] "Thu Nov  7 22:53:52 2024"
-[dumpfile_size] 2895317
+[dumpfile_mtime] "Fri Nov  8 05:03:36 2024"
+[dumpfile_size] 6025758
 [savefile] "/home/lspadersimon/repos/osiris_i/verilog/tb/waveform/osiris_i_waveform.gtkw"
-[timestart] 7630320
+[timestart] 15255027
 [size] 1870 1016
 [pos] -1 -1
-*-8.000000 7631005 209750 279850 339850 359750 419750 539850 600100 669950 4320950 4450950 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-8.000000 15255552 209750 279850 339850 359750 419750 539850 600100 669950 4320950 4450950 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [markername] Asent Write Command complete
 [markername] Bsent Write Address byte 1:0
 [markername] Csent Write Address bytes 7:6
@@ -383,7 +383,89 @@ osiris_i_tb.dut.inst_mem_ack_o
 -
 -------- DATA MEM -------
 @28
+osiris_i_tb.dut.i_select_mem
+osiris_i_tb.dut.uart_wb_cyc_o
+osiris_i_tb.dut.funct3[2:0]
+osiris_i_tb.dut.wmask0[3:0]
+osiris_i_tb.dut.mux_funct3[3:0]
+osiris_i_tb.U_DATA_MEM.wmask0[3:0]
+osiris_i_tb.U_DATA_MEM.wmask0_reg[3:0]
+@200
+-
+@24
+[color] 2
+osiris_i_tb.U_DATA_MEM.addr0[8:0]
+osiris_i_tb.U_DATA_MEM.din0[31:0]
+@c00024
+[color] 2
+osiris_i_tb.U_DATA_MEM.addr0_reg[8:0]
+@28
+[color] 2
+(0)osiris_i_tb.U_DATA_MEM.addr0_reg[8:0]
+[color] 2
+(1)osiris_i_tb.U_DATA_MEM.addr0_reg[8:0]
+[color] 2
+(2)osiris_i_tb.U_DATA_MEM.addr0_reg[8:0]
+[color] 2
+(3)osiris_i_tb.U_DATA_MEM.addr0_reg[8:0]
+[color] 2
+(4)osiris_i_tb.U_DATA_MEM.addr0_reg[8:0]
+[color] 2
+(5)osiris_i_tb.U_DATA_MEM.addr0_reg[8:0]
+[color] 2
+(6)osiris_i_tb.U_DATA_MEM.addr0_reg[8:0]
+[color] 2
+(7)osiris_i_tb.U_DATA_MEM.addr0_reg[8:0]
+[color] 2
+(8)osiris_i_tb.U_DATA_MEM.addr0_reg[8:0]
+@1401200
+-group_end
+@24
+osiris_i_tb.U_DATA_MEM.din0_reg[31:0]
+@28
 osiris_i_tb.U_DATA_MEM.clk0
+osiris_i_tb.U_DATA_MEM.web0_reg
+@c00022
+[color] 2
+osiris_i_tb.U_DATA_MEM.dout0[31:0]
+@28
+(0)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(1)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(2)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(3)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(4)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(5)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(6)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(7)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(8)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(9)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(10)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(11)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(12)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(13)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(14)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(15)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(16)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(17)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(18)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(19)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(20)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(21)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(22)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(23)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(24)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(25)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(26)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(27)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(28)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(29)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(30)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+(31)osiris_i_tb.U_DATA_MEM.dout0[31:0]
+@1401200
+-group_end
+@200
+-
+@28
 osiris_i_tb.dut.data_mem_ack_o
 [color] 3
 osiris_i_tb.dut.data_mem_cyc_i
@@ -391,11 +473,24 @@ osiris_i_tb.dut.data_mem_cyc_i
 osiris_i_tb.dut.data_mem_stb_i
 [color] 3
 osiris_i_tb.dut.data_mem_we_i
-@22
+@c00022
 osiris_i_tb.dut.data_mem_adr_i[8:0]
-@24
+@28
+(0)osiris_i_tb.dut.data_mem_adr_i[8:0]
+(1)osiris_i_tb.dut.data_mem_adr_i[8:0]
+(2)osiris_i_tb.dut.data_mem_adr_i[8:0]
+(3)osiris_i_tb.dut.data_mem_adr_i[8:0]
+(4)osiris_i_tb.dut.data_mem_adr_i[8:0]
+(5)osiris_i_tb.dut.data_mem_adr_i[8:0]
+(6)osiris_i_tb.dut.data_mem_adr_i[8:0]
+(7)osiris_i_tb.dut.data_mem_adr_i[8:0]
+(8)osiris_i_tb.dut.data_mem_adr_i[8:0]
+@1401200
+-group_end
+@22
 osiris_i_tb.dut.data_mem_dat_i[31:0]
 osiris_i_tb.dut.data_mem_dat_o[31:0]
+osiris_i_tb.dut.data_reg[31:0]
 @200
 -
 -------- CORE -------
@@ -480,13 +575,16 @@ osiris_i_tb.dut.rst_core
 @22
 osiris_i_tb.dut.U_CORE.i_instr_ID[31:0]
 osiris_i_tb.dut.U_CORE.i_read_data_M[31:0]
-@25
+@24
 osiris_i_tb.dut.U_CORE.o_pc_IF[31:0]
 @28
 osiris_i_tb.dut.U_CORE.o_mem_write_M
 @22
 osiris_i_tb.dut.U_CORE.o_data_addr_M[31:0]
 osiris_i_tb.dut.U_CORE.o_write_data_M[31:0]
+@28
+osiris_i_tb.dut.U_CORE.o_funct3[2:0]
+osiris_i_tb.dut.U_CORE.o_funct3_MEM[2:0]
 @200
 -
 --------- control unit --------
@@ -651,6 +749,8 @@ osiris_i_tb.dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_rst_ID
 @22
 osiris_i_tb.dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID[31:0]
 osiris_i_tb.dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_data_WB[31:0]
+osiris_i_tb.dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.o_rs1_ID[31:0]
+osiris_i_tb.dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.o_rs2_ID[31:0]
 @200
 --------- register_file --------
 @28
@@ -658,8 +758,9 @@ osiris_i_tb.dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.clk
 osiris_i_tb.dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.i_rst_ID
 @420
 osiris_i_tb.dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.i
-@22
+@23
 osiris_i_tb.dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.i_data_WB[31:0]
+@22
 osiris_i_tb.dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.i_instr_ID[31:0]
 osiris_i_tb.dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.i_rd_WB[3:0]
 @28
@@ -683,5 +784,20 @@ osiris_i_tb.dut.U_CORE.U_DATAPATH.U_IF_ID.i_pcplus4_IF[31:0]
 -
 @22
 osiris_i_tb.dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.U_REGISTER_FILE.o_rs2_ID[31:0]
+@200
+-
+--------- stage_execute --------
+@22
+osiris_i_tb.dut.U_CORE.U_STAGE_EXECUTE.o_alu_result_EX[31:0]
+@200
+--------- stage_writeback --------
+@28
+osiris_i_tb.dut.U_CORE.U_STAGE_WRITE_BACK.i_result_src_WB[1:0]
+@22
+osiris_i_tb.dut.U_CORE.U_STAGE_WRITE_BACK.i_pcplus4_WB[31:0]
+osiris_i_tb.dut.U_CORE.U_STAGE_WRITE_BACK.i_alu_result_WB[31:0]
+osiris_i_tb.dut.U_CORE.U_STAGE_WRITE_BACK.i_pc_target_WB[31:0]
+osiris_i_tb.dut.U_CORE.U_STAGE_WRITE_BACK.i_result_data_WB[31:0]
+osiris_i_tb.dut.U_CORE.U_STAGE_WRITE_BACK.o_result_WB[31:0]
 [pattern_trace] 1
 [pattern_trace] 0
