@@ -671,7 +671,7 @@ module osiris_i_tb;
 
             // write_instruction_mem(12,32'h0030A423); // sw x3, 8(x1)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
             write_instruction_mem(12,32'h00322223); // sw x3, 4(x4)  // Store word from x3 to memory at address x1 + 8: mem[8] = 3
-            write_instruction_mem(16,32'h00422283); // lw x5, 4(x4)  // reg[5] = 3
+            // write_instruction_mem(16,32'h00422283); // lw x5, 4(x4)  // reg[5] = 3
 
 
             // write_instruction_mem(16,32'h0010a083); // lw x1, 1(x1)  

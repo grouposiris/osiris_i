@@ -39,7 +39,8 @@ module osiris_i #(
     
     // Data register for read operations
     reg [DATA_WIDTH-1:0] data_reg;
-    
+    reg [3:0] wmask0;
+
     // ------------------------------------------
     // Internal Signals for UART Wishbone Bridge
     // ------------------------------------------
@@ -97,7 +98,7 @@ module osiris_i #(
         .i_instr_ID    (core_instr_ID),     // Instruction input to core
         // .i_read_data_M (core_read_data_M),  // Data read input to core
         .i_read_data_M (data_reg),  // Data read input to core
-        .o_funct3_MEM(mux_funct3),
+        .o_funct3_MEM(funct3),
         .o_pc_IF       (core_pc_IF),        // Program Counter output from core
         .o_mem_write_M (core_mem_write_M),  // Memory write enable output from core
         .o_data_addr_M (core_data_addr_M),  // Data address output from core
@@ -143,7 +144,8 @@ module osiris_i #(
     wire data_mem_cyc_i;
     wire [DATA_WIDTH-1:0] data_mem_dat_o;
     wire data_mem_ack_o;
-    wire [2:0] mux_funct3;
+    // wire [2:0] mux_funct3;
+    wire [3:0] mux_funct3;
 
     // Mux between core and UART bridge for Data Memory access
     assign data_mem_adr_i = (i_select_mem == 1'b1 && uart_wb_stb_o) ? uart_wb_adr_o[DATA_MEM_ADDR_WIDTH-1:0] : core_data_addr_M[DATA_MEM_ADDR_WIDTH-1:0];
@@ -219,7 +221,8 @@ module osiris_i #(
     // Instantiate Data Memory
     // ------------------------------------------
     
-    assign mux_funct3 = (i_select_mem == 1'b1 && uart_wb_cyc_o) ? 3'b010 : funct3; // when UART is selecting, communicate by word (3'b010), when i_select_mem == 0 (connect to core), so core decides with funct3
+    // assign mux_funct3 = (i_select_mem == 1'b1 && uart_wb_cyc_o) ? 3'b010 : funct3; // when UART is selecting, communicate by word (3'b010), when i_select_mem == 0 (connect to core), so core decides with funct3
+    assign mux_funct3 = (i_select_mem == 1'b1 && uart_wb_cyc_o) ? 4'b1111 : wmask0; // when UART is selecting, communicate by word (3'b010), when i_select_mem == 0 (connect to core), so core decides with funct3
 
     // mem_byte #(
     // // mem #(
@@ -255,7 +258,8 @@ module osiris_i #(
         .clk0(clk),  // Clock input for Port 0
         .csb0(1'b0),  // Chip Select (active low) for Port 0: 1'b0 (always active)
         .web0(write_sram_data_mem),  // Write Enable (active low) for Port 0
-        .wmask0(4'b1111),  // [3:0] Write Mask for byte-wise write enable": 4'b111 (always entire word)
+        // .wmask0(4'b1111),  // [3:0] Write Mask for byte-wise write enable": 4'b111 (always entire word)
+        .wmask0(mux_funct3),  // [3:0] Write Mask for byte-wise write enable": 4'b111 (always entire word)
         .addr0(data_mem_adr_i),  // [9:0] Address input for Port 0
         .din0(data_mem_dat_i),  // [31:0] Data input for Port 0
         .dout0(data_mem_dat_o),  // [31:0] Data output for Port 0
@@ -266,7 +270,20 @@ module osiris_i #(
         .dout1(dummy_data2)  // Data output for Port 1 // * unused
     );
 
-    
+    // 3'b000: begin  // sb (Store Byte)        wmask0_reg = 4'b0001
+    // 3'b001: begin  // sh (Store Halfword)    wmask0_reg = 4'b0011
+    // 3'b010: begin  // sw (Store Word)        wmask0_reg = 4'b1111
+    // default: begin  // sw (Store Word)
+    always @(*) begin
+        case (funct3)
+            3'b000: wmask0 = 4'b0001; // sb (Store Byte)
+            3'b001: wmask0 = 4'b0011; // sh (Store Halfword)
+            3'b010: wmask0 = 4'b1111; // sw (Store Word)
+            default: wmask0 = 4'b1111; // Default case, optional
+        endcase
+    end
+
+
     always @(*) begin
 
         case (mux_funct3)
