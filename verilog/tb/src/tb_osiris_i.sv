@@ -161,7 +161,7 @@ module osiris_i_tb;
                 always @(dut.U_DATA_MEM.mem[k] or dut.U_DATA_MEM.mem[k+1] or dut.U_DATA_MEM.mem[k+2] or dut.U_DATA_MEM.mem[k+3]) begin
                     aux_data = {dut.U_DATA_MEM.mem[k+3], dut.U_DATA_MEM.mem[k+2], dut.U_DATA_MEM.mem[k+1], dut.U_DATA_MEM.mem[k]};
                     $display("k:%d aux_data: %d", k, aux_data);
-                    $display("      Time %0t ps: Data Memory [%0d]= [%b] changed to %d<<<--- =%b =%h\n\n", $time, (k/4), (k/4), aux_data, aux_data,aux_data);
+                    $display("      Time %0t ps: Data Memory [%0d]= [%b] changed to %d<<<--- =%b =%h\n\n", $time, k, k, aux_data, aux_data,aux_data);
                 end
             end
         endgenerate
@@ -268,6 +268,14 @@ module osiris_i_tb;
         //     dut.U_DATA_MEM.mem[(i*4)+1] = 8'h00;
         //     dut.U_DATA_MEM.mem[(i*4)+2] = 8'h00;
         //     dut.U_DATA_MEM.mem[(i*4)+3] = 8'h00; // Most significant byte
+        // end
+
+        // for (i = 0; i < DATA_MEM_WORDS; i = i + 1) begin
+        //     // dut.U_DATA_MEM.mem[(i*4)]   = 8'h33; // Least significant byte
+        //     dut.U_DATA_MEM.mem[(i*4)]   = 8'hEF; // Least significant byte
+        //     dut.U_DATA_MEM.mem[(i*4)+1] = 8'hBE;
+        //     dut.U_DATA_MEM.mem[(i*4)+2] = 8'hAD;
+        //     dut.U_DATA_MEM.mem[(i*4)+3] = 8'hDE; // Most significant byte
         // end
 
 
@@ -662,10 +670,13 @@ module osiris_i_tb;
             // write_instruction_mem(236,32'h0020A123);// sw x2, 4(x1)  // Store word from x2 to memory at address x1 + 4: mem[3] = 2
 
             // write_instruction_mem(12,32'h0030A423); // sw x3, 8(x1)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
+            write_instruction_mem(12,32'h00322223); // sw x3, 4(x4)  // Store word from x3 to memory at address x1 + 8: mem[8] = 3
+            write_instruction_mem(16,32'h00422283); // lw x5, 4(x4)  // reg[5] = 3
 
-            // write_instruction_mem(16,32'h0010a083); // lw x1, 1(x1)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
-            // write_instruction_mem(24,32'h0080a103); // lw x2, 8(x1)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
-            // write_instruction_mem(32,32'h00802183); // lw x3, 8(x0)  // Store word from x3 to memory at address x1 + 8: mem[9] = 3
+
+            // write_instruction_mem(16,32'h0010a083); // lw x1, 1(x1)  
+            // write_instruction_mem(24,32'h0080a103); // lw x2, 8(x1) 
+            // write_instruction_mem(32,32'h00802183); // lw x4, 8(x0) 
             // write_instruction_mem(8, 32'h00002183); // lw x3, 0(x0)  // reg[3] = 0
             // write_instruction_mem(12,32'h00022203); // lw x4, 0(x4)  // reg[4] = 1
             // write_instruction_mem(16,32'h00422283); // lw x5, 4(x4)  // reg[5] = 2
@@ -674,9 +685,18 @@ module osiris_i_tb;
             // write_instruction_mem(12,32'h00021203); // lh x4, 0(x4)  // reg[4] = 1
             // write_instruction_mem(16,32'h00421283); // lh x5, 4(x4)  // reg[5] = 2
 
-            write_instruction_mem(8, 32'h00000183); // lb x3, 0(x0)  // reg[3] = 0
-            write_instruction_mem(12,32'h00020203); // lb x4, 0(x4)  // reg[4] = 1
-            write_instruction_mem(16,32'h00420283); // lb x5, 4(x4)  // reg[5] = 2
+            // write_instruction_mem(8, 32'h00000183); // lb x3, 0(x0)  // reg[3] = 0
+            // write_instruction_mem(12,32'h00020203); // lb x4, 0(x4)  // reg[4] = 1
+            // write_instruction_mem(16,32'h00420283); // lb x5, 4(x4)  // reg[5] = 2
+
+            // write_instruction_mem(8, 32'h00000183); // lb x3, 0(x0)  
+            // write_instruction_mem(12, 32'h00100183); // lb x3, 1(x0) 
+            // write_instruction_mem(16, 32'h00200183); // lb x3, 2(x0)  
+
+            // write_instruction_mem(20, 32'h00004183); // lbu x3, 0(x0)  
+            // write_instruction_mem(24, 32'h00104183); // lbu x3, 1(x0) 
+            // write_instruction_mem(28, 32'h00204183); // lbu x3, 2(x0)  
+
 
             // // NOP instruction
             // #(CLK_PERIOD);

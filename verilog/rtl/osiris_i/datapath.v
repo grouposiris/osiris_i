@@ -295,11 +295,12 @@ module datapath #(
     // assign o_data_addr_M  = o_alu_result_WB_neg;
 
     // assign o_write_data_M = write_data_M;
-    //// assign o_write_data_M = write_data_EX;
-    assign o_write_data_M = write_data_WB;
+    assign o_write_data_M = write_data_EX;
+    // assign o_write_data_M = write_data_WB;
 
+    assign o_mem_write_M  = mem_write_EX;
     // assign o_mem_write_M  = mem_write_M;
-    assign o_mem_write_M  = mem_write_WB;
+    // assign o_mem_write_M  = mem_write_WB;
 
     // MEM/WB Pipeline Register
     mem_wb U_MEM_WB (
