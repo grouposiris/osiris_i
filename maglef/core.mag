@@ -1,11 +1,11 @@
 magic
 tech sky130A
 magscale 1 2
-timestamp 1730856143
+timestamp 1731047503
 << obsli1 >>
 rect 2760 2703 77188 127313
 << obsm1 >>
-rect 14 2672 79934 127424
+rect 14 2672 79934 127492
 << metal2 >>
 rect 1950 129200 2006 130000
 rect 3882 129200 3938 130000
@@ -416,11 +416,12 @@ rect 37244 2672 37564 127344
 rect 67304 2672 67624 127344
 rect 67964 2672 68284 127344
 << obsm4 >>
-rect 22691 3027 36504 127261
-rect 36984 3027 37164 127261
-rect 37644 3027 67224 127261
-rect 67704 3027 67884 127261
-rect 68364 3027 69677 127261
+rect 19931 127424 69125 127533
+rect 19931 3027 36504 127424
+rect 36984 3027 37164 127424
+rect 37644 3027 67224 127424
+rect 67704 3027 67884 127424
+rect 68364 3027 69125 127424
 << labels >>
 rlabel metal3 s 0 85008 800 85128 6 clk
 port 1 nsew signal input
@@ -770,8 +771,8 @@ port 168 nsew ground bidirectional
 string FIXED_BBOX 0 0 80000 130000
 string LEFclass BLOCK
 string LEFview TRUE
-string GDS_END 24925068
-string GDS_FILE /home/roliveira/Desktop/osiris_i/openlane/core/runs/metal/results/signoff/core.magic.gds
-string GDS_START 1143924
+string GDS_END 24957358
+string GDS_FILE /home/lspadersimon/repos/osiris_i/openlane/core/runs/metal/results/signoff/core.magic.gds
+string GDS_START 1154360
 << end >>
 

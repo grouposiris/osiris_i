@@ -90,6 +90,8 @@ module datapath #(
     output wire o_funct_7_5;
     output wire [DATA_WIDTH-1:0] o_pc_IF;
     output wire [2:0] o_funct3_MEM;
+    wire [           2:0] funct3_MEM;
+    reg  [DATA_WIDTH-1:0] o_pc_IF_delayed;
 
     // ------------------------------------------
     // Localparams
@@ -128,20 +130,22 @@ module datapath #(
     wire [DATA_WIDTH-1:0] alu_result_M;
     wire [DATA_WIDTH-1:0] write_data_M, pcplus4_M;
     wire [DATA_WIDTH-1:0] pc_target_M;
-    wire [DATA_WIDTH-1:0] write_data_WB;  // used for writing on external memory
+    // wire [DATA_WIDTH-1:0] write_data_WB;  // used for writing on external memory
     wire [3:0] rd_M;
     wire [1:0] result_src_M;
     wire reg_write_M, mem_write_M;
 
     // WB
-    wire [DATA_WIDTH-1:0] result_WB, read_data_WB;
-    wire [DATA_WIDTH-1:0] alu_result_WB, pc_plus4_WB, o_alu_result_WB_neg;
+    wire [DATA_WIDTH-1:0] result_WB;
+    // wire [DATA_WIDTH-1:0] read_data_WB;
+    wire [DATA_WIDTH-1:0] alu_result_WB, pc_plus4_WB;
+    // wire [DATA_WIDTH-1:0] o_alu_result_WB_neg;
 
     wire [DATA_WIDTH-1:0] pc_target_WB;
     wire [           3:0] rd_WB;
     wire                  reg_write_WB;
     wire [           1:0] result_src_WB;
-    wire                  mem_write_WB;
+    // wire                  mem_write_WB;
 
     wire [           2:0] funct3_EX;
 
@@ -164,13 +168,18 @@ module datapath #(
         .o_pc_IF(o_pc_IF)
     );
 
+    always @(posedge clk) begin
+        o_pc_IF_delayed <= o_pc_IF
+            ;  // memory has 1,5 clock cycle delay so the PC was out-of-sync with the instruction
+    end
+
     // IF/ID Pipeline Register
     assign if_id_rst = rst | flush_ID;
     if_id U_IF_ID (
         .clk(clk),
         .i_flush_ID(if_id_rst),  // reset
         .i_stall_ID(stall_ID),
-        .i_pc_IF(o_pc_IF),
+        .i_pc_IF(o_pc_IF_delayed),
         .i_instr_IF(i_instr_IF),
         .i_pcplus4_IF(pcplus4_IF),
         .o_pc_ID(pc_ID),
@@ -237,6 +246,8 @@ module datapath #(
         .o_addr_src_EX(o_addr_src_EX),
         .o_funct3_EX(funct3_EX)
     );
+    // assign o_funct3_MEM = funct3_EX;
+    assign o_funct3_MEM = funct3_MEM;
 
     // Execute Stage
     stage_execute U_STAGE_EXECUTE (
@@ -279,7 +290,7 @@ module datapath #(
         .o_pc_plus4_M(pcplus4_M),
         .o_rd_M(rd_M),
         .o_pc_target_M(pc_target_M),
-        .o_funct3_MEM(o_funct3_MEM)
+        .o_funct3_MEM(funct3_MEM)
     );
 
     // Memory Access Stage
@@ -290,39 +301,44 @@ module datapath #(
     // -------------------------------------
     // Memory Access Stage
     // assign o_data_addr_M  = alu_result_WB;
-    //// assign o_data_addr_M  = alu_result_M;
-    assign o_data_addr_M  = o_alu_result_WB_neg;
+    // assign o_data_addr_M  = o_alu_result_WB_neg;
 
-    // assign o_write_data_M = write_data_M;
-    //// assign o_write_data_M = write_data_EX;
-    assign o_write_data_M = write_data_WB;
+    assign o_data_addr_M  = alu_result_M;
+    // assign o_data_addr_M  = alu_result_EX;
 
-    // assign o_mem_write_M  = mem_write_M;
-    assign o_mem_write_M  = mem_write_WB;
+    // assign o_write_data_M = write_data_WB;
+
+    assign o_write_data_M = write_data_M;
+    // assign o_write_data_M = write_data_EX;
+
+    // assign o_mem_write_M  = mem_write_WB;
+
+    assign o_mem_write_M  = mem_write_M;
+    // assign o_mem_write_M  = mem_write_EX;
 
     // MEM/WB Pipeline Register
     mem_wb U_MEM_WB (
         .clk(clk),
         .rst(rst),  //*
         .i_alu_result_M(alu_result_M),
-        .i_read_data_M(i_read_data_M),
+        // .i_read_data_M(i_read_data_M),
         .i_pc_target_M(pc_target_M),
         .i_pc_plus4_M(pcplus4_M),
         .i_rd_M(rd_M),
         .i_reg_write_M(reg_write_M),
         .i_result_src_M(result_src_M),
-        .i_mem_write_M(mem_write_M),  //*
-        .i_write_data_M(write_data_M),
+        // .i_mem_write_M(mem_write_M),  //*
+        // .i_write_data_M(write_data_M),
         .o_alu_result_WB(alu_result_WB),
-        .o_alu_result_WB_neg(o_alu_result_WB_neg),
-        .o_read_data_WB(read_data_WB),
+        // .o_alu_result_WB_neg(o_alu_result_WB_neg),
+        // .o_read_data_WB(read_data_WB),
         .o_pc_target_WB(pc_target_WB),  // ! not being used??
         .o_pc_plus4_WB(pc_plus4_WB),
         .o_rd_WB(rd_WB),
         .o_reg_write_WB(reg_write_WB),
-        .o_result_src_WB(result_src_WB),
-        .o_mem_write_WB(mem_write_WB),  //*
-        .o_write_data_WB(write_data_WB)
+        .o_result_src_WB(result_src_WB)
+        // .o_mem_write_WB(mem_write_WB),  //*
+        // .o_write_data_WB(write_data_WB)
     );
 
     // Write-Back Stage
@@ -331,7 +347,8 @@ module datapath #(
         .i_alu_result_WB(alu_result_WB),
         // .i_alu_result_WB(o_alu_result_WB_neg),  //* reg file adjustment
         .i_pc_target_WB(pc_target_WB),
-        .i_result_data_WB(read_data_WB),
+        .i_result_data_WB(i_read_data_M),
+        // .i_result_data_WB(read_data_WB),
         .i_pcplus4_WB(pc_plus4_WB),
         .o_result_WB(result_WB)
     );

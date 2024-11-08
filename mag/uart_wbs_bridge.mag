@@ -1,7 +1,7 @@
 magic
 tech sky130A
 magscale 1 2
-timestamp 1730852867
+timestamp 1731048028
 << viali >>
 rect 4353 34085 4387 34119
 rect 14105 34085 14139 34119
@@ -84222,7 +84222,7 @@ rect 31023 2688 31039 2752
 rect 31103 2688 31119 2752
 rect 31183 2688 31191 2752
 rect 30871 2672 31191 2688
-use sky130_fd_sc_hd__inv_2  _0709_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__inv_2  _0709_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 25392 0 1 19040
 box -38 -48 314 592
@@ -84278,15 +84278,15 @@ use sky130_fd_sc_hd__inv_2  _0722_
 timestamp 1688980957
 transform 1 0 15088 0 1 15776
 box -38 -48 314 592
-use sky130_fd_sc_hd__nor2_1  _0723_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__nor2_1  _0723_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 10580 0 -1 23392
 box -38 -48 314 592
-use sky130_fd_sc_hd__or2_2  _0724_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__or2_2  _0724_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 9568 0 1 21216
 box -38 -48 498 592
-use sky130_fd_sc_hd__or2_1  _0725_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__or2_1  _0725_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 10580 0 1 22304
 box -38 -48 498 592
@@ -84294,7 +84294,7 @@ use sky130_fd_sc_hd__nor2_1  _0726_
 timestamp 1688980957
 transform -1 0 11132 0 -1 23392
 box -38 -48 314 592
-use sky130_fd_sc_hd__o21a_1  _0727_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__o21a_1  _0727_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 10212 0 -1 23392
 box -38 -48 590 592
@@ -84302,15 +84302,15 @@ use sky130_fd_sc_hd__inv_2  _0728_
 timestamp 1688980957
 transform 1 0 10212 0 1 23392
 box -38 -48 314 592
-use sky130_fd_sc_hd__or4b_1  _0729_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__or4b_1  _0729_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 12880 0 1 32096
 box -38 -48 774 592
-use sky130_fd_sc_hd__or4bb_1  _0730_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__or4bb_1  _0730_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 11500 0 1 28832
 box -38 -48 866 592
-use sky130_fd_sc_hd__or4_1  _0731_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__or4_1  _0731_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 12328 0 -1 28832
 box -38 -48 590 592
@@ -84330,7 +84330,7 @@ use sky130_fd_sc_hd__nor2_1  _0735_
 timestamp 1688980957
 transform 1 0 10028 0 1 24480
 box -38 -48 314 592
-use sky130_fd_sc_hd__or4_4  _0736_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__or4_4  _0736_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 11960 0 -1 24480
 box -38 -48 866 592
@@ -84354,11 +84354,11 @@ use sky130_fd_sc_hd__or4_1  _0741_
 timestamp 1688980957
 transform -1 0 11960 0 1 23392
 box -38 -48 590 592
-use sky130_fd_sc_hd__o31a_1  _0742_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__o31a_1  _0742_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 9936 0 1 20128
 box -38 -48 682 592
-use sky130_fd_sc_hd__xnor2_1  _0743_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__xnor2_1  _0743_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 9752 0 1 19040
 box -38 -48 682 592
@@ -84366,15 +84366,15 @@ use sky130_fd_sc_hd__o21a_1  _0744_
 timestamp 1688980957
 transform -1 0 11684 0 -1 21216
 box -38 -48 590 592
-use sky130_fd_sc_hd__and2b_1  _0745_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__and2b_1  _0745_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 10488 0 1 20128
 box -38 -48 590 592
-use sky130_fd_sc_hd__a31o_1  _0746_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__a31o_1  _0746_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 10028 0 -1 21216
 box -38 -48 682 592
-use sky130_fd_sc_hd__nand2_1  _0747_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__nand2_1  _0747_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 12512 0 -1 23392
 box -38 -48 314 592
@@ -84386,11 +84386,11 @@ use sky130_fd_sc_hd__nor2_1  _0749_
 timestamp 1688980957
 transform -1 0 10396 0 -1 22304
 box -38 -48 314 592
-use sky130_fd_sc_hd__mux2_1  _0750_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__mux2_1  _0750_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 9016 0 -1 16864
 box -38 -48 866 592
-use sky130_fd_sc_hd__and4bb_1  _0751_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__and4bb_1  _0751_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 9752 0 -1 20128
 box -38 -48 958 592
@@ -84402,7 +84402,7 @@ use sky130_fd_sc_hd__or4_1  _0753_
 timestamp 1688980957
 transform -1 0 11592 0 1 19040
 box -38 -48 590 592
-use sky130_fd_sc_hd__and4_1  _0754_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__and4_1  _0754_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 12052 0 -1 20128
 box -38 -48 682 592
@@ -84410,7 +84410,7 @@ use sky130_fd_sc_hd__and2b_1  _0755_
 timestamp 1688980957
 transform -1 0 11132 0 -1 19040
 box -38 -48 590 592
-use sky130_fd_sc_hd__a21o_1  _0756_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__a21o_1  _0756_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 9936 0 1 17952
 box -38 -48 590 592
@@ -84430,11 +84430,11 @@ use sky130_fd_sc_hd__o31a_1  _0760_
 timestamp 1688980957
 transform 1 0 11868 0 -1 23392
 box -38 -48 682 592
-use sky130_fd_sc_hd__a41o_1  _0761_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__a41o_1  _0761_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 12604 0 1 22304
 box -38 -48 774 592
-use sky130_fd_sc_hd__o41a_1  _0762_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__o41a_1  _0762_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 10580 0 -1 20128
 box -38 -48 866 592
@@ -84450,7 +84450,7 @@ use sky130_fd_sc_hd__mux2_1  _0765_
 timestamp 1688980957
 transform 1 0 11868 0 -1 19040
 box -38 -48 866 592
-use sky130_fd_sc_hd__and2_1  _0766_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__and2_1  _0766_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 29072 0 -1 12512
 box -38 -48 498 592
@@ -84482,7 +84482,7 @@ use sky130_fd_sc_hd__or4_1  _0773_
 timestamp 1688980957
 transform 1 0 27968 0 -1 20128
 box -38 -48 590 592
-use sky130_fd_sc_hd__nor2_2  _0774_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__nor2_2  _0774_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 27508 0 -1 16864
 box -38 -48 498 592
@@ -84490,7 +84490,7 @@ use sky130_fd_sc_hd__nand2_1  _0775_
 timestamp 1688980957
 transform -1 0 23368 0 1 14688
 box -38 -48 314 592
-use sky130_fd_sc_hd__and2_2  _0776_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__and2_2  _0776_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 27324 0 -1 15776
 box -38 -48 590 592
@@ -84534,7 +84534,7 @@ use sky130_fd_sc_hd__nor2_1  _0786_
 timestamp 1688980957
 transform -1 0 28888 0 -1 13600
 box -38 -48 314 592
-use sky130_fd_sc_hd__a22o_1  _0787_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__a22o_1  _0787_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 30360 0 1 13600
 box -38 -48 682 592
@@ -84546,7 +84546,7 @@ use sky130_fd_sc_hd__or2_1  _0789_
 timestamp 1688980957
 transform -1 0 29072 0 -1 12512
 box -38 -48 498 592
-use sky130_fd_sc_hd__a32o_1  _0790_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__a32o_1  _0790_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 27416 0 -1 13600
 box -38 -48 774 592
@@ -84562,11 +84562,11 @@ use sky130_fd_sc_hd__nand2_1  _0793_
 timestamp 1688980957
 transform -1 0 27600 0 -1 23392
 box -38 -48 314 592
-use sky130_fd_sc_hd__nand3_1  _0794_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__nand3_1  _0794_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 26864 0 -1 22304
 box -38 -48 406 592
-use sky130_fd_sc_hd__and4_2  _0795_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__and4_2  _0795_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 27876 0 1 22304
 box -38 -48 774 592
@@ -84578,7 +84578,7 @@ use sky130_fd_sc_hd__nand2_1  _0797_
 timestamp 1688980957
 transform -1 0 29900 0 1 23392
 box -38 -48 314 592
-use sky130_fd_sc_hd__and3_1  _0798_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__and3_1  _0798_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 29716 0 1 20128
 box -38 -48 498 592
@@ -84586,7 +84586,7 @@ use sky130_fd_sc_hd__and4_1  _0799_
 timestamp 1688980957
 transform 1 0 29532 0 1 17952
 box -38 -48 682 592
-use sky130_fd_sc_hd__nor2_4  _0800_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__nor2_4  _0800_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 27324 0 1 15776
 box -38 -48 866 592
@@ -84630,7 +84630,7 @@ use sky130_fd_sc_hd__and2_1  _0810_
 timestamp 1688980957
 transform -1 0 25852 0 -1 21216
 box -38 -48 498 592
-use sky130_fd_sc_hd__o2bb2a_1  _0811_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__o2bb2a_1  _0811_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 28612 0 1 17952
 box -38 -48 774 592
@@ -84658,11 +84658,11 @@ use sky130_fd_sc_hd__and4_1  _0817_
 timestamp 1688980957
 transform 1 0 29532 0 -1 16864
 box -38 -48 682 592
-use sky130_fd_sc_hd__o21ai_1  _0818_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__o21ai_1  _0818_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 29348 0 1 15776
 box -38 -48 406 592
-use sky130_fd_sc_hd__a21oi_1  _0819_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__a21oi_1  _0819_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 29716 0 1 15776
 box -38 -48 406 592
@@ -84710,7 +84710,7 @@ use sky130_fd_sc_hd__inv_2  _0830_
 timestamp 1688980957
 transform -1 0 31096 0 1 20128
 box -38 -48 314 592
-use sky130_fd_sc_hd__or3b_1  _0831_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__or3b_1  _0831_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 29256 0 -1 23392
 box -38 -48 682 592
@@ -84798,7 +84798,7 @@ use sky130_fd_sc_hd__or2_1  _0852_
 timestamp 1688980957
 transform -1 0 28152 0 1 12512
 box -38 -48 498 592
-use sky130_fd_sc_hd__mux4_1  _0853_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__mux4_1  _0853_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 24380 0 -1 12512
 box -38 -48 1970 592
@@ -84918,7 +84918,7 @@ use sky130_fd_sc_hd__or4b_1  _0882_
 timestamp 1688980957
 transform -1 0 10120 0 1 23392
 box -38 -48 774 592
-use sky130_fd_sc_hd__a21bo_1  _0883_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__a21bo_1  _0883_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 7544 0 1 23392
 box -38 -48 774 592
@@ -84954,7 +84954,7 @@ use sky130_fd_sc_hd__nand2_1  _0891_
 timestamp 1688980957
 transform 1 0 14536 0 -1 33184
 box -38 -48 314 592
-use sky130_fd_sc_hd__and3_2  _0892_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__and3_2  _0892_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 14352 0 1 32096
 box -38 -48 590 592
@@ -85030,7 +85030,7 @@ use sky130_fd_sc_hd__and3_1  _0910_
 timestamp 1688980957
 transform -1 0 14996 0 -1 32096
 box -38 -48 498 592
-use sky130_fd_sc_hd__o21bai_1  _0911_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__o21bai_1  _0911_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 14352 0 1 32096
 box -38 -48 590 592
@@ -85046,7 +85046,7 @@ use sky130_fd_sc_hd__mux2_1  _0914_
 timestamp 1688980957
 transform -1 0 16560 0 -1 29920
 box -38 -48 866 592
-use sky130_fd_sc_hd__and4b_1  _0915_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__and4b_1  _0915_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 14444 0 1 28832
 box -38 -48 774 592
@@ -85090,11 +85090,11 @@ use sky130_fd_sc_hd__nor2_1  _0925_
 timestamp 1688980957
 transform -1 0 14812 0 -1 26656
 box -38 -48 314 592
-use sky130_fd_sc_hd__o22a_1  _0926_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__o22a_1  _0926_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 14168 0 1 25568
 box -38 -48 682 592
-use sky130_fd_sc_hd__a2bb2o_1  _0927_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__a2bb2o_1  _0927_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 15272 0 1 26656
 box -38 -48 774 592
@@ -85114,7 +85114,7 @@ use sky130_fd_sc_hd__a32o_1  _0931_
 timestamp 1688980957
 transform 1 0 9936 0 -1 28832
 box -38 -48 774 592
-use sky130_fd_sc_hd__a21boi_1  _0932_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__a21boi_1  _0932_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 11868 0 -1 27744
 box -38 -48 590 592
@@ -85122,7 +85122,7 @@ use sky130_fd_sc_hd__and2_1  _0933_
 timestamp 1688980957
 transform 1 0 10672 0 -1 27744
 box -38 -48 498 592
-use sky130_fd_sc_hd__o32a_1  _0934_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__o32a_1  _0934_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 10580 0 1 27744
 box -38 -48 774 592
@@ -85134,11 +85134,11 @@ use sky130_fd_sc_hd__inv_2  _0936_
 timestamp 1688980957
 transform -1 0 8372 0 -1 31008
 box -38 -48 314 592
-use sky130_fd_sc_hd__and3b_2  _0937_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__and3b_2  _0937_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 18860 0 -1 12512
 box -38 -48 774 592
-use sky130_fd_sc_hd__nand2b_1  _0938_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__nand2b_1  _0938_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 21344 0 1 13600
 box -38 -48 498 592
@@ -85154,7 +85154,7 @@ use sky130_fd_sc_hd__and2b_1  _0941_
 timestamp 1688980957
 transform 1 0 18308 0 -1 12512
 box -38 -48 590 592
-use sky130_fd_sc_hd__and3b_1  _0942_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__and3b_1  _0942_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 17572 0 1 13600
 box -38 -48 682 592
@@ -85170,7 +85170,7 @@ use sky130_fd_sc_hd__or4_1  _0945_
 timestamp 1688980957
 transform 1 0 16928 0 -1 13600
 box -38 -48 590 592
-use sky130_fd_sc_hd__or3_1  _0946_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__or3_1  _0946_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 18952 0 1 11424
 box -38 -48 498 592
@@ -85186,7 +85186,7 @@ use sky130_fd_sc_hd__and3_1  _0949_
 timestamp 1688980957
 transform -1 0 18032 0 -1 9248
 box -38 -48 498 592
-use sky130_fd_sc_hd__nor3b_1  _0950_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__nor3b_1  _0950_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 15732 0 1 11424
 box -38 -48 590 592
@@ -85194,7 +85194,7 @@ use sky130_fd_sc_hd__or3b_1  _0951_
 timestamp 1688980957
 transform -1 0 16376 0 -1 13600
 box -38 -48 682 592
-use sky130_fd_sc_hd__or3_2  _0952_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__or3_2  _0952_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 17664 0 -1 11424
 box -38 -48 590 592
@@ -85214,7 +85214,7 @@ use sky130_fd_sc_hd__a21o_1  _0956_
 timestamp 1688980957
 transform 1 0 17480 0 1 8160
 box -38 -48 590 592
-use sky130_fd_sc_hd__and4bb_2  _0957_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__and4bb_2  _0957_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 16100 0 -1 11424
 box -38 -48 958 592
@@ -85254,11 +85254,11 @@ use sky130_fd_sc_hd__mux2_1  _0966_
 timestamp 1688980957
 transform 1 0 14812 0 1 9248
 box -38 -48 866 592
-use sky130_fd_sc_hd__nor3_1  _0967_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__nor3_1  _0967_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 18584 0 1 14688
 box -38 -48 406 592
-use sky130_fd_sc_hd__nand2_2  _0968_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__nand2_2  _0968_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 20884 0 -1 14688
 box -38 -48 498 592
@@ -85270,7 +85270,7 @@ use sky130_fd_sc_hd__and2_2  _0970_
 timestamp 1688980957
 transform 1 0 16928 0 1 11424
 box -38 -48 590 592
-use sky130_fd_sc_hd__nand3b_4  _0971_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__nand3b_4  _0971_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 20792 0 -1 12512
 box -38 -48 1510 592
@@ -85278,7 +85278,7 @@ use sky130_fd_sc_hd__a2bb2o_1  _0972_
 timestamp 1688980957
 transform 1 0 21344 0 -1 21216
 box -38 -48 774 592
-use sky130_fd_sc_hd__or3b_2  _0973_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__or3b_2  _0973_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 19688 0 1 8160
 box -38 -48 682 592
@@ -85338,7 +85338,7 @@ use sky130_fd_sc_hd__nor2_1  _0987_
 timestamp 1688980957
 transform 1 0 19136 0 -1 11424
 box -38 -48 314 592
-use sky130_fd_sc_hd__or2_4  _0988_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__or2_4  _0988_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 19688 0 -1 11424
 box -38 -48 682 592
@@ -85506,7 +85506,7 @@ use sky130_fd_sc_hd__and2_2  _1029_
 timestamp 1688980957
 transform -1 0 13432 0 1 11424
 box -38 -48 590 592
-use sky130_fd_sc_hd__and3b_4  _1030_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__and3b_4  _1030_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 18952 0 1 10336
 box -38 -48 958 592
@@ -85682,11 +85682,11 @@ use sky130_fd_sc_hd__nor2_1  _1073_
 timestamp 1688980957
 transform -1 0 20792 0 1 15776
 box -38 -48 314 592
-use sky130_fd_sc_hd__a211o_1  _1074_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__a211o_1  _1074_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 22172 0 1 13600
 box -38 -48 682 592
-use sky130_fd_sc_hd__nor3b_4  _1075_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__nor3b_4  _1075_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 19412 0 1 11424
 box -38 -48 1418 592
@@ -85798,7 +85798,7 @@ use sky130_fd_sc_hd__a21o_1  _1102_
 timestamp 1688980957
 transform 1 0 20240 0 -1 13600
 box -38 -48 590 592
-use sky130_fd_sc_hd__nand2_4  _1103_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__nand2_4  _1103_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 14444 0 -1 11424
 box -38 -48 866 592
@@ -86082,7 +86082,7 @@ use sky130_fd_sc_hd__mux2_1  _1173_
 timestamp 1688980957
 transform 1 0 4508 0 1 4896
 box -38 -48 866 592
-use sky130_fd_sc_hd__a211oi_1  _1174_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__a211oi_1  _1174_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 15732 0 1 12512
 box -38 -48 590 592
@@ -86090,7 +86090,7 @@ use sky130_fd_sc_hd__o22a_1  _1175_
 timestamp 1688980957
 transform 1 0 18768 0 1 12512
 box -38 -48 682 592
-use sky130_fd_sc_hd__a311o_1  _1176_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__a311o_1  _1176_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 16836 0 1 12512
 box -38 -48 774 592
@@ -86186,7 +86186,7 @@ use sky130_fd_sc_hd__a21oi_1  _1199_
 timestamp 1688980957
 transform -1 0 12972 0 1 23392
 box -38 -48 406 592
-use sky130_fd_sc_hd__a31oi_1  _1200_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__a31oi_1  _1200_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 26680 0 1 13600
 box -38 -48 498 592
@@ -87058,7 +87058,7 @@ use sky130_fd_sc_hd__inv_2  _1417_
 timestamp 1688980957
 transform 1 0 8924 0 -1 21216
 box -38 -48 314 592
-use sky130_fd_sc_hd__dfrtp_1  _1418_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__dfrtp_1  _1418_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 14168 0 -1 15776
 box -38 -48 1878 592
@@ -87070,15 +87070,15 @@ use sky130_fd_sc_hd__dfrtp_1  _1420_
 timestamp 1688980957
 transform -1 0 20424 0 -1 14688
 box -38 -48 1878 592
-use sky130_fd_sc_hd__dfstp_1  _1421_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__dfstp_1  _1421_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 25668 0 1 14688
 box -38 -48 1970 592
-use sky130_fd_sc_hd__dfrtp_4  _1422_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__dfrtp_4  _1422_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 13984 0 1 14688
 box -38 -48 2154 592
-use sky130_fd_sc_hd__dfrtp_2  _1423_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__dfrtp_2  _1423_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 20608 0 -1 16864
 box -38 -48 1970 592
@@ -87930,11 +87930,11 @@ use sky130_fd_sc_hd__dfrtp_1  _1635_
 timestamp 1688980957
 transform 1 0 6072 0 -1 21216
 box -38 -48 1878 592
-use sky130_fd_sc_hd__clkbuf_2  _1636_ Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__clkbuf_2  _1636_ dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 13432 0 1 33184
 box -38 -48 406 592
-use sky130_fd_sc_hd__diode_2  ANTENNA__0871__A0 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__diode_2  ANTENNA__0871__A0 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 15364 0 1 21216
 box -38 -48 222 592
@@ -89350,7 +89350,7 @@ use sky130_fd_sc_hd__diode_2  ANTENNA_output99_A
 timestamp 1688980957
 transform -1 0 5152 0 1 33184
 box -38 -48 222 592
-use sky130_fd_sc_hd__clkbuf_16  clkbuf_0_clk Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__clkbuf_16  clkbuf_0_clk dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 17112 0 1 19040
 box -38 -48 1878 592
@@ -89474,7 +89474,7 @@ use sky130_fd_sc_hd__clkbuf_16  clkbuf_leaf_27_clk
 timestamp 1688980957
 transform -1 0 5336 0 1 5984
 box -38 -48 1878 592
-use sky130_fd_sc_hd__buf_6  fanout105 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__buf_6  fanout105 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 32936 0 1 11424
 box -38 -48 866 592
@@ -89494,15 +89494,15 @@ use sky130_fd_sc_hd__buf_6  fanout109
 timestamp 1688980957
 transform 1 0 14904 0 -1 13600
 box -38 -48 866 592
-use sky130_fd_sc_hd__buf_8  fanout110 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__buf_8  fanout110 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 15640 0 1 11424
 box -38 -48 1142 592
-use sky130_fd_sc_hd__buf_4  fanout111 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__buf_4  fanout111 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 15640 0 1 16864
 box -38 -48 590 592
-use sky130_fd_sc_hd__clkbuf_8  fanout112 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__clkbuf_8  fanout112 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 16008 0 -1 17952
 box -38 -48 1050 592
@@ -89598,19 +89598,19 @@ use sky130_fd_sc_hd__buf_8  fanout135
 timestamp 1688980957
 transform 1 0 5428 0 1 31008
 box -38 -48 1142 592
-use sky130_fd_sc_hd__decap_6  FILLER_0_0_6 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__decap_6  FILLER_0_0_6 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 3312 0 1 2720
 box -38 -48 590 592
-use sky130_fd_sc_hd__fill_1  FILLER_0_0_39 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__fill_1  FILLER_0_0_39 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 6348 0 1 2720
 box -38 -48 130 592
-use sky130_fd_sc_hd__decap_8  FILLER_0_0_76 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__decap_8  FILLER_0_0_76 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 9752 0 1 2720
 box -38 -48 774 592
-use sky130_fd_sc_hd__decap_4  FILLER_0_0_85 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__decap_4  FILLER_0_0_85 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 10580 0 1 2720
 box -38 -48 406 592
@@ -89618,7 +89618,7 @@ use sky130_fd_sc_hd__fill_1  FILLER_0_0_89
 timestamp 1688980957
 transform 1 0 10948 0 1 2720
 box -38 -48 130 592
-use sky130_fd_sc_hd__decap_3  FILLER_0_0_93 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__decap_3  FILLER_0_0_93 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 11316 0 1 2720
 box -38 -48 314 592
@@ -89690,7 +89690,7 @@ use sky130_fd_sc_hd__decap_8  FILLER_0_1_19
 timestamp 1688980957
 transform 1 0 4508 0 -1 3808
 box -38 -48 774 592
-use sky130_ef_sc_hd__decap_12  FILLER_0_1_43 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_ef_sc_hd__decap_12  FILLER_0_1_43 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 6716 0 -1 3808
 box -38 -48 1142 592
@@ -89702,7 +89702,7 @@ use sky130_fd_sc_hd__decap_8  FILLER_0_1_57
 timestamp 1688980957
 transform 1 0 8004 0 -1 3808
 box -38 -48 774 592
-use sky130_fd_sc_hd__fill_2  FILLER_0_1_65 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__fill_2  FILLER_0_1_65 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 8740 0 -1 3808
 box -38 -48 222 592
@@ -95086,7 +95086,7 @@ use sky130_fd_sc_hd__decap_3  FILLER_0_57_337
 timestamp 1688980957
 transform 1 0 33764 0 -1 34272
 box -38 -48 314 592
-use sky130_fd_sc_hd__dlygate4sd3_1  hold1 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__dlygate4sd3_1  hold1 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 24196 0 -1 9248
 box -38 -48 774 592
@@ -95306,7 +95306,7 @@ use sky130_fd_sc_hd__dlygate4sd3_1  hold55
 timestamp 1688980957
 transform 1 0 9752 0 1 22304
 box -38 -48 774 592
-use sky130_fd_sc_hd__clkdlybuf4s25_1  hold56 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__clkdlybuf4s25_1  hold56 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 10488 0 -1 20128
 box -38 -48 774 592
@@ -95370,7 +95370,7 @@ use sky130_fd_sc_hd__dlygate4sd3_1  hold71
 timestamp 1688980957
 transform -1 0 31188 0 -1 8160
 box -38 -48 774 592
-use sky130_fd_sc_hd__buf_1  hold72 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__buf_1  hold72 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 11868 0 -1 23392
 box -38 -48 314 592
@@ -95406,7 +95406,7 @@ use sky130_fd_sc_hd__clkbuf_2  hold80
 timestamp 1688980957
 transform 1 0 17940 0 1 9248
 box -38 -48 406 592
-use sky130_fd_sc_hd__buf_2  hold81 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__buf_2  hold81 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 14444 0 1 13600
 box -38 -48 406 592
@@ -95742,7 +95742,7 @@ use sky130_fd_sc_hd__buf_2  hold164
 timestamp 1688980957
 transform -1 0 15088 0 -1 14688
 box -38 -48 406 592
-use sky130_fd_sc_hd__dlymetal6s2s_1  hold165 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__dlymetal6s2s_1  hold165 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 15548 0 1 12512
 box -38 -48 958 592
@@ -96126,7 +96126,7 @@ use sky130_fd_sc_hd__dlygate4sd3_1  hold260
 timestamp 1688980957
 transform -1 0 9108 0 1 32096
 box -38 -48 774 592
-use sky130_fd_sc_hd__clkbuf_4  hold261 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__clkbuf_4  hold261 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 12420 0 -1 24480
 box -38 -48 590 592
@@ -96650,7 +96650,7 @@ use sky130_fd_sc_hd__dlymetal6s2s_1  input1
 timestamp 1688980957
 transform 1 0 3036 0 1 24480
 box -38 -48 958 592
-use sky130_fd_sc_hd__clkbuf_1  input2 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__clkbuf_1  input2 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 31648 0 1 2720
 box -38 -48 314 592
@@ -96790,7 +96790,7 @@ use sky130_fd_sc_hd__clkbuf_1  input36
 timestamp 1688980957
 transform 1 0 33764 0 -1 13600
 box -38 -48 314 592
-use sky130_fd_sc_hd__buf_12  output37 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__buf_12  output37 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform -1 0 22356 0 -1 34272
 box -38 -48 1510 592
@@ -97526,7 +97526,7 @@ use sky130_fd_sc_hd__decap_3  PHY_115
 timestamp 1688980957
 transform -1 0 34316 0 -1 34272
 box -38 -48 314 592
-use sky130_fd_sc_hd__tapvpwrvgnd_1  TAP_116 Downloads/unic-cass/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
+use sky130_fd_sc_hd__tapvpwrvgnd_1  TAP_116 dependencies/pdks/sky130A/libs.ref/sky130_fd_sc_hd/mag
 timestamp 1688980957
 transform 1 0 5336 0 1 2720
 box -38 -48 130 592

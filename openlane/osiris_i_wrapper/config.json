@@ -2,7 +2,7 @@
     "DESIGN_NAME": "osiris_i_wrapper",
     "VERILOG_FILES": "dir::../../verilog/rtl/osiris_i_wrapper/*.v",
     "CLOCK_PORT": "wb_clk_i",
-    "CLOCK_NET": ["uart_wbs_bridge.clk","mem_byte.clk","core.clk"],
+    "CLOCK_NET": ["uart_wbs_bridge.clk","sky130_sram_2kbyte_1rw1r_32x512_8.clk","core.clk"],
     "CLOCK_PERIOD": 25,
     "RT_MIN_LAYER": "met1",
     "RT_MAX_LAYER": "met4",
@@ -22,15 +22,15 @@
     "BOTTOM_MARGIN_MULT": 5,
     "EXTRA_LEFS":      ["dir::../../lef/core.lef",
                         "dir::../../lef/uart_wbs_bridge.lef",
-                        "dir::../../lef/mem_byte.lef"
+                        "/home/lspadersimon/repos/caravel_user_project/dependencies/pdks/volare/sky130/versions/78b7bc32ddb4b6f14f76883c2e2dc5b5de9d1cbc/sky130A/libs.ref/sky130_sram_macros/lef/sky130_sram_2kbyte_1rw1r_32x512_8.lef"
     ],
     "EXTRA_GDS_FILES": ["dir::../../gds/core.gds",
                         "dir::../../gds/uart_wbs_bridge.gds",
-                        "dir::../..//gds/mem_byte.gds"
+                        "/home/lspadersimon/repos/caravel_user_project/dependencies/pdks/volare/sky130/versions/78b7bc32ddb4b6f14f76883c2e2dc5b5de9d1cbc/sky130A/libs.ref/sky130_sram_macros/gds/sky130_sram_2kbyte_1rw1r_32x512_8.gds"
     ],
     "EXTRA_LIBS":      ["dir::../../lib/core.lib",
                         "dir::../../lib/uart_wbs_bridge.lib",
-                        "dir::../../lib/mem_byte.lib"
+                        "/home/lspadersimon/repos/caravel_user_project/dependencies/pdks/volare/sky130/versions/78b7bc32ddb4b6f14f76883c2e2dc5b5de9d1cbc/sky130A/libs.ref/sky130_sram_macros/lib/sky130_sram_2kbyte_1rw1r_32x512_8_TT_1p8V_25C.lib"
     ],
     "FP_PDN_MACRO_HOOKS": "U_UART_WB_BRIDGE vccd1 vssd1 vccd1 vssd1, U_INST_MEM vccd1 vssd1 vccd1 vssd1, U_DATA_MEM vccd1 vssd1 vccd1 vssd1, U_CORE vccd1 vssd1 vccd1 vssd1",
     "VERILOG_FILES_BLACKBOX": [
