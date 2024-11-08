@@ -36,7 +36,10 @@ module osiris_i #(
     inout vccd1;  // Power supply
     inout vssd1;  // Ground
 `endif
-
+    
+    // Data register for read operations
+    reg [DATA_WIDTH-1:0] data_reg;
+    
     // ------------------------------------------
     // Internal Signals for UART Wishbone Bridge
     // ------------------------------------------
@@ -92,7 +95,8 @@ module osiris_i #(
         .clk           (clk),
         .rst           (rst_core),
         .i_instr_ID    (core_instr_ID),     // Instruction input to core
-        .i_read_data_M (core_read_data_M),  // Data read input to core
+        // .i_read_data_M (core_read_data_M),  // Data read input to core
+        .i_read_data_M (data_reg),  // Data read input to core
         .o_funct3_MEM(mux_funct3),
         .o_pc_IF       (core_pc_IF),        // Program Counter output from core
         .o_mem_write_M (core_mem_write_M),  // Memory write enable output from core
@@ -261,6 +265,31 @@ module osiris_i #(
         .addr1({DATA_MEM_ADDR_WIDTH{1'b0}}),  // Address input for Port 1 // * unused
         .dout1(dummy_data2)  // Data output for Port 1 // * unused
     );
+
+    
+    always @(*) begin
+
+        case (mux_funct3)
+            3'b000: begin  // lb (Load Byte): rd = SignExt([wb_adr_i]7:0)
+                data_reg = {{24{data_mem_dat_o[7]}}, data_mem_dat_o[6:0]};
+            end
+            3'b001: begin  // lh (Load Halfword): rd = SignExt([wb_adr_i]15:0)
+                data_reg = {{16{data_mem_dat_o[15]}}, data_mem_dat_o[15:0]};
+            end
+            3'b010: begin  // lw (Load Word): rd = [wb_adr_i]31:0
+                data_reg = data_mem_dat_o;
+            end
+            3'b100: begin  // lbu (Load Byte Unsigned): rd = ZeroExt([wb_adr_i]7:0
+                data_reg = {24'b0, data_mem_dat_o[7:0]};
+            end
+            3'b101: begin  // lhu (Load Halfword Unsigned): rd = ZeroExt([wb_adr_i]15:0
+                data_reg = {16'b0, data_mem_dat_o[15:0]};
+            end
+            default: begin
+                data_reg = data_mem_dat_o;
+            end
+        endcase
+    end
 
     // ------------------------------------------
     // Acknowledge Signal to UART Bridge
