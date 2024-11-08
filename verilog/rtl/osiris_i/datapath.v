@@ -91,6 +91,7 @@ module datapath #(
     output wire [DATA_WIDTH-1:0] o_pc_IF;
     output wire [2:0] o_funct3_MEM;
     wire [           2:0] funct3_MEM;
+    reg  [DATA_WIDTH-1:0] o_pc_IF_delayed;
 
     // ------------------------------------------
     // Localparams
@@ -165,13 +166,18 @@ module datapath #(
         .o_pc_IF(o_pc_IF)
     );
 
+    always @(posedge clk) begin
+        o_pc_IF_delayed <= o_pc_IF
+            ;  // memory has 1,5 clock cycle delay so the PC was out-of-sync with the instruction
+    end
+
     // IF/ID Pipeline Register
     assign if_id_rst = rst | flush_ID;
     if_id U_IF_ID (
         .clk(clk),
         .i_flush_ID(if_id_rst),  // reset
         .i_stall_ID(stall_ID),
-        .i_pc_IF(o_pc_IF),
+        .i_pc_IF(o_pc_IF_delayed),
         .i_instr_IF(i_instr_IF),
         .i_pcplus4_IF(pcplus4_IF),
         .o_pc_ID(pc_ID),

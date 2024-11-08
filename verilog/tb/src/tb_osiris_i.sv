@@ -194,10 +194,10 @@ module osiris_i_tb;
         end
 
     // Monitor changes in the PC register
-        always @(dut.core_pc_IF) begin
+        always @(dut.U_CORE.U_DATAPATH.o_pc_IF_delayed) begin
             if (!rst_core) begin
-                $display("  Time %0t ps: [Program Counter] dut.core_pc_IF changed to %0d", $time, dut.core_pc_IF);
-                $fdisplay(f_osiris_core_state_dump, "   Clock Cycle: %d | [Program Counter] changed to %h", cycle_counter, dut.core_pc_IF);
+                $display("  Time %0t ps: [Program Counter] dut.U_CORE.U_DATAPATH.o_pc_IF_delayed changed to %0d", $time, dut.U_CORE.U_DATAPATH.o_pc_IF_delayed);
+                $fdisplay(f_osiris_core_state_dump, "   Clock Cycle: %d | [Program Counter] changed to %h", cycle_counter, dut.U_CORE.U_DATAPATH.o_pc_IF_delayed);
             end
         end
 
@@ -211,18 +211,18 @@ module osiris_i_tb;
 
     // Simulate fetching instructions
         // Memory reads are asynchronous
-        always @(*) begin
+        always @(dut.U_CORE.U_DATAPATH.o_pc_IF_delayed) begin
             if (!rst_core) begin
                 // if (dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID!= 0) begin
-                    // dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID = dut.U_INST_MEM.mem[dut.core_pc_IF[INST_MEM_ADDR_BITS-1:0]];
-                    // $display("->Time %0t ps: Instruction Fetch: PC = %d, Instruction = %h, Assembly: %s", $time, dut.core_pc_IF, dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID, decode_instruction(dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID));
-                    $display("->Time %0t ps: Instruction Fetch: PC[%d], Instruction = %h, Assembly: %s --------------", $time, dut.core_pc_IF, dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID, decode_instruction(dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID));
+                    // dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID = dut.U_INST_MEM.mem[dut.U_CORE.U_DATAPATH.o_pc_IF_delayed[INST_MEM_ADDR_BITS-1:0]];
+                    // $display("->Time %0t ps: Instruction Fetch: PC = %d, Instruction = %h, Assembly: %s", $time, dut.U_CORE.U_DATAPATH.o_pc_IF_delayed, dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID, decode_instruction(dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID));
+                    $display("->Time %0t ps: Instruction Fetch: PC[%d], Instruction = %h, Assembly: %s --------------", $time, dut.U_CORE.U_DATAPATH.o_pc_IF_delayed, dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID, decode_instruction(dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID));
                 // end
                 // decoded_inst = decode_instruction(dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID);
             end 
             // end else begin
             //     // dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID = {DATA_WIDTH{1'b1}};
-            //     //$display("Time %0t ps: Instruction Fetch: PC[%h], Instruction = %h, Assembly: %s", $time, dut.core_pc_IF, dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID, decode_instruction(dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID));
+            //     //$display("Time %0t ps: Instruction Fetch: PC[%h], Instruction = %h, Assembly: %s", $time, dut.U_CORE.U_DATAPATH.o_pc_IF_delayed, dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID, decode_instruction(dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID));
             //     // decoded_inst = decode_instruction(dut.U_CORE.U_DATAPATH.U_STAGE_DECODE.i_instr_ID);
             // end
         end
@@ -463,13 +463,13 @@ module osiris_i_tb;
             // dut.U_INST_MEM.mem[104] = 32'h008302e7;  // jalr x5, 8(x6)  // Jump to address x6 + 8, x5 = return address = 5 (decimal)
 
 
-            // andi (AND immediate)
-            #(CLK_PERIOD) $display("Sending andi x1, x2, 0xF");
-            dut.U_INST_MEM.mem[0] = 32'h00f17093;  // andi x1, x2, 0xF  // x1 = x2 & 0xF = 2
-            #(CLK_PERIOD) $display("Sending andi x3, x4, 0xA");
-            dut.U_INST_MEM.mem[364] = 32'h00a27193;  // andi x3, x4, 0xA  // x3 = x4 & 0xA = 0
-            #(CLK_PERIOD) $display("Sending andi x5, x6, 0xFF");
-            dut.U_INST_MEM.mem[368] = 32'h0ff37293;  // andi x5, x6, 0xFF  // x5 = x6 & 0xFF = 6
+            // // andi (AND immediate)
+            // #(CLK_PERIOD) $display("Sending andi x1, x2, 0xF");
+            // dut.U_INST_MEM.mem[0] = 32'h00f17093;  // andi x1, x2, 0xF  // x1 = x2 & 0xF = 2
+            // #(CLK_PERIOD) $display("Sending andi x3, x4, 0xA");
+            // dut.U_INST_MEM.mem[364] = 32'h00a27193;  // andi x3, x4, 0xA  // x3 = x4 & 0xA = 0
+            // #(CLK_PERIOD) $display("Sending andi x5, x6, 0xFF");
+            // dut.U_INST_MEM.mem[368] = 32'h0ff37293;  // andi x5, x6, 0xFF  // x5 = x6 & 0xFF = 6
 
             // // ori (OR immediate)
             // #(CLK_PERIOD) $display("Sending ori x1, x2, 0x1");
@@ -722,10 +722,11 @@ module osiris_i_tb;
             // dut.U_INST_MEM.mem[288] = 32'h00629663;  // bne x5, x6, 12  // Branch if x5 != x6 to PC + 12: true (but it won't execute completely if you execute the previous instruction before, it will execute partially then will receive aflush from hazard unit because this is a control hazard)
             // dut.U_INST_MEM.mem[292] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
 
-            // // # blt 
-            // #(CLK_PERIOD) $display("Sending blt x1, x2, 40");
-            // dut.U_INST_MEM.mem[252] = 32'h0220c463;  // blt x1, x2, 8  // Branch if x1 < x2 to PC + 8: true
-            // dut.U_INST_MEM.mem[256] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
+            // # blt 
+            #(CLK_PERIOD) $display("Sending blt x1, x2, 40");
+            dut.U_INST_MEM.mem[252] = 32'h0220c463;  // blt x1, x2, 8  // Branch if x1 < x2 to PC + 8: true
+            dut.U_INST_MEM.mem[256] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
+            
             // dut.U_INST_MEM.mem[292] = 32'h00210133;  // add x2, x2, x2 // x2 = 4
             // #(CLK_PERIOD) $display("Sending blt x3, x4, -4");
             // dut.U_INST_MEM.mem[296] = 32'hFE41CEE3;  // blt x3, x4, -4  // Branch if x3 < x4 to PC - 4: true
