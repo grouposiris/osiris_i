@@ -290,8 +290,9 @@ module datapath #(
     // -------------------------------------
     // Memory Access Stage
     // assign o_data_addr_M  = alu_result_WB;
-    //// assign o_data_addr_M  = alu_result_M;
-    assign o_data_addr_M  = o_alu_result_WB_neg;
+    // assign o_data_addr_M  = alu_result_M;
+    assign o_data_addr_M  = alu_result_EX;
+    // assign o_data_addr_M  = o_alu_result_WB_neg;
 
     // assign o_write_data_M = write_data_M;
     //// assign o_write_data_M = write_data_EX;
