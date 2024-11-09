@@ -36,7 +36,7 @@
  */
 
 module osiris_i_mem#(
-    parameter BITS = 16,
+    //parameter BITS = 16,
     parameter DATA_WIDTH = 32,
     parameter ADDR_WIDTH = 32,
     parameter INST_MEM_SIZE = 1, // in KB
