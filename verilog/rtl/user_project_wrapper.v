@@ -78,69 +78,36 @@ module user_project_wrapper #(
    output [2:0] user_irq
 );
 
-
-   // wire clk(wb_clk_i),
-   // wire rst(io_in[1]);
-
-   // wire wb_dat_i
-   // wire wb_ack_i
-   // wire wb_adr_o
-   // wire wb_dat_o
-   // wire wb_we_o
-   // wire wb_stb_o
-   // wire wb_cyc_o
-
-
 /*--------------------------------------*/
 /* User project is instantiated  here   */
 /*--------------------------------------*/
-    // osiris_i U_OSIRIS_I(
-    //     .clk(wb_clk_i),
-    //     .rst(io_in[1]),
-    //     .wb_dat_i(wbs_dat_o),
-    //     .wb_ack_i(wbs_ack_o),
-    //     .wb_adr_o(wbs_adr_i),
-    //     .wb_dat_o(wbs_dat_o),
-    //     .wb_we_o(wbs_we_i),
-    //     .wb_stb_o(wbs_stb_i),
-    //     .wb_cyc_o(wbs_cyc_i)
-    // );
-
-user_proj_example mprj (
+osiris_i_mem osiris_mem (
 `ifdef USE_POWER_PINS
 	.vccd1(vccd1),	// User area 1 1.8V power
 	.vssd1(vssd1),	// User area 1 digital ground
 `endif
 
     .wb_clk_i(wb_clk_i),
-    .wb_rst_i(wb_rst_i),
-
     // MGMT SoC Wishbone Slave
-
-    .wbs_cyc_i(wbs_cyc_i),
-    .wbs_stb_i(wbs_stb_i),
-    .wbs_we_i(wbs_we_i),
-    // .wbs_sel_i(wbs_sel_i),
-    .wbs_adr_i(wbs_adr_i),
-    .wbs_dat_i(wbs_dat_i),
-    .wbs_ack_o(wbs_ack_o),
-    .wbs_dat_o(wbs_dat_o),
+    // .wb_rst_i(wb_rst_i),
+    // .wbs_cyc_i(wbs_cyc_i),
+    // .wbs_stb_i(wbs_stb_i),
+    // .wbs_we_i(wbs_we_i),
+    // .wbs_adr_i(wbs_adr_i),
+    // .wbs_dat_i(wbs_dat_i),
 
     // Logic Analyzer
 
-    // .la_data_in(la_data_in),
-    // .la_data_out(la_data_out),
-    // .la_oenb (la_oenb),
-
     // IO Pads
-
-    .io_in ({io_in[37:30],io_in[7:0]}),
-    // .io_out({io_out[37:30],io_out[7:0]}),
-    // .io_oeb({io_oeb[37:30],io_oeb[7:0]}),
+    .io_in (io_in[16:12]),
+    // .io_out(io_out[11:10]),
+    .io_out(io_out[18:17]),
+    // .io_oeb({io_oeb[11:5]})
+    .io_oeb(io_oeb[18:12])
 
     // IRQ
-    //.irq(user_irq)
 );
+
 
 
 

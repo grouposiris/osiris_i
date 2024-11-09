@@ -1,189 +1,114 @@
-// ------------------------------------------------------------------------
-// SkyWater SKY130 2KB SRAM Module
-// Module Name: sky130_sram_2kbyte_1rw1r_32x512_8
-// Description: 
-//   - A dual-port SRAM with:
-//     - Port 0: Single Read/Write (1RW) port
-//     - Port 1: Single Read-Only (1R) port
-//   - Memory Size:
-//     - 512 words of 32 bits each (512 x 32 bits)
-//     - Total size: 2KB
-//   - Write size granularity: 8 bits (byte-wise write enable)
-// ------------------------------------------------------------------------
+// OpenRAM SRAM model
+// Words: 512
+// Word size: 32
+// Write size: 8
 
-module sky130_sram_2kbyte_1rw1r_32x512_8 (
+module sky130_sram_2kbyte_1rw1r_32x512_8(
 `ifdef USE_POWER_PINS
-    vccd1,  // Positive power supply
-    vssd1,  // Ground
+    vccd1,
+    vssd1,
 `endif
-    // Port 0: Read/Write Port
-    clk0,  // Clock input for Port 0
-    csb0,  // Chip Select (active low) for Port 0
-    web0,  // Write Enable (active low) for Port 0
-    wmask0,  // Write Mask for byte-wise write enable
-    addr0,  // Address input for Port 0
-    din0,  // Data input for Port 0
-    dout0,  // Data output for Port 0
-    // Port 1: Read-Only Port
-    clk1,  // Clock input for Port 1
-    csb1,  // Chip Select (active low) for Port 1
-    addr1,  // Address input for Port 1
-    dout1  // Data output for Port 1
-);
+// Port 0: RW
+    clk0,csb0,web0,wmask0,addr0,din0,dout0,
+// Port 1: R
+    clk1,csb1,addr1,dout1
+  );
 
-    // ------------------------------
-    // Parameter Declarations
-    // ------------------------------
-    parameter NUM_WMASKS = 4;  // Number of write mask bits (one per byte)
-    parameter DATA_WIDTH = 32;  // Width of the data bus (32 bits)
-    parameter ADDR_WIDTH = 9;  // Width of the address bus (512 addresses => 2^9)
-    parameter RAM_DEPTH = 1 << ADDR_WIDTH;  // Depth of the memory (512 words)
-    parameter DELAY = 3;  // Simulated delay for read operations
-    parameter VERBOSE = 1;  // Verbosity flag for simulation messages
-    parameter T_HOLD = 1;  // Hold time for outputs after clock edge
+  parameter NUM_WMASKS = 4 ;
+  parameter DATA_WIDTH = 32 ;
+  parameter ADDR_WIDTH = 9 ;
+  parameter RAM_DEPTH = 1 << ADDR_WIDTH;
+  // FIXME: This delay is arbitrary.
+  parameter DELAY = 3 ;
+  parameter VERBOSE = 1 ; //Set to 0 to only display warnings
+  parameter T_HOLD = 1 ; //Delay to hold dout value after posedge. Value is arbitrary
 
 `ifdef USE_POWER_PINS
-    // Power pins (used in physical design)
-    inout vccd1;  // Power supply
-    inout vssd1;  // Ground
+    inout vccd1;
+    inout vssd1;
 `endif
+  input  clk0; // clock
+  input   csb0; // active low chip select
+  input  web0; // active low write control
+  input [NUM_WMASKS-1:0]   wmask0; // write mask
+  input [ADDR_WIDTH-1:0]  addr0;
+  input [DATA_WIDTH-1:0]  din0;
+  output [DATA_WIDTH-1:0] dout0;
+  input  clk1; // clock
+  input   csb1; // active low chip select
+  input [ADDR_WIDTH-1:0]  addr1;
+  output [DATA_WIDTH-1:0] dout1;
 
-    // ------------------------------
-    // Port 0 Signals (Read/Write Port)
-    // ------------------------------
-    input clk0;  // Clock input for Port 0
-    input csb0;  // Chip Select (active low) for Port 0
-    input web0;  // Write Enable (active low) for Port 0
-    input [NUM_WMASKS-1:0] wmask0;  // Write Mask for byte-wise write enable (4 bits)
-    input [ADDR_WIDTH-1:0] addr0;  // Address input for Port 0 (9 bits)
-    input [DATA_WIDTH-1:0] din0;  // Data input for Port 0 (32 bits)
-    output [DATA_WIDTH-1:0] dout0;  // Data output for Port 0 (32 bits)
+  reg  csb0_reg;
+  reg  web0_reg;
+  reg [NUM_WMASKS-1:0]   wmask0_reg;
+  reg [ADDR_WIDTH-1:0]  addr0_reg;
+  reg [DATA_WIDTH-1:0]  din0_reg;
+  reg [DATA_WIDTH-1:0]  dout0;
 
-    // ------------------------------
-    // Port 1 Signals (Read-Only Port)
-    // ------------------------------
-    input clk1;  // Clock input for Port 1
-    input csb1;  // Chip Select (active low) for Port 1
-    input [ADDR_WIDTH-1:0] addr1;  // Address input for Port 1 (9 bits)
-    output [DATA_WIDTH-1:0] dout1;  // Data output for Port 1 (32 bits)
+  // All inputs are registers
+  always @(posedge clk0)
+  begin
+    csb0_reg = csb0;
+    web0_reg = web0;
+    wmask0_reg = wmask0;
+    addr0_reg = addr0;
+    din0_reg = din0;
+    #(T_HOLD) dout0 = 32'bx;
+    if ( !csb0_reg && web0_reg && VERBOSE ) 
+      $display($time," Reading %m addr0=%b dout0=%b",addr0_reg,mem[addr0_reg]);
+    if ( !csb0_reg && !web0_reg && VERBOSE )
+      $display($time," Writing %m addr0=%b din0=%b wmask0=%b",addr0_reg,din0_reg,wmask0_reg);
+  end
 
-    // ------------------------------
-    // Internal Registers and Wires
-    // ------------------------------
+  reg  csb1_reg;
+  reg [ADDR_WIDTH-1:0]  addr1_reg;
+  reg [DATA_WIDTH-1:0]  dout1;
 
-    // Registers for Port 0 (captured on the positive edge of clk0)
-    reg csb0_reg;  // Registered Chip Select for Port 0
-    reg web0_reg;  // Registered Write Enable for Port 0
-    reg [NUM_WMASKS-1:0] wmask0_reg;  // Registered Write Mask for Port 0
-    reg [ADDR_WIDTH-1:0] addr0_reg;  // Registered Address for Port 0
-    reg [DATA_WIDTH-1:0] din0_reg;  // Registered Data Input for Port 0
-    reg [DATA_WIDTH-1:0] dout0;  // Data Output for Port 0 (registered)
+  // All inputs are registers
+  always @(posedge clk1)
+  begin
+    csb1_reg = csb1;
+    addr1_reg = addr1;
+    if (!csb0 && !web0 && !csb1 && (addr0 == addr1))
+         $display($time," WARNING: Writing and reading addr0=%b and addr1=%b simultaneously!",addr0,addr1);
+    #(T_HOLD) dout1 = 32'bx;
+    if ( !csb1_reg && VERBOSE ) 
+      $display($time," Reading %m addr1=%b dout1=%b",addr1_reg,mem[addr1_reg]);
+  end
 
-    // Registers for Port 1 (captured on the positive edge of clk1)
-    reg csb1_reg;  // Registered Chip Select for Port 1
-    reg [ADDR_WIDTH-1:0] addr1_reg;  // Registered Address for Port 1
-    reg [DATA_WIDTH-1:0] dout1;  // Data Output for Port 1 (registered)
+reg [DATA_WIDTH-1:0]    mem [0:RAM_DEPTH-1];
 
-    // Memory array declaration
-    reg [DATA_WIDTH-1:0] mem[0:RAM_DEPTH-1];  // Memory array (512 x 32 bits)
-
-    // ------------------------------
-    // Port 0 Input Registration
-    // ------------------------------
-    // Capture the inputs on the positive edge of clk0
-    always @(posedge clk0) begin
-        csb0_reg   <= csb0;  // Register Chip Select
-        web0_reg   <= web0;  // Register Write Enable
-        wmask0_reg <= wmask0;  // Register Write Mask
-        addr0_reg  <= addr0;  // Register Address
-        din0_reg   <= din0;  // Register Data Input
-
-        // After T_HOLD time units, set dout0 to unknown if csb0 is inactive
-        // #(T_HOLD)
-        // dout0 <= (csb0_reg) ? {DATA_WIDTH{1'bx}} : dout0;
-
-        // Optional verbosity for simulation
-        if (!csb0_reg && web0_reg && VERBOSE)
-            // $display($time, " Reading from Port 0: addr0=%h dout0=%h", addr0_reg, mem[addr0_reg]);
-            if (!csb0_reg && !web0_reg && VERBOSE)
-                $display(
-                    $time,
-                    " Writing to Port 0: addr0=%h din0=%h wmask0=%b",
-                    addr0_reg,
-                    din0_reg,
-                    wmask0_reg
-                );
+  // Memory Write Block Port 0
+  // Write Operation : When web0 = 0, csb0 = 0
+  always @ (negedge clk0)
+  begin : MEM_WRITE0
+    if ( !csb0_reg && !web0_reg ) begin
+        if (wmask0_reg[0])
+                mem[addr0_reg][7:0] = din0_reg[7:0];
+        if (wmask0_reg[1])
+                mem[addr0_reg][15:8] = din0_reg[15:8];
+        if (wmask0_reg[2])
+                mem[addr0_reg][23:16] = din0_reg[23:16];
+        if (wmask0_reg[3])
+                mem[addr0_reg][31:24] = din0_reg[31:24];
     end
+  end
 
-    // ------------------------------
-    // Port 1 Input Registration
-    // ------------------------------
-    // Capture the inputs on the positive edge of clk1
-    always @(posedge clk1) begin
-        csb1_reg  <= csb1;  // Register Chip Select
-        addr1_reg <= addr1;  // Register Address
+  // Memory Read Block Port 0
+  // Read Operation : When web0 = 1, csb0 = 0
+  always @ (negedge clk0)
+  begin : MEM_READ0
+    if (!csb0_reg && web0_reg)
+       dout0 <= #(DELAY) mem[addr0_reg];
+  end
 
-        // // After T_HOLD time units, set dout1 to unknown if csb1 is inactive
-        // #(T_HOLD) dout1 <= (csb1_reg) ? {DATA_WIDTH{1'bx}} : dout1;
-
-        // Optional verbosity for simulation
-        if (!csb1_reg && VERBOSE)
-            $display($time, " Reading from Port 1: addr1=%h dout1=%h", addr1_reg, mem[addr1_reg]);
-    end
-
-    // ------------------------------
-    // Memory Write Operation (Port 0)
-    // ------------------------------
-    // Perform write operation on the negative edge of clk0
-    always @(negedge clk0) begin
-        // Check if Port 0 is active and write operation is enabled
-        if (!csb0_reg && !web0_reg) begin
-            // Byte-wise write operation using write mask
-            if (wmask0_reg[0]) mem[addr0_reg][7:0] <= din0_reg[7:0];  // Write byte 0
-            if (wmask0_reg[1]) mem[addr0_reg][15:8] <= din0_reg[15:8];  // Write byte 1
-            if (wmask0_reg[2]) mem[addr0_reg][23:16] <= din0_reg[23:16];  // Write byte 2
-            if (wmask0_reg[3]) mem[addr0_reg][31:24] <= din0_reg[31:24];  // Write byte 3
-        end
-    end
-
-    // ------------------------------
-    // Memory Read Operation (Port 0)
-    // ------------------------------
-    // Perform read operation on the negative edge of clk0
-    always @(negedge clk0) begin
-        // Check if Port 0 is active and read operation is enabled
-        if (!csb0_reg && web0_reg) begin
-            // dout0 <= #(DELAY) mem[addr0_reg];  // Read data with simulated delay
-            dout0 <= mem[addr0_reg];  // Read data with simulated delay
-            // $display($time, " SKY130 RAM Reading from Port 1: addr1=%h dout1=%h", addr0_reg,
-            //  mem[addr0_reg]);
-
-        end
-    end
-
-    // ------------------------------
-    // Memory Read Operation (Port 1)
-    // ------------------------------
-    // Perform read operation on the negative edge of clk1
-    always @(negedge clk1) begin
-        // Check if Port 1 is active
-        if (!csb1_reg) begin
-            // dout1 <= #(DELAY) mem[addr1_reg];  // Read data with simulated delay
-            dout1 <= mem[addr1_reg];  // Read data with simulated delay
-        end
-    end
-
-    // ------------------------------
-    // Conflict Detection (Optional)
-    // ------------------------------
-    // Issue a warning if both ports access the same address simultaneously
-    always @(posedge clk0 or posedge clk1) begin
-        if (!csb0 && !web0 && !csb1 && (addr0 == addr1)) begin
-            $display(
-                $time,
-                " WARNING: Simultaneous write and read to the same address (%h) on different ports!",
-                addr0);
-        end
-    end
+  // Memory Read Block Port 1
+  // Read Operation : When web1 = 1, csb1 = 0
+  always @ (negedge clk1)
+  begin : MEM_READ1
+    if (!csb1_reg)
+       dout1 <= #(DELAY) mem[addr1_reg];
+  end
 
 endmodule
